@@ -3,7 +3,7 @@
    이 파일만 수정하면 사이트 전체 링크가 한 번에 바뀝니다.
    ============================================================ */
 
-const CONTACT_URL = 'https://open.kakao.com/o/sPbZfmsi';
+const CONTACT_URL = 'https://open.kakao.com/me/talk_sim_mind';
 
 const STORE_LINKS = {
   store: CONTACT_URL,
@@ -24,8 +24,6 @@ const STORE_LINKS = {
   pkg_couple:      CONTACT_URL,
   pkg_exam:        CONTACT_URL,
   pkg_parenting:   CONTACT_URL,
-  pkg_career:      CONTACT_URL,
-  pkg_work:        CONTACT_URL,
 };
 
 /* ============================================================
