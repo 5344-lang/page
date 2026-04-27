@@ -228,6 +228,7 @@ const DEFAULT_PRICES = {
 /* ── 로그인 ── */
 function doLogin() {
   if (document.getElementById('pwInput').value === ADMIN_PW) {
+    sessionStorage.setItem('ttok_admin_ok', '1');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboard').style.display  = 'block';
     loadToken();
@@ -239,9 +240,17 @@ function doLogin() {
 document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
 function doLogout() {
+  sessionStorage.removeItem('ttok_admin_ok');
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('dashboard').style.display   = 'none';
   document.getElementById('pwInput').value = '';
+}
+
+if (sessionStorage.getItem('ttok_admin_ok')) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display  = 'block';
+  loadToken();
+  renderTable();
 }
 
 /* ── Token ── */

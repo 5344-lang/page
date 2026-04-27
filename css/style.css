@@ -566,11 +566,20 @@ section { padding: 80px 0; }
   .result-dual { grid-template-columns: 1fr; }
 }
 
-/* ─── Quiz 6-option grid ─── */
+/* ─── Quiz option grids ─── */
 .quiz-options-6 { grid-template-columns: 1fr 1fr !important; }
+.quiz-options-6 > .quiz-option:last-child:nth-child(odd) { grid-column: 1 / -1; max-width: calc(50% - 5px); margin: 0 auto; }
+.quiz-options-1col { grid-template-columns: 1fr !important; }
 @media (max-width: 500px) {
   .quiz-options-6 { grid-template-columns: 1fr !important; }
+  .quiz-options-6 > .quiz-option:last-child:nth-child(odd) { max-width: 100%; }
 }
+
+/* ─── Package price box ─── */
+.pkg-price-box { display:flex; align-items:center; gap:12px; padding:14px 20px; background:var(--beige); border-radius:10px; margin:16px 0; flex-wrap:wrap; }
+.pkg-price-original { font-size:.88rem; color:var(--text-muted); text-decoration:line-through; }
+.pkg-price-discount { font-size:1.35rem; font-weight:900; color:var(--brown-dark); }
+.pkg-price-badge { font-size:.78rem; color:#fff; font-weight:700; background:var(--green); padding:3px 10px; border-radius:20px; }
 
 /* ─── Footer Social ─── */
 .footer-social { }

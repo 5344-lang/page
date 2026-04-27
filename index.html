@@ -448,17 +448,18 @@
     <div class="modal-header">
       <button class="modal-close" id="quizClose">×</button>
       <h3>🔍 나에게 맞는 검사 찾기</h3>
-      <p>2가지 질문으로 <strong>단일 검사 + 패키지</strong>를 함께 추천해 드려요.</p>
+      <p>3가지 질문으로 <strong>딱 맞는 검사 2가지</strong>를 추천해 드려요.</p>
     </div>
     <div class="modal-body">
       <div class="quiz-progress">
-        <span></span><span></span>
+        <span></span><span></span><span></span>
       </div>
 
       <div class="quiz-step active" data-step="0">
         <h4>Q1. 어떤 고민으로 검사를 찾으셨나요?</h4>
         <div class="quiz-options quiz-options-6">
           <button class="quiz-option" data-value="pattern">😔 나 자신이 낯설고<br>반복되는 패턴이 힘들어요</button>
+          <button class="quiz-option" data-value="stress">😮‍💨 공부는 잘 되는데<br>스트레스·번아웃이 심해요</button>
           <button class="quiz-option" data-value="relation">🤝 관계에서 오해·상처가<br>자꾸 반복돼요</button>
           <button class="quiz-option" data-value="study">📚 열심히 해도<br>공부·학습이 안 돼요</button>
           <button class="quiz-option" data-value="career">🎯 진로·전공·직업<br>방향이 막막해요</button>
@@ -476,21 +477,26 @@
         </div>
       </div>
 
+      <div class="quiz-step" data-step="2">
+        <h4 id="q3Title">Q3. 조금 더 구체적으로 알려주세요.</h4>
+        <div class="quiz-options quiz-options-1col" id="q3Options"></div>
+      </div>
+
       <div class="quiz-result" id="quizResult">
         <div class="result-dual">
           <div class="result-box">
-            <div class="result-tag">⭐ 단일 검사 추천</div>
-            <div class="result-icon" id="resultEmoji">🌟</div>
-            <h4 id="resultTitle">추천 검사</h4>
-            <p id="resultDesc">결과 설명</p>
-            <a href="#" id="quizResultLink" class="btn btn-primary" style="font-size:.82rem;padding:10px 18px;width:100%;justify-content:center;margin-top:auto;">자세히 보기 →</a>
+            <div class="result-tag">⭐ 1순위 추천</div>
+            <div class="result-icon" id="result1Emoji">🌟</div>
+            <h4 id="result1Title">추천 검사</h4>
+            <p id="result1Desc">결과 설명</p>
+            <a href="#" id="result1Link" class="btn btn-primary" style="font-size:.82rem;padding:10px 18px;width:100%;justify-content:center;margin-top:auto;">자세히 보기 →</a>
           </div>
           <div class="result-box">
-            <div class="result-tag result-tag-pkg">📦 패키지 추천</div>
-            <div class="result-icon" id="resultPkgEmoji">📦</div>
-            <h4 id="resultPkgTitle">추천 패키지</h4>
-            <p id="resultPkgDesc">패키지 설명</p>
-            <a href="#" id="quizPkgLink" class="btn btn-outline" style="font-size:.82rem;padding:10px 18px;width:100%;justify-content:center;margin-top:auto;">패키지 보기 →</a>
+            <div class="result-tag result-tag-pkg">✨ 2순위 추천</div>
+            <div class="result-icon" id="result2Emoji">🌟</div>
+            <h4 id="result2Title">추천 검사</h4>
+            <p id="result2Desc">결과 설명</p>
+            <a href="#" id="result2Link" class="btn btn-outline" style="font-size:.82rem;padding:10px 18px;width:100%;justify-content:center;margin-top:auto;">자세히 보기 →</a>
           </div>
         </div>
         <button class="btn btn-outline" id="quizRetry" style="font-size:.85rem;padding:10px 20px;margin-top:12px;width:100%;justify-content:center;">↺ 다시 선택하기</button>
@@ -517,6 +523,7 @@
       </div>
       <div class="pkg-steps-title">검사 구성</div>
       <div class="pkg-steps" id="pkgMSteps"></div>
+      <div id="pkgMPrice" class="pkg-price-box" style="display:none;"></div>
       <a id="pkgMCta" href="https://open.kakao.com/o/sPbZfmsi" target="_blank" class="pkg-cta-btn">
         💬 카카오로 문의하기
       </a>
