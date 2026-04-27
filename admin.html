@@ -30,29 +30,38 @@
     #dashboard { display: none; }
     .top-bar { background: var(--brown-dark); color: #fff; padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
     .top-bar-logo { font-weight: 900; font-size: 1.1rem; }
-    .btn-logout { background: rgba(255,255,255,.15); border: none; color: #fff; padding: 7px 16px; border-radius: 8px; cursor: pointer; font-size: .85rem; transition: background .2s; }
+    .btn-logout { background: rgba(255,255,255,.15); border: none; color: #fff; padding: 7px 16px; border-radius: 8px; cursor: pointer; font-size: .85rem; }
     .btn-logout:hover { background: rgba(255,255,255,.25); }
 
     .dashboard-inner { max-width: 960px; margin: 0 auto; padding: 36px 24px; }
-    .section-title { font-size: 1.1rem; font-weight: 700; color: var(--brown-dark); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--beige-dark); display: flex; align-items: center; gap: 8px; }
+    .section-title { font-size: 1.05rem; font-weight: 700; color: var(--brown-dark); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--beige-dark); }
 
     /* ── Cards ── */
-    .setting-card { background: var(--white); border-radius: 14px; padding: 22px 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(107,76,53,.08); }
-    .setting-label { font-size: .85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
-    .setting-input { width: 100%; padding: 11px 14px; border-radius: 8px; border: 1.5px solid var(--beige-dark); font-size: .95rem; outline: none; transition: border-color .2s; background: var(--beige); }
+    .setting-card { background: var(--white); border-radius: 14px; padding: 22px 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(107,76,53,.08); }
+    .setting-label { font-size: .82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+    .setting-input { width: 100%; padding: 11px 14px; border-radius: 8px; border: 1.5px solid var(--beige-dark); font-size: .95rem; outline: none; transition: border-color .2s; background: var(--beige); font-family: inherit; }
     .setting-input:focus { border-color: var(--brown-light); }
+    .input-hint { font-size: .78rem; color: var(--text-muted); margin-top: 7px; }
+    .input-hint a { color: var(--brown); }
+
+    /* ── Token box ── */
+    .token-row { display: flex; gap: 10px; align-items: center; }
+    .token-row .setting-input { flex: 1; font-family: monospace; font-size: .88rem; }
+    .btn-token-save { background: var(--beige-dark); color: var(--brown); border: none; padding: 11px 18px; border-radius: 8px; font-size: .85rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background .2s; }
+    .btn-token-save:hover { background: var(--brown-light); color: var(--white); }
+    .token-saved-badge { font-size: .8rem; color: var(--green); font-weight: 700; display: none; }
 
     /* ── Table ── */
     .test-table { width: 100%; border-collapse: collapse; }
-    .test-table th { text-align: left; font-size: .78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; padding: 10px 16px; background: var(--beige-dark); }
+    .test-table th { text-align: left; font-size: .75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; padding: 10px 16px; background: var(--beige-dark); }
     .test-table th:first-child { border-radius: 10px 0 0 10px; }
     .test-table th:last-child { border-radius: 0 10px 10px 0; }
-    .test-table tbody tr { background: var(--white); transition: background .15s; }
+    .test-table tbody tr { background: var(--white); }
     .test-table tbody tr:hover { background: var(--beige); }
-    .test-table td { padding: 14px 16px; border-bottom: 1px solid var(--beige-dark); vertical-align: middle; }
+    .test-table td { padding: 13px 16px; border-bottom: 1px solid var(--beige-dark); vertical-align: middle; }
     .test-table tbody tr:last-child td { border-bottom: none; }
-    .test-name { font-weight: 700; color: var(--brown-dark); font-size: .95rem; }
-    .test-key { font-size: .75rem; color: var(--text-muted); }
+    .test-name { font-weight: 700; color: var(--brown-dark); font-size: .93rem; }
+    .test-key { font-size: .73rem; color: var(--text-muted); }
     .price-input { width: 120px; padding: 8px 10px; border-radius: 8px; border: 1.5px solid var(--beige-dark); font-size: .95rem; text-align: right; outline: none; transition: border-color .2s; }
     .price-input:focus { border-color: var(--brown-light); }
     .toggle-wrap { display: flex; align-items: center; gap: 8px; }
@@ -66,38 +75,41 @@
     .toggle-label.on  { color: var(--green); }
     .toggle-label.off { color: #c55; }
 
-    /* ── Action Buttons ── */
-    .actions-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; align-items: center; }
-    .btn-save { background: var(--yellow); color: var(--brown); border: none; padding: 14px 32px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; box-shadow: 0 4px 14px rgba(255,203,47,.4); }
-    .btn-save:hover { background: #F5BC00; }
-    .btn-generate { background: transparent; color: var(--brown); border: 2px solid var(--brown-light); padding: 12px 22px; border-radius: 10px; font-size: .88rem; font-weight: 600; cursor: pointer; transition: all .2s; }
-    .btn-generate:hover { background: var(--beige-dark); }
-    .btn-copy { background: var(--brown); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; font-size: .88rem; font-weight: 700; cursor: pointer; transition: background .2s; display: none; }
-    .btn-copy:hover { background: var(--brown-dark); }
-    .copy-ok { color: var(--green); font-weight: 700; font-size: .9rem; display: none; }
-
-    /* ── Code Output ── */
-    .code-block { margin-top: 20px; display: none; }
-    .code-block pre { background: var(--brown-dark); color: #f0ead8; border-radius: 12px; padding: 22px 24px; font-size: .8rem; line-height: 1.7; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
-    .code-hint { font-size: .82rem; color: var(--text-muted); margin-top: 10px; }
-    .code-hint strong { color: var(--brown); }
-
-    /* ── Toast ── */
-    .toast {
-      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
-      background: var(--brown-dark); color: #fff;
-      padding: 14px 28px; border-radius: 50px;
-      font-size: .95rem; font-weight: 700;
-      box-shadow: 0 8px 28px rgba(0,0,0,.25);
-      opacity: 0; transition: opacity .3s, transform .3s;
-      pointer-events: none; white-space: nowrap; z-index: 999;
+    /* ── Save Button ── */
+    .save-area { margin-top: 28px; }
+    .btn-save {
+      background: var(--yellow); color: var(--brown); border: none;
+      padding: 16px 40px; border-radius: 12px; font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+      box-shadow: 0 4px 16px rgba(255,203,47,.45);
+      display: flex; align-items: center; gap: 10px;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .btn-save:hover { background: #F5BC00; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,203,47,.5); }
+    .btn-save:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .save-status { margin-top: 16px; font-size: .9rem; font-weight: 600; display: none; }
+    .save-status.success { color: var(--green); }
+    .save-status.error   { color: #c00; }
+    .save-status.loading { color: var(--brown); }
 
-    /* ── Info Box ── */
+    /* ── Progress bar ── */
+    .progress-bar {
+      height: 4px; background: var(--beige-dark); border-radius: 2px;
+      margin-top: 12px; overflow: hidden; display: none;
+    }
+    .progress-fill {
+      height: 100%; width: 0%; background: var(--yellow);
+      border-radius: 2px; transition: width .4s ease;
+    }
+
+    /* ── Info ── */
     .info-box { background: #EEF7F2; border-left: 4px solid var(--green); border-radius: 0 10px 10px 0; padding: 14px 18px; font-size: .87rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.7; }
     .info-box strong { color: var(--green); }
-    .info-divider { border: none; border-top: 2px dashed var(--beige-dark); margin: 32px 0; }
+    .warn-box { background: #FEF3E2; border-left: 4px solid #C07000; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: .84rem; color: #7A5000; margin-top: 10px; display: none; }
+
+    /* ── Toast ── */
+    .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--brown-dark); color: #fff; padding: 14px 28px; border-radius: 50px; font-size: .95rem; font-weight: 700; box-shadow: 0 8px 28px rgba(0,0,0,.25); opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; white-space: nowrap; z-index: 999; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.error-toast { background: #c33; }
   </style>
 </head>
 <body>
@@ -119,7 +131,7 @@
   <div class="top-bar">
     <div class="top-bar-logo">🐻 똑심마인드 관리자</div>
     <div style="display:flex;gap:12px;align-items:center;">
-      <span id="savedAt" style="font-size:.82rem;opacity:.7;"></span>
+      <span id="savedAt" style="font-size:.8rem;opacity:.7;"></span>
       <button class="btn-logout" onclick="doLogout()">로그아웃</button>
     </div>
   </div>
@@ -127,7 +139,26 @@
   <div class="dashboard-inner">
 
     <div class="info-box">
-      <strong>💾 바로 저장</strong>을 누르면 이 브라우저에 즉시 반영됩니다. 배포 후 다른 사람들에게도 반영하려면 아래 <strong>코드 생성 → js/links.js 교체</strong>까지 진행하세요.
+      <strong>저장하면 모든 방문자에게 즉시 반영됩니다.</strong><br>
+      GitHub Personal Access Token이 있으면 <code>js/links.js</code>를 자동으로 업데이트합니다. GitHub Pages 배포는 저장 후 약 1분 소요됩니다.
+    </div>
+
+    <!-- GitHub Token -->
+    <div class="section-title">🔑 GitHub 토큰</div>
+    <div class="setting-card">
+      <div class="setting-label">Personal Access Token</div>
+      <div class="token-row">
+        <input type="password" id="ghToken" class="setting-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+        <button class="btn-token-save" onclick="saveToken()">저장</button>
+        <span class="token-saved-badge" id="tokenBadge">✅ 저장됨</span>
+      </div>
+      <div class="input-hint">
+        <a href="https://github.com/settings/tokens/new?scopes=repo&description=똑심마인드+관리자" target="_blank">👉 토큰 발급 바로가기</a>
+        &nbsp;— Expiration: No expiration / 권한: <strong>repo</strong> 체크 후 생성
+      </div>
+      <div class="warn-box" id="noTokenWarn">
+        ⚠️ 토큰 없이 저장하면 이 브라우저에서만 반영됩니다. 모든 방문자에게 반영하려면 토큰을 먼저 입력하세요.
+      </div>
     </div>
 
     <!-- 문의 링크 -->
@@ -142,49 +173,37 @@
     <div class="setting-card" style="padding:0;overflow:hidden;">
       <table class="test-table">
         <thead>
-          <tr>
-            <th>검사명</th>
-            <th>가격 (원)</th>
-            <th>판매 상태</th>
-          </tr>
+          <tr><th>검사명</th><th>가격 (원)</th><th>판매 상태</th></tr>
         </thead>
         <tbody id="testTableBody"></tbody>
       </table>
     </div>
 
-    <!-- 메인 액션 -->
-    <div class="actions-bar">
-      <button class="btn-save" onclick="saveToLocal()">💾 바로 저장</button>
-    </div>
-
-    <hr class="info-divider">
-
-    <!-- 코드 생성 (보조) -->
-    <div class="section-title" style="font-size:.95rem;color:var(--text-muted);border-color:transparent;margin-bottom:8px;">
-      🛠 고급 — links.js에 영구 반영하기
-    </div>
-    <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:16px;">새 기기에서도 반영되도록 배포 파일에 직접 저장하고 싶을 때만 사용하세요.</p>
-    <div class="actions-bar" style="margin-top:0;">
-      <button class="btn-generate" onclick="generateCode()">📋 코드 생성</button>
-      <button class="btn-copy" id="btnCopy" onclick="copyCode()">복사하기</button>
-      <span class="copy-ok" id="copyOk">✅ 복사됨!</span>
-    </div>
-
-    <div class="code-block" id="codeBlock">
-      <pre id="codeOutput"></pre>
-      <div class="code-hint">위 코드를 복사해 <strong>js/links.js</strong>의 <strong>CONTACT_URL</strong>과 <strong>TEST_PRICES</strong> 부분을 교체한 뒤 저장·배포하세요.</div>
+    <!-- 저장 -->
+    <div class="save-area">
+      <button class="btn-save" id="btnSave" onclick="saveAll()">
+        <span id="btnIcon">💾</span>
+        <span id="btnText">저장하기 (모든 방문자에게 반영)</span>
+      </button>
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="save-status" id="saveStatus"></div>
     </div>
 
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-const ADMIN_PW = 'gosi0912';
-const LS_LIVE  = 'ttok_live_prices';
-const LS_FORM  = 'ttokAdmin';
+const ADMIN_PW  = 'gosi0912';
+const GH_OWNER  = '5344-lang';
+const GH_REPO   = 'page';
+const GH_FILE   = 'js/links.js';
+const LS_TOKEN  = 'ttok_gh_token';
+const LS_LIVE   = 'ttok_live_prices';
+const LS_SAVED  = 'ttok_saved_at';
 
 const TESTS = [
   { key: 'tci',    label: 'TCI 기질 및 성격검사' },
@@ -209,7 +228,8 @@ const DEFAULT_PRICES = {
 function doLogin() {
   if (document.getElementById('pwInput').value === ADMIN_PW) {
     document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('dashboard').style.display  = 'block';
+    loadToken();
     renderTable();
   } else {
     document.getElementById('loginErr').style.display = 'block';
@@ -219,23 +239,35 @@ document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key 
 
 function doLogout() {
   document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('dashboard').style.display   = 'none';
   document.getElementById('pwInput').value = '';
 }
 
-/* ── 테이블 렌더 (live 저장값 우선) ── */
-function renderTable() {
-  const live   = JSON.parse(localStorage.getItem(LS_LIVE)  || 'null');
-  const form   = JSON.parse(localStorage.getItem(LS_FORM)  || '{}');
-  const source = live || form;
+/* ── Token ── */
+function loadToken() {
+  const t = localStorage.getItem(LS_TOKEN) || '';
+  document.getElementById('ghToken').value = t;
+  document.getElementById('tokenBadge').style.display = t ? 'inline' : 'none';
+  document.getElementById('noTokenWarn').style.display = t ? 'none' : 'block';
+}
 
-  /* savedAt 표시 */
-  const ts = localStorage.getItem('ttok_saved_at');
+function saveToken() {
+  const t = document.getElementById('ghToken').value.trim();
+  localStorage.setItem(LS_TOKEN, t);
+  document.getElementById('tokenBadge').style.display  = t ? 'inline' : 'none';
+  document.getElementById('noTokenWarn').style.display = t ? 'none'   : 'block';
+  showToast(t ? '✅ 토큰 저장됨' : '토큰이 삭제됐습니다.');
+}
+
+/* ── 테이블 ── */
+function renderTable() {
+  const live = JSON.parse(localStorage.getItem(LS_LIVE) || 'null') || {};
+  const ts   = localStorage.getItem(LS_SAVED);
   if (ts) document.getElementById('savedAt').textContent = '마지막 저장: ' + ts;
 
   document.getElementById('testTableBody').innerHTML = TESTS.map(t => {
-    const price  = source[t.key]?.price  ?? DEFAULT_PRICES[t.key];
-    const active = source[t.key]?.active ?? true;
+    const price  = live[t.key]?.price  ?? DEFAULT_PRICES[t.key];
+    const active = live[t.key]?.active ?? true;
     return `
       <tr>
         <td><div class="test-name">${t.label}</div><div class="test-key">${t.key}</div></td>
@@ -243,28 +275,25 @@ function renderTable() {
         <td>
           <div class="toggle-wrap">
             <label class="toggle">
-              <input type="checkbox" id="active_${t.key}" ${active ? 'checked' : ''}
-                onchange="updateToggleLabel('${t.key}')">
+              <input type="checkbox" id="active_${t.key}" ${active ? 'checked' : ''} onchange="updateLabel('${t.key}')">
               <span class="toggle-slider"></span>
             </label>
-            <span class="toggle-label ${active ? 'on' : 'off'}" id="lbl_${t.key}">
-              ${active ? '판매중' : '판매중지'}
-            </span>
+            <span class="toggle-label ${active ? 'on' : 'off'}" id="lbl_${t.key}">${active ? '판매중' : '판매중지'}</span>
           </div>
         </td>
       </tr>`;
   }).join('');
 }
 
-function updateToggleLabel(key) {
-  const checked = document.getElementById('active_' + key).checked;
-  const lbl = document.getElementById('lbl_' + key);
-  lbl.textContent = checked ? '판매중' : '판매중지';
-  lbl.className = 'toggle-label ' + (checked ? 'on' : 'off');
+function updateLabel(key) {
+  const on = document.getElementById('active_' + key).checked;
+  const el = document.getElementById('lbl_' + key);
+  el.textContent = on ? '판매중' : '판매중지';
+  el.className = 'toggle-label ' + (on ? 'on' : 'off');
 }
 
-/* ── 현재 폼에서 prices 객체 읽기 ── */
-function readFormPrices() {
+/* ── 폼 읽기 ── */
+function readForm() {
   const prices = {};
   TESTS.forEach(t => {
     prices[t.key] = {
@@ -272,53 +301,165 @@ function readFormPrices() {
       active: document.getElementById('active_' + t.key).checked,
     };
   });
-  return prices;
+  return {
+    prices,
+    contactUrl: document.getElementById('contactUrl').value.trim(),
+  };
 }
 
-/* ── 💾 바로 저장 ── */
-function saveToLocal() {
-  const prices = readFormPrices();
-  const ts = new Date().toLocaleString('ko-KR');
-  localStorage.setItem(LS_LIVE,  JSON.stringify(prices));
-  localStorage.setItem(LS_FORM,  JSON.stringify(prices));
-  localStorage.setItem('ttok_saved_at', ts);
-  document.getElementById('savedAt').textContent = '마지막 저장: ' + ts;
-  showToast('✅ 저장 완료! 사이트에 즉시 반영됩니다.');
-}
-
-/* ── 코드 생성 (보조) ── */
-function generateCode() {
-  const contactUrl = document.getElementById('contactUrl').value.trim();
-  const prices = readFormPrices();
+/* ── links.js 생성 ── */
+function buildLinksJs(contactUrl, prices) {
   const lines = Object.entries(prices).map(([k, v]) =>
     `  ${k.padEnd(7)}: { price: ${String(v.price).padStart(6)}, active: ${v.active} },`
   ).join('\n');
-  const code =
-`const CONTACT_URL = '${contactUrl}';
 
+  return `/* ============================================================
+   똑심마인드 — 스토어 링크 설정 파일
+   이 파일만 수정하면 사이트 전체 링크가 한 번에 바뀝니다.
+   ============================================================ */
+
+const CONTACT_URL = '${contactUrl}';
+
+const STORE_LINKS = {
+  store: CONTACT_URL,
+  tci:    CONTACT_URL,
+  kocean: CONTACT_URL,
+  golden: CONTACT_URL,
+  rs:     CONTACT_URL,
+  kiri:   CONTACT_URL,
+  pai:    CONTACT_URL,
+  cst:    CONTACT_URL,
+  sct:    CONTACT_URL,
+  mlst:   CONTACT_URL,
+  kcmii:  CONTACT_URL,
+  pkg_personality: CONTACT_URL,
+  pkg_mental:      CONTACT_URL,
+  pkg_relation:    CONTACT_URL,
+  pkg_teen:        CONTACT_URL,
+  pkg_couple:      CONTACT_URL,
+  pkg_exam:        CONTACT_URL,
+  pkg_parenting:   CONTACT_URL,
+};
+
+/* ============================================================
+   가격 설정 — active: true = 판매중 / false = 판매중지
+   ============================================================ */
 const TEST_PRICES = {
 ${lines}
-};`;
-  document.getElementById('codeOutput').textContent = code;
-  document.getElementById('codeBlock').style.display = 'block';
-  document.getElementById('btnCopy').style.display = 'inline-block';
-  document.getElementById('copyOk').style.display = 'none';
+};
+`;
 }
 
-/* ── 복사 ── */
-function copyCode() {
-  navigator.clipboard.writeText(document.getElementById('codeOutput').textContent).then(() => {
-    document.getElementById('copyOk').style.display = 'inline';
-    setTimeout(() => { document.getElementById('copyOk').style.display = 'none'; }, 2500);
+/* ── GitHub API로 파일 업데이트 ── */
+async function updateGitHub(token, content) {
+  const apiBase = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+
+  // 현재 파일 SHA 조회
+  const getRes = await fetch(apiBase, { headers });
+  if (!getRes.ok) {
+    const err = await getRes.json();
+    throw new Error(err.message || `GET 실패 (${getRes.status})`);
+  }
+  const fileData = await getRes.json();
+  const sha = fileData.sha;
+
+  // Base64 인코딩
+  const encoded = btoa(unescape(encodeURIComponent(content)));
+
+  // 파일 업데이트
+  const putRes = await fetch(apiBase, {
+    method: 'PUT',
+    headers: { ...headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: '관리자 페이지에서 가격 업데이트',
+      content: encoded,
+      sha,
+    }),
   });
+  if (!putRes.ok) {
+    const err = await putRes.json();
+    throw new Error(err.message || `PUT 실패 (${putRes.status})`);
+  }
+}
+
+/* ── 저장 메인 ── */
+async function saveAll() {
+  const { prices, contactUrl } = readForm();
+  const token = localStorage.getItem(LS_TOKEN) || '';
+  const btn   = document.getElementById('btnSave');
+  const status = document.getElementById('saveStatus');
+  const progress = document.getElementById('progressBar');
+  const fill   = document.getElementById('progressFill');
+
+  btn.disabled = true;
+  document.getElementById('btnIcon').textContent = '⏳';
+  document.getElementById('btnText').textContent = '저장 중...';
+  status.style.display = 'none';
+  progress.style.display = 'block';
+  fill.style.width = '10%';
+
+  // 1. localStorage 즉시 저장
+  localStorage.setItem(LS_LIVE, JSON.stringify(prices));
+  const ts = new Date().toLocaleString('ko-KR');
+  localStorage.setItem(LS_SAVED, ts);
+  document.getElementById('savedAt').textContent = '마지막 저장: ' + ts;
+  fill.style.width = '30%';
+
+  if (!token) {
+    // 토큰 없음 → 브라우저만 반영
+    fill.style.width = '100%';
+    setTimeout(() => {
+      progress.style.display = 'none';
+      fill.style.width = '0%';
+    }, 600);
+    resetBtn();
+    showToast('✅ 저장됨 (이 브라우저에서만 반영)');
+    return;
+  }
+
+  // 2. GitHub API 업데이트
+  try {
+    fill.style.width = '55%';
+    const newContent = buildLinksJs(contactUrl, prices);
+    await updateGitHub(token, newContent);
+    fill.style.width = '100%';
+    setTimeout(() => { progress.style.display = 'none'; fill.style.width = '0%'; }, 600);
+    resetBtn();
+    status.className = 'save-status success';
+    status.textContent = '✅ GitHub 업데이트 완료! 약 1분 후 모든 방문자에게 반영됩니다.';
+    status.style.display = 'block';
+    showToast('🚀 배포 완료! 1분 후 전체 반영');
+  } catch (err) {
+    fill.style.width = '100%';
+    fill.style.background = '#c33';
+    setTimeout(() => { progress.style.display = 'none'; fill.style.width = '0%'; fill.style.background = 'var(--yellow)'; }, 600);
+    resetBtn();
+    status.className = 'save-status error';
+    status.textContent = '❌ GitHub 오류: ' + err.message;
+    status.style.display = 'block';
+    showToast('❌ GitHub 업데이트 실패 — 토큰을 확인하세요', true);
+  }
+}
+
+function resetBtn() {
+  const btn = document.getElementById('btnSave');
+  btn.disabled = false;
+  document.getElementById('btnIcon').textContent = '💾';
+  document.getElementById('btnText').textContent = '저장하기 (모든 방문자에게 반영)';
 }
 
 /* ── Toast ── */
-function showToast(msg) {
+function showToast(msg, isError = false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error-toast' : '');
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  setTimeout(() => t.classList.remove('show'), 3500);
 }
 </script>
 </body>
