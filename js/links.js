@@ -24,6 +24,8 @@ const STORE_LINKS = {
   pkg_couple:      CONTACT_URL,
   pkg_exam:        CONTACT_URL,
   pkg_parenting:   CONTACT_URL,
+  pkg_career:      CONTACT_URL,
+  pkg_work:        CONTACT_URL,
 };
 
 /* ============================================================

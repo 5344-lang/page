@@ -25,390 +25,201 @@ revealEls.forEach(el => observer.observe(el));
 
 /* ─── Quiz Modal ─── */
 const QUIZ = {
-  Q3_OPTIONS: {
-    pattern: [
-      { value: 'emotion',  label: '😤 감정 조절이 어렵고 충동적으로 행동해요' },
-      { value: 'curious',  label: '🤔 내 성격이 왜 이런지 근본적으로 궁금해요' },
-      { value: 'strength', label: '⭐ 나만의 강점을 찾고 싶어요' }
-    ],
-    stress: [
-      { value: 'burnout',         label: '😮‍💨 번아웃·무기력이 심해요' },
-      { value: 'relation_stress', label: '😰 관계·환경 때문에 스트레스를 받아요' },
-      { value: 'anxiety',         label: '😟 불안·걱정이 많고 회복이 느려요' }
+  Q2_OPTIONS: {
+    self: [
+      { value: 'emotion',      label: '😤 감정 조절이 어렵고 힘들어요' },
+      { value: 'personality',  label: '🤔 내 성격·기질이 궁금해요' },
+      { value: 'stress',       label: '😮‍💨 번아웃·스트레스가 심해요' },
+      { value: 'strength',     label: '⭐ 나만의 강점을 찾고 싶어요' }
     ],
     relation: [
-      { value: 'pattern_rel', label: '🔍 나의 관계 패턴을 파악하고 싶어요' },
-      { value: 'conflict',    label: '💥 성격 차이로 갈등이 반복돼요' },
-      { value: 'fear',        label: '💔 친밀한 관계에서 상처받는 게 두려워요' }
+      { value: 'pattern',  label: '🔁 반복되는 관계 패턴이 있어요' },
+      { value: 'conflict', label: '💥 성격 차이로 갈등이 잦아요' },
+      { value: 'fear',     label: '💔 친밀한 관계가 두렵거나 힘들어요' },
+      { value: 'couple',   label: '💑 파트너·커플 관계가 어려워요' }
     ],
-    study: [
-      { value: 'motivation',   label: '😴 집중력·동기 부족이 문제예요' },
-      { value: 'method',       label: '📖 학습 방법·전략을 모르겠어요' },
-      { value: 'anxiety_exam', label: '😰 시험 불안·긴장이 너무 심해요' }
-    ],
-    career: [
-      { value: 'major',     label: '🏫 전공·학과 선택이 막막해요' },
-      { value: 'aptitude',  label: '💡 내 강점과 적성을 모르겠어요' },
-      { value: 'direction', label: '🧭 진로 방향이 전혀 감이 안 잡혀요' }
+    learn: [
+      { value: 'focus',   label: '😴 집중력·동기가 부족해요' },
+      { value: 'method',  label: '📖 내게 맞는 공부법을 모르겠어요' },
+      { value: 'anxiety', label: '😰 시험 불안·긴장이 심해요' },
+      { value: 'career',  label: '🧭 진로·전공 방향이 막막해요' }
     ],
     child: [
-      { value: 'behavior',      label: '❓ 아이가 왜 그런 행동을 하는지 모르겠어요' },
-      { value: 'communication', label: '💬 아이와의 소통·관계가 힘들어요' },
-      { value: 'school',        label: '📚 아이의 학습·학교생활이 걱정돼요' }
-    ],
-    self: [
-      { value: 'temperament',   label: '🧬 기질과 성격 전반을 알고 싶어요' },
-      { value: 'strength_self', label: '⭐ 나만의 강점과 긍정 자원을 찾고 싶어요' },
-      { value: 'inner',         label: '🌊 무의식·내면 깊은 곳을 탐색하고 싶어요' }
+      { value: 'behavior',      label: '❓ 아이 행동을 이해 못하겠어요' },
+      { value: 'comm',          label: '💬 아이와 소통이 잘 안 돼요' },
+      { value: 'school',        label: '📚 아이 학습·학교생활이 걱정돼요' },
+      { value: 'emotion_child', label: '💙 아이 정서·심리가 불안해요' }
     ]
   },
 
-  MAP: {
-    pattern: {
-      young: { _default: [
-        { emoji:'🧬', title:'JTCI 기질검사', desc:'아이의 반복 행동 뒤에는 타고난 기질이 있습니다. JTCI로 뿌리를 이해하세요.', href:'pages/tci.html' },
-        { emoji:'✨', title:'GOLDEN 성격유형검사', desc:'성격 유형으로 아이의 행동 방식을 입체적으로 이해합니다.', href:'pages/golden.html' }
-      ]},
-      teen: {
-        emotion: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'감정 조절의 어려움은 타고난 기질에서 시작됩니다.', href:'pages/tci.html' },
-          { emoji:'🔬', title:'PAI-A 성격평가', desc:'청소년 성격 전반과 감정·충동 조절을 정밀 측정합니다.', href:'pages/pai.html' }
-        ],
-        curious: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'타고난 기질과 성장한 성격을 7차원으로 분석합니다.', href:'pages/tci.html' },
-          { emoji:'🌊', title:'K-OCEAN 5요인 성격검사', desc:'현재 드러나는 행동 패턴을 5가지 차원으로 측정합니다.', href:'pages/kocean.html' }
-        ],
-        strength: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질을 알아야 강점을 올바르게 활용할 수 있습니다.', href:'pages/tci.html' },
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'나만의 대표 강점 24가지 중 상위 강점을 발견합니다.', href:'pages/cst.html' }
-        ]
-      },
-      adult: {
-        emotion: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'감정 조절 어려움의 기질적 원인을 파악합니다.', href:'pages/tci.html' },
-          { emoji:'🔬', title:'PAI 성격평가 질문지', desc:'성인 성격 전반과 임상적 특성을 정밀 측정합니다.', href:'pages/pai.html' }
-        ],
-        curious: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'타고난 기질과 성장한 성격을 7차원으로 분석합니다.', href:'pages/tci.html' },
-          { emoji:'🌊', title:'K-OCEAN 5요인 성격검사', desc:'현재 드러나는 행동 패턴을 5가지 차원으로 측정합니다.', href:'pages/kocean.html' }
-        ],
-        strength: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질을 알아야 강점을 올바르게 활용할 수 있습니다.', href:'pages/tci.html' },
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'나만의 대표 강점을 발견하고 삶에서 더 많이 활용하세요.', href:'pages/cst.html' }
-        ]
-      }
+  TESTS: {
+    tci: {
+      young:   { emoji:'🧬', title:'JTCI 유아·아동 기질검사',  desc:'아이의 타고난 기질을 7차원으로 분석해 행동과 감정의 뿌리를 이해합니다.',  href:'pages/tci.html' },
+      teen:    { emoji:'🧬', title:'JTCI 12-18 기질검사',      desc:'청소년기 기질과 성격을 7차원으로 분석해 반복 패턴의 원인을 파악합니다.', href:'pages/tci.html' },
+      college: { emoji:'🧬', title:'TCI 기질 및 성격검사',     desc:'타고난 기질과 성장한 성격을 7차원으로 입체 분석합니다.',                  href:'pages/tci.html' },
+      adult:   { emoji:'🧬', title:'TCI 기질 및 성격검사',     desc:'타고난 기질과 성장한 성격을 7차원으로 입체 분석합니다.',                  href:'pages/tci.html' }
     },
-    stress: {
-      young: { _default: [
-        { emoji:'🧬', title:'JTCI 기질검사', desc:'스트레스에 취약한 기질적 특성을 파악합니다.', href:'pages/tci.html' },
-        { emoji:'💚', title:'RS 회복탄력성검사', desc:'심리적 회복 능력을 점검하고 강화 방법을 찾습니다.', href:'pages/rs.html' }
-      ]},
-      teen: {
-        burnout: [
-          { emoji:'💚', title:'RS 회복탄력성검사', desc:'번아웃 상태의 회복 능력을 객관적으로 파악합니다.', href:'pages/rs.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'번아웃에 취약한 기질적 원인을 이해합니다.', href:'pages/tci.html' }
-        ],
-        relation_stress: [
-          { emoji:'💚', title:'RS 회복탄력성검사', desc:'관계 스트레스를 이겨내는 회복 능력을 점검합니다.', href:'pages/rs.html' },
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'관계 스트레스의 원인이 되는 대인관계 패턴을 파악합니다.', href:'pages/kiri.html' }
-        ],
-        anxiety: [
-          { emoji:'💚', title:'RS 회복탄력성검사', desc:'불안 속에서 회복하는 심리적 탄력성을 측정합니다.', href:'pages/rs.html' },
-          { emoji:'🔬', title:'PAI-A 성격평가', desc:'불안·긴장의 성격적 원인을 정밀하게 분석합니다.', href:'pages/pai.html' }
-        ]
-      },
-      adult: {
-        burnout: [
-          { emoji:'💚', title:'RS 회복탄력성검사', desc:'번아웃 상태의 회복 능력을 객관적으로 파악합니다.', href:'pages/rs.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'번아웃에 취약한 기질적 원인을 이해합니다.', href:'pages/tci.html' }
-        ],
-        relation_stress: [
-          { emoji:'💚', title:'RS 회복탄력성검사', desc:'관계 스트레스를 이겨내는 회복 능력을 점검합니다.', href:'pages/rs.html' },
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'관계 스트레스의 원인이 되는 대인관계 패턴을 파악합니다.', href:'pages/kiri.html' }
-        ],
-        anxiety: [
-          { emoji:'💚', title:'RS 회복탄력성검사', desc:'불안 속에서 회복하는 심리적 탄력성을 측정합니다.', href:'pages/rs.html' },
-          { emoji:'🔬', title:'PAI 성격평가 질문지', desc:'불안·긴장의 성격적 원인을 정밀하게 분석합니다.', href:'pages/pai.html' }
-        ]
-      }
+    kocean: { _: { emoji:'🌊', title:'K-OCEAN 5요인 성격검사',   desc:'현재 드러나는 성격을 개방성·성실성·외향성·친화성·신경증 5차원으로 측정합니다.', href:'pages/kocean.html' } },
+    golden: { _: { emoji:'✨', title:'GOLDEN 골든성격유형검사',   desc:'4가지 성격 유형 선호로 나의 심리 에너지와 의사결정 방식을 파악합니다.',      href:'pages/golden.html' } },
+    rs:     { _: { emoji:'💚', title:'RS 회복탄력성검사',         desc:'역경을 이겨내는 심리적 회복 능력을 측정하고 강화 방법을 찾습니다.',          href:'pages/rs.html' } },
+    kiri:   { _: { emoji:'🤝', title:'KiRi 통합적 대인관계검사',  desc:'나의 대인관계 패턴과 핵심 욕구를 통합적으로 분석합니다.',                   href:'pages/kiri.html' } },
+    pai: {
+      young:   { emoji:'🔬', title:'PAI-A 청소년 성격평가', desc:'청소년 성격 전반과 임상적 특성을 정밀 측정합니다.', href:'pages/pai.html' },
+      teen:    { emoji:'🔬', title:'PAI-A 청소년 성격평가', desc:'청소년 성격 전반과 임상적 특성을 정밀 측정합니다.', href:'pages/pai.html' },
+      college: { emoji:'🔬', title:'PAI 성격평가 질문지',   desc:'성인 성격 전반과 임상적 특성을 정밀 측정합니다.',   href:'pages/pai.html' },
+      adult:   { emoji:'🔬', title:'PAI 성격평가 질문지',   desc:'성인 성격 전반과 임상적 특성을 정밀 측정합니다.',   href:'pages/pai.html' }
     },
-    relation: {
-      young: { _default: [
-        { emoji:'🧬', title:'JTCI 기질검사', desc:'아이의 기질을 이해하면 관계 갈등의 원인이 보입니다.', href:'pages/tci.html' },
-        { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'아이의 관계 패턴과 대인 욕구를 파악합니다.', href:'pages/kiri.html' }
-      ]},
-      teen: {
-        pattern_rel: [
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'나의 대인관계 패턴과 핵심 욕구를 통합적으로 분석합니다.', href:'pages/kiri.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'관계 패턴의 기질적 뿌리를 이해합니다.', href:'pages/tci.html' }
-        ],
-        conflict: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질 차이가 갈등의 핵심 원인일 수 있습니다.', href:'pages/tci.html' },
-          { emoji:'✨', title:'GOLDEN 성격유형검사', desc:'성격 유형의 차이로 갈등 구조를 이해합니다.', href:'pages/golden.html' }
-        ],
-        fear: [
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'친밀감 회피 패턴과 대인 욕구의 핵심을 분석합니다.', href:'pages/kiri.html' },
-          { emoji:'🔬', title:'PAI-A 성격평가', desc:'관계 두려움의 성격적 원인을 정밀하게 파악합니다.', href:'pages/pai.html' }
-        ]
-      },
-      adult: {
-        pattern_rel: [
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'나의 대인관계 패턴과 핵심 욕구를 통합적으로 분석합니다.', href:'pages/kiri.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'관계 패턴의 기질적 뿌리를 이해합니다.', href:'pages/tci.html' }
-        ],
-        conflict: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질 차이가 갈등의 핵심 원인일 수 있습니다.', href:'pages/tci.html' },
-          { emoji:'🌊', title:'K-OCEAN 5요인 성격검사', desc:'성격 차원의 차이로 갈등 구조를 입체적으로 이해합니다.', href:'pages/kocean.html' }
-        ],
-        fear: [
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'친밀감 회피 패턴과 대인 욕구의 핵심을 분석합니다.', href:'pages/kiri.html' },
-          { emoji:'🔬', title:'PAI 성격평가 질문지', desc:'관계 두려움의 성격적 원인을 정밀하게 파악합니다.', href:'pages/pai.html' }
-        ]
-      }
-    },
-    study: {
-      young: { _default: [
-        { emoji:'📚', title:'MLST-II 학습전략검사', desc:'학습 습관과 동기 수준을 진단합니다.', href:'pages/mlst.html' },
-        { emoji:'🧬', title:'JTCI 기질검사', desc:'기질별 최적 학습 방식을 파악합니다.', href:'pages/tci.html' }
-      ]},
-      teen: {
-        motivation: [
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'학습 동기·집중력 문제를 4대 전략으로 정밀 진단합니다.', href:'pages/mlst.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'동기 부족의 기질적 원인을 파악합니다.', href:'pages/tci.html' }
-        ],
-        method: [
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'나에게 맞는 학습 전략을 과학적으로 진단합니다.', href:'pages/mlst.html' },
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'강점 기반으로 나만의 공부법을 찾습니다.', href:'pages/cst.html' }
-        ],
-        anxiety_exam: [
-          { emoji:'💚', title:'RS 회복탄력성검사', desc:'시험 스트레스에 버티는 심리적 회복력을 측정합니다.', href:'pages/rs.html' },
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'불안이 학습 전략에 미치는 영향을 함께 점검합니다.', href:'pages/mlst.html' }
-        ]
-      },
-      adult: {
-        motivation: [
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'자기주도 학습 동기와 집중력을 진단합니다.', href:'pages/mlst.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'동기 부족의 기질적 원인을 파악합니다.', href:'pages/tci.html' }
-        ],
-        method: [
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'나에게 맞는 학습 전략을 과학적으로 진단합니다.', href:'pages/mlst.html' },
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'강점 기반으로 나만의 공부법을 찾습니다.', href:'pages/cst.html' }
-        ],
-        anxiety_exam: [
-          { emoji:'💚', title:'RS 회복탄력성검사', desc:'시험 스트레스에 버티는 심리적 회복력을 측정합니다.', href:'pages/rs.html' },
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'불안이 학습 전략에 미치는 영향을 함께 점검합니다.', href:'pages/mlst.html' }
-        ]
-      }
-    },
-    career: {
-      young: { _default: [
-        { emoji:'⭐', title:'CST 성격강점검사', desc:'아이만의 고유한 강점을 발견해 진로 씨앗을 심어줍니다.', href:'pages/cst.html' },
-        { emoji:'🧬', title:'JTCI 기질검사', desc:'기질에 맞는 진로 방향의 뿌리를 파악합니다.', href:'pages/tci.html' }
-      ]},
-      teen: {
-        major: [
-          { emoji:'🎓', title:'KCMII-2 대학전공선택검사', desc:'Holland 이론으로 나에게 맞는 전공을 과학적으로 탐색합니다.', href:'pages/kcmii.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질에 맞는 전공 방향을 함께 이해합니다.', href:'pages/tci.html' }
-        ],
-        aptitude: [
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'나만의 고유한 강점과 적성을 발견합니다.', href:'pages/cst.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질로 자연스럽게 드러나는 적성을 파악합니다.', href:'pages/tci.html' }
-        ],
-        direction: [
-          { emoji:'🎓', title:'KCMII-2 대학전공선택검사', desc:'전공·직업 방향을 Holland 적성이론으로 탐색합니다.', href:'pages/kcmii.html' },
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'강점 기반으로 진로 방향의 힌트를 찾습니다.', href:'pages/cst.html' }
-        ]
-      },
-      adult: {
-        major: [
-          { emoji:'🎓', title:'KCMII-2 대학전공선택검사', desc:'전과·재수·진로 전환 시 적합한 전공을 탐색합니다.', href:'pages/kcmii.html' },
-          { emoji:'🌊', title:'K-OCEAN 5요인 성격검사', desc:'현재 성격으로 맞는 직종·환경을 파악합니다.', href:'pages/kocean.html' }
-        ],
-        aptitude: [
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'나만의 고유한 강점과 적성을 발견합니다.', href:'pages/cst.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질로 자연스럽게 드러나는 적성을 파악합니다.', href:'pages/tci.html' }
-        ],
-        direction: [
-          { emoji:'🎓', title:'KCMII-2 대학전공선택검사', desc:'직업·진로 방향을 Holland 적성이론으로 탐색합니다.', href:'pages/kcmii.html' },
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'강점 기반으로 진로 방향의 힌트를 찾습니다.', href:'pages/cst.html' }
-        ]
-      }
-    },
-    child: {
-      young: {
-        behavior: [
-          { emoji:'🧬', title:'JTCI 유아·아동 기질검사', desc:'아이의 반복 행동 뒤에는 타고난 기질이 있습니다.', href:'pages/tci.html' },
-          { emoji:'🔬', title:'PAI-A 성격평가', desc:'아이의 성격 전반과 행동 특성을 정밀 측정합니다.', href:'pages/pai.html' }
-        ],
-        communication: [
-          { emoji:'🧬', title:'JTCI 유아·아동 기질검사', desc:'아이 기질을 이해하면 소통 방식이 달라집니다.', href:'pages/tci.html' },
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'아이의 관계 패턴과 대인 욕구를 파악합니다.', href:'pages/kiri.html' }
-        ],
-        school: [
-          { emoji:'🧬', title:'JTCI 유아·아동 기질검사', desc:'기질별 학습 성향과 교우관계 방식을 이해합니다.', href:'pages/tci.html' },
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'학습 습관과 동기 수준을 진단합니다.', href:'pages/mlst.html' }
-        ]
-      },
-      teen: {
-        behavior: [
-          { emoji:'🧬', title:'JTCI 12-18 기질검사', desc:'청소년 자녀의 반복 행동의 기질적 원인을 이해합니다.', href:'pages/tci.html' },
-          { emoji:'🔬', title:'PAI-A 성격평가', desc:'청소년 성격 전반과 행동 특성을 정밀 측정합니다.', href:'pages/pai.html' }
-        ],
-        communication: [
-          { emoji:'🧬', title:'JTCI 12-18 기질검사', desc:'청소년 자녀의 기질을 이해하면 대화가 달라집니다.', href:'pages/tci.html' },
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'자녀의 관계 패턴과 대인 욕구를 파악합니다.', href:'pages/kiri.html' }
-        ],
-        school: [
-          { emoji:'🧬', title:'JTCI 12-18 기질검사', desc:'기질별 학습 성향을 파악합니다.', href:'pages/tci.html' },
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'학습 전략과 공부 습관을 진단합니다.', href:'pages/mlst.html' }
-        ]
-      },
-      adult: {
-        behavior: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'성인 자녀의 기질을 이해해 관계 역동을 파악합니다.', href:'pages/tci.html' },
-          { emoji:'🔬', title:'PAI 성격평가 질문지', desc:'성인 자녀의 성격 전반을 임상적으로 이해합니다.', href:'pages/pai.html' }
-        ],
-        communication: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'성인 자녀의 기질을 이해하면 소통이 달라집니다.', href:'pages/tci.html' },
-          { emoji:'🤝', title:'KiRi 통합적 대인관계검사', desc:'성인 자녀의 관계 패턴과 대인 욕구를 파악합니다.', href:'pages/kiri.html' }
-        ],
-        school: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'성인 자녀의 기질과 학습 성향을 파악합니다.', href:'pages/tci.html' },
-          { emoji:'📚', title:'MLST-II 학습전략검사', desc:'자기주도 학습 전략을 진단합니다.', href:'pages/mlst.html' }
-        ]
-      }
-    },
-    self: {
-      young: { _default: [
-        { emoji:'🧬', title:'JTCI 기질검사', desc:'아이의 타고난 성품을 가장 정확하게 보여주는 검사입니다.', href:'pages/tci.html' },
-        { emoji:'✨', title:'GOLDEN 성격유형검사', desc:'성격 유형으로 아이를 입체적으로 이해합니다.', href:'pages/golden.html' }
-      ]},
-      teen: {
-        temperament: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'타고난 기질과 성장한 성격을 7차원으로 분석합니다.', href:'pages/tci.html' },
-          { emoji:'🌊', title:'K-OCEAN 5요인 성격검사', desc:'현재 드러나는 성격을 5가지 차원으로 측정합니다.', href:'pages/kocean.html' }
-        ],
-        strength_self: [
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'나만의 대표 강점을 발견하고 활용하는 방법을 찾습니다.', href:'pages/cst.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질에서 드러나는 자연스러운 강점을 이해합니다.', href:'pages/tci.html' }
-        ],
-        inner: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'내면의 기질적 특성을 깊이 탐색합니다.', href:'pages/tci.html' },
-          { emoji:'💬', title:'SCT 문장완성검사', desc:'무의식의 욕구와 감정을 자유롭게 탐색합니다.', href:'pages/sct.html' }
-        ]
-      },
-      adult: {
-        temperament: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'타고난 기질과 성장한 성격을 7차원으로 분석합니다.', href:'pages/tci.html' },
-          { emoji:'🌊', title:'K-OCEAN 5요인 성격검사', desc:'현재 드러나는 성격을 5가지 차원으로 측정합니다.', href:'pages/kocean.html' }
-        ],
-        strength_self: [
-          { emoji:'⭐', title:'CST 성격강점검사', desc:'나만의 대표 강점을 발견하고 활용하는 방법을 찾습니다.', href:'pages/cst.html' },
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'기질에서 드러나는 자연스러운 강점을 이해합니다.', href:'pages/tci.html' }
-        ],
-        inner: [
-          { emoji:'🧬', title:'TCI 기질 및 성격검사', desc:'내면의 기질적 특성을 깊이 탐색합니다.', href:'pages/tci.html' },
-          { emoji:'💬', title:'SCT 문장완성검사', desc:'무의식의 욕구와 감정을 자유롭게 탐색합니다.', href:'pages/sct.html' }
-        ]
-      }
-    }
+    cst:   { _: { emoji:'⭐', title:'CST 성격강점검사',      desc:'VIA 강점 모델로 나만의 고유한 강점을 발견하고 활용 방법을 찾습니다.',      href:'pages/cst.html' } },
+    sct:   { _: { emoji:'💬', title:'SCT 문장완성검사',       desc:'미완성 문장을 완성하며 무의식적 욕구와 감정을 탐색합니다.',                href:'pages/sct.html' } },
+    mlst:  { _: { emoji:'📚', title:'MLST-II 학습전략검사',  desc:'동기·인지·행동·정서 4대 학습 전략을 과학적으로 진단합니다.',             href:'pages/mlst.html' } },
+    kcmii: { _: { emoji:'🎓', title:'KCMII-2 전공선택검사', desc:'Holland 적성이론으로 나에게 맞는 전공·직업 방향을 탐색합니다.',          href:'pages/kcmii.html' } }
   },
 
-  situation: null,
-  age: null,
-  detail: null,
+  PRIMARY: {
+    'self+emotion':'tci',   'self+personality':'tci',  'self+stress':'rs',    'self+strength':'cst',
+    'relation+pattern':'kiri','relation+conflict':'tci','relation+fear':'kiri','relation+couple':'tci',
+    'learn+focus':'mlst',   'learn+method':'mlst',     'learn+anxiety':'rs',  'learn+career':'kcmii',
+    'child+behavior':'tci', 'child+comm':'tci',        'child+school':'tci',  'child+emotion_child':'tci'
+  },
+
+  SECONDARY: {
+    tci:   { deep:'kocean', action:'cst',    precise:'pai',    strength:'cst'    },
+    rs:    { deep:'tci',    action:'mlst',   precise:'pai',    strength:'cst'    },
+    cst:   { deep:'tci',    action:'golden', precise:'tci',    strength:'golden' },
+    kiri:  { deep:'tci',    action:'golden', precise:'pai',    strength:'cst'    },
+    mlst:  { deep:'tci',    action:'cst',    precise:'kocean', strength:'cst'    },
+    kcmii: { deep:'tci',    action:'cst',    precise:'kocean', strength:'cst'    }
+  },
+
+  SEC_OVERRIDE: {
+    'self+emotion':       { deep:'pai',  action:'rs',     precise:'pai',    strength:'cst'    },
+    'self+stress':        { deep:'tci',  action:'tci',    precise:'pai',    strength:'cst'    },
+    'relation+fear':      { deep:'pai',  action:'tci',    precise:'pai',    strength:'rs'     },
+    'relation+couple':    { deep:'kiri', action:'golden', precise:'kiri',   strength:'cst'    },
+    'learn+anxiety':      { deep:'tci',  action:'mlst',   precise:'pai',    strength:'cst'    },
+    'learn+career':       { deep:'tci',  action:'cst',    precise:'kocean', strength:'cst'    },
+    'child+behavior':     { deep:'pai',  action:'kiri',   precise:'pai',    strength:'cst'    },
+    'child+comm':         { deep:'kiri', action:'kiri',   precise:'pai',    strength:'golden' },
+    'child+school':       { deep:'mlst', action:'mlst',   precise:'pai',    strength:'cst'    },
+    'child+emotion_child':{ deep:'pai',  action:'rs',     precise:'pai',    strength:'cst'    }
+  },
+
+  PACKAGE: {
+    'self+emotion':'pkg_mental',      'self+personality':'pkg_personality',
+    'self+stress':'pkg_mental',       'self+strength':'pkg_personality',
+    'relation+pattern':'pkg_relation','relation+conflict':'pkg_relation',
+    'relation+fear':'pkg_relation',   'relation+couple':'pkg_couple',
+    'learn+focus':'pkg_exam',         'learn+method':'pkg_exam',
+    'learn+anxiety':'pkg_exam',       'learn+career':'pkg_career',
+    'child+behavior':'pkg_parenting', 'child+comm':'pkg_parenting',
+    'child+school':'pkg_parenting',   'child+emotion_child':'pkg_parenting'
+  },
+
+  q1:null, q2:null, q3:null, q4:null, _lastPkgKey:null,
+
+  getTest(key, age) {
+    const t = this.TESTS[key]; if (!t) return null;
+    return t[age] || t._ || null;
+  },
+
+  lookup() {
+    const path = `${this.q1}+${this.q2}`;
+    const pKey = this.PRIMARY[path]; if (!pKey) return null;
+    const ov   = this.SEC_OVERRIDE[path] || {};
+    const sKey = ov[this.q4] || (this.SECONDARY[pKey] || {})[this.q4];
+    let pkgKey = this.PACKAGE[path];
+    if (path === 'learn+career' && (this.q3 === 'college' || this.q3 === 'adult')) pkgKey = 'pkg_work';
+    return { t1: this.getTest(pKey, this.q3), t2: this.getTest(sKey, this.q3), pkgKey };
+  },
 
   init() {
-    document.querySelectorAll('[data-quiz-open]').forEach(btn =>
-      btn.addEventListener('click', () => this.open())
-    );
-    const closeBtn = document.getElementById('quizClose');
-    const overlay  = document.getElementById('quizOverlay');
-    if (closeBtn) closeBtn.addEventListener('click', () => this.close());
-    if (overlay)  overlay.addEventListener('click', e => { if (e.target === overlay) this.close(); });
+    document.querySelectorAll('[data-quiz-open]').forEach(b => b.addEventListener('click', () => this.open()));
+    const ov = document.getElementById('quizOverlay');
+    document.getElementById('quizClose')?.addEventListener('click', () => this.close());
+    ov?.addEventListener('click', e => { if (e.target === ov) this.close(); });
 
     document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        this.situation = btn.dataset.value;
-        setTimeout(() => this.goStep(1), 300);
+        btn.classList.add('selected'); this.q1 = btn.dataset.value;
+        setTimeout(() => { this.renderQ2(); this.goStep(1); }, 280);
       });
     });
-
-    document.querySelectorAll('.quiz-step[data-step="1"] .quiz-option').forEach(btn => {
+    document.querySelectorAll('.quiz-step[data-step="2"] .quiz-option').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.quiz-step[data-step="1"] .quiz-option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        this.age = btn.dataset.value;
-        setTimeout(() => { this.renderQ3(); this.goStep(2); }, 300);
+        document.querySelectorAll('.quiz-step[data-step="2"] .quiz-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected'); this.q3 = btn.dataset.value;
+        setTimeout(() => this.goStep(3), 280);
       });
     });
-
+    document.querySelectorAll('.quiz-step[data-step="3"] .quiz-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.quiz-step[data-step="3"] .quiz-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected'); this.q4 = btn.dataset.value;
+        setTimeout(() => this.showResult(), 280);
+      });
+    });
     document.getElementById('quizRetry')?.addEventListener('click', () => this.reset());
     document.getElementById('result1Link')?.addEventListener('click', () => this.close());
     document.getElementById('result2Link')?.addEventListener('click', () => this.close());
+    document.getElementById('resultPkgBtn')?.addEventListener('click', () => {
+      this.close();
+      if (this._lastPkgKey) setTimeout(() => openPkgModal(this._lastPkgKey), 120);
+    });
   },
 
   open()  { this.reset(); document.getElementById('quizOverlay').classList.add('open'); },
   close() { document.getElementById('quizOverlay').classList.remove('open'); },
 
   reset() {
-    this.situation = null; this.age = null; this.detail = null;
-    document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option, .quiz-step[data-step="1"] .quiz-option').forEach(b => b.classList.remove('selected'));
+    this.q1 = this.q2 = this.q3 = this.q4 = this._lastPkgKey = null;
+    document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option, .quiz-step[data-step="2"] .quiz-option, .quiz-step[data-step="3"] .quiz-option').forEach(b => b.classList.remove('selected'));
+    const q2c = document.getElementById('q2Options'); if (q2c) q2c.innerHTML = '';
     document.getElementById('quizResult').classList.remove('show');
     this.goStep(0);
   },
 
   goStep(idx) {
-    document.querySelectorAll('.quiz-step').forEach((s, i) =>
-      s.classList.toggle('active', i === idx)
-    );
-    document.querySelectorAll('.quiz-progress span').forEach((b, i) =>
-      b.classList.toggle('done', i < idx)
-    );
+    document.querySelectorAll('.quiz-step').forEach((s,i) => s.classList.toggle('active', i === idx));
+    document.querySelectorAll('.quiz-progress span').forEach((b,i) => b.classList.toggle('done', i < idx));
   },
 
-  renderQ3() {
-    const opts = this.Q3_OPTIONS[this.situation] || [];
-    const container = document.getElementById('q3Options');
-    if (!container) return;
-    container.innerHTML = opts.map(o =>
-      `<button class="quiz-option" data-value="${o.value}">${o.label}</button>`
-    ).join('');
-    container.querySelectorAll('.quiz-option').forEach(btn => {
+  renderQ2() {
+    const opts = this.Q2_OPTIONS[this.q1] || [];
+    const c = document.getElementById('q2Options'); if (!c) return;
+    c.innerHTML = opts.map(o => `<button class="quiz-option" data-value="${o.value}">${o.label}</button>`).join('');
+    c.querySelectorAll('.quiz-option').forEach(btn => {
       btn.addEventListener('click', () => {
-        container.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        this.detail = btn.dataset.value;
-        setTimeout(() => this.showResult(), 300);
+        c.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected'); this.q2 = btn.dataset.value;
+        setTimeout(() => this.goStep(2), 280);
       });
     });
   },
 
-  lookup() {
-    const block = this.MAP[this.situation]?.[this.age];
-    if (!block) return null;
-    return block[this.detail] || block._default || null;
-  },
-
   showResult() {
     const r = this.lookup();
-    if (!r || r.length < 2) return;
-    document.getElementById('result1Emoji').textContent = r[0].emoji;
-    document.getElementById('result1Title').textContent = r[0].title;
-    document.getElementById('result1Desc').textContent  = r[0].desc;
-    const link1 = document.getElementById('result1Link');
-    if (link1) link1.href = r[0].href;
-    document.getElementById('result2Emoji').textContent = r[1].emoji;
-    document.getElementById('result2Title').textContent = r[1].title;
-    document.getElementById('result2Desc').textContent  = r[1].desc;
-    const link2 = document.getElementById('result2Link');
-    if (link2) link2.href = r[1].href;
+    if (!r || !r.t1 || !r.t2) return;
+    this._lastPkgKey = r.pkgKey;
+    document.getElementById('result1Emoji').textContent = r.t1.emoji;
+    document.getElementById('result1Title').textContent = r.t1.title;
+    document.getElementById('result1Desc').textContent  = r.t1.desc;
+    document.getElementById('result1Link').href = r.t1.href;
+    document.getElementById('result2Emoji').textContent = r.t2.emoji;
+    document.getElementById('result2Title').textContent = r.t2.title;
+    document.getElementById('result2Desc').textContent  = r.t2.desc;
+    document.getElementById('result2Link').href = r.t2.href;
+    const pkg = PKG_INFO[r.pkgKey];
+    if (pkg) {
+      document.getElementById('resultPkgEmoji').textContent = pkg.icon;
+      document.getElementById('resultPkgTitle').textContent = pkg.title;
+      document.getElementById('resultPkgDesc').textContent  = (pkg.why || '').slice(0, 55) + '…';
+    }
     document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
     document.getElementById('quizResult').classList.add('show');
     document.querySelectorAll('.quiz-progress span').forEach(b => b.classList.add('done'));
   }
+
 };
 
 /* ─── Package Price Calculator ─── */
@@ -494,6 +305,28 @@ const PKG_INFO = {
       { icon: '🐣', name: 'JTCI 유아·아동 기질검사', desc: '아이의 타고난 기질을 이해해 맞춤 양육의 출발점을 잡습니다.' },
       { icon: '🔬', name: 'PAI-A 성격평가', desc: '아이의 성격 전반과 심리적 특성을 정밀하게 측정합니다.' },
       { icon: '🏠', name: 'PAT-2 부모양육태도검사', desc: '부모의 양육 방식을 점검하고 가족 역동을 함께 이해합니다.' }
+    ]
+  },
+  pkg_career: {
+    icon: '🧭', title: '진로 탐색 패키지',
+    tags: ['KCMII-2', 'CST', 'TCI'],
+    testKeys: ['kcmii', 'cst', 'tci'],
+    why: 'KCMII-2로 Holland 이론에 기반한 적성 방향을, CST로 나만의 고유한 강점을, TCI로 기질에 맞는 일의 스타일을 종합적으로 탐색합니다. 세 검사가 만나면 "내가 잘할 수 있는 일"과 "내가 즐길 수 있는 일"이 명확해집니다.',
+    steps: [
+      { icon: '🎓', name: 'KCMII-2 전공선택검사', desc: 'Holland 적성이론으로 나에게 맞는 전공·직업 방향을 탐색합니다.' },
+      { icon: '⭐', name: 'CST 성격강점검사', desc: '나만의 고유한 강점 24가지 중 상위 강점을 발견하고 진로에 연결합니다.' },
+      { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '타고난 기질에 맞는 직업 환경과 일의 스타일을 이해합니다.' }
+    ]
+  },
+  pkg_work: {
+    icon: '💼', title: '직장인 성장 패키지',
+    tags: ['TCI', 'K-OCEAN', 'KiRi'],
+    testKeys: ['tci', 'kocean', 'kiri'],
+    why: 'TCI로 직장 내 반복 패턴의 기질적 원인을, K-OCEAN으로 현재 나의 행동 방식을, KiRi로 대인관계 패턴과 갈등 구조를 이해합니다. 조직 안에서 나를 가장 입체적으로 파악할 수 있는 조합입니다.',
+    steps: [
+      { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '직장에서 반복되는 행동·감정 패턴의 기질적 뿌리를 이해합니다.' },
+      { icon: '🌊', name: 'K-OCEAN 5요인 성격검사', desc: '현재 나의 업무 방식—성실성·외향성·친화성 등을 객관적으로 측정합니다.' },
+      { icon: '🤝', name: 'KiRi 통합적 대인관계검사', desc: '직장 내 관계 패턴과 갈등의 핵심 욕구를 통합적으로 분석합니다.' }
     ]
   }
 };
