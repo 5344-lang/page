@@ -115,10 +115,11 @@ const QUIZ = {
     'child+school':'pkg_parenting',   'child+emotion_child':'pkg_parenting'
   },
 
-  q1:null, q2:null, q3:null, q4:null, _lastPkgKey:null,
+  q1:null, q2:null, q3:null, _lastPkgKey:null,
 
-  getTest(key, age) {
+  getTest(key) {
     const t = this.TESTS[key]; if (!t) return null;
+    const age = this.q1 === 'child' ? 'young' : 'adult';
     return t[age] || t._ || null;
   },
 
@@ -126,10 +127,9 @@ const QUIZ = {
     const path = `${this.q1}+${this.q2}`;
     const pKey = this.PRIMARY[path]; if (!pKey) return null;
     const ov   = this.SEC_OVERRIDE[path] || {};
-    const sKey = ov[this.q4] || (this.SECONDARY[pKey] || {})[this.q4];
-    let pkgKey = this.PACKAGE[path];
-    if (path === 'learn+career' && (this.q3 === 'college' || this.q3 === 'adult')) pkgKey = 'pkg_work';
-    return { t1: this.getTest(pKey, this.q3), t2: this.getTest(sKey, this.q3), pkgKey };
+    const sKey = ov[this.q3] || (this.SECONDARY[pKey] || {})[this.q3];
+    const pkgKey = this.PACKAGE[path];
+    return { t1: this.getTest(pKey), t2: this.getTest(sKey), pkgKey };
   },
 
   init() {
@@ -149,13 +149,6 @@ const QUIZ = {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.quiz-step[data-step="2"] .quiz-option').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected'); this.q3 = btn.dataset.value;
-        setTimeout(() => this.goStep(3), 280);
-      });
-    });
-    document.querySelectorAll('.quiz-step[data-step="3"] .quiz-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.quiz-step[data-step="3"] .quiz-option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected'); this.q4 = btn.dataset.value;
         setTimeout(() => this.showResult(), 280);
       });
     });
@@ -172,8 +165,8 @@ const QUIZ = {
   close() { document.getElementById('quizOverlay').classList.remove('open'); },
 
   reset() {
-    this.q1 = this.q2 = this.q3 = this.q4 = this._lastPkgKey = null;
-    document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option, .quiz-step[data-step="2"] .quiz-option, .quiz-step[data-step="3"] .quiz-option').forEach(b => b.classList.remove('selected'));
+    this.q1 = this.q2 = this.q3 = this._lastPkgKey = null;
+    document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option, .quiz-step[data-step="2"] .quiz-option').forEach(b => b.classList.remove('selected'));
     const q2c = document.getElementById('q2Options'); if (q2c) q2c.innerHTML = '';
     document.getElementById('quizResult').classList.remove('show');
     this.goStep(0);
