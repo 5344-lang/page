@@ -59,7 +59,7 @@
         </h1>
         <p class="hero-desc">
           단순한 성격 테스트가 아닙니다.<br>
-          학계가 검증한 <strong>10종의 전문 심리검사</strong>로<br>
+          학계가 검증한 <strong>11종의 전문 심리검사</strong>로<br>
           기질·성격·강점·진로·관계를 입체적으로 탐색하세요.
         </p>
         <div class="hero-ctas">
@@ -72,7 +72,7 @@
         </div>
         <div class="hero-stats">
           <div class="stat-item">
-            <div class="stat-num">10종</div>
+            <div class="stat-num">11종</div>
             <div class="stat-label">전문 심리검사</div>
           </div>
           <div class="stat-item">
@@ -260,6 +260,17 @@
         <a href="pages/kcmii.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
+      <div class="test-card reveal">
+        <div class="test-card-icon">🦎</div>
+        <h3>STS 6요인 기질검사</h3>
+        <p>영아부터 성인까지, 타고난 기질을 6가지 요인과 동물 유형으로 직관적으로 이해합니다.</p>
+        <div class="test-card-meta">
+          <span class="tag tag-brown">영아~성인</span>
+          <span class="tag tag-green">동물 유형 제공</span>
+        </div>
+        <a href="pages/sts.html" class="btn btn-primary">자세히 보기</a>
+      </div>
+
     </div>
   </div>
 </section>
@@ -347,14 +358,29 @@
         <div class="package-price">학업 최적화 <span class="note">🎯 수험생 특화</span></div>
       </div>
 
-      <div class="package-card reveal" data-pkg="pkg_parenting">
+      <div class="package-card reveal" data-store="pkg_parenting" style="cursor:pointer;">
         <div class="package-icon">👨‍👩‍👧</div>
         <h3>부모-자녀 양육 패키지</h3>
-        <p class="desc">JTCI로 아이의 타고난 기질을 파악하고, PAI-A와 부모양육태도 검사를 더해 가족 전체의 역동을 이해합니다.</p>
-        <div class="package-tests">
-          <span class="tag tag-brown">JTCI 3-11</span>
-          <span class="tag tag-green">PAI-A</span>
-          <span class="tag tag-brown">PAT-2</span>
+        <p class="desc">자녀 나이에 따라 맞춤 기질검사를 선택해 PAI-A·PAT-2와 함께 가족 전체의 역동을 이해합니다.</p>
+        <div class="pkg-age-split">
+          <div class="pkg-age-block">
+            <div class="pkg-age-label">🍼 영아·유아 자녀</div>
+            <div class="pkg-age-range">0 ~ 7세</div>
+            <div class="package-tests" style="margin:0;">
+              <span class="tag tag-brown">STS</span>
+              <span class="tag tag-green">PAI-A</span>
+              <span class="tag tag-brown">PAT-2</span>
+            </div>
+          </div>
+          <div class="pkg-age-block">
+            <div class="pkg-age-label">👧 아동·청소년 자녀</div>
+            <div class="pkg-age-range">8 ~ 18세</div>
+            <div class="package-tests" style="margin:0;">
+              <span class="tag tag-brown">JTCI</span>
+              <span class="tag tag-green">PAI-A</span>
+              <span class="tag tag-brown">PAT-2</span>
+            </div>
+          </div>
         </div>
         <div class="package-price">가족 이해 <span class="note">🏠 양육 특화</span></div>
       </div>
@@ -502,113 +528,4 @@
     </div>
     <div class="footer-bottom">
       <p>© 2025 똑심마인드<a href="admin.html" style="color:rgba(255,255,255,.18);margin-left:4px;text-decoration:none;" title="">·</a>. All rights reserved. |
-        <a data-store="store" href="https://open.kakao.com/o/sPbZfmsi" target="_blank" style="color:rgba(255,255,255,.6)">💬 카카오 문의하기</a>
-      </p>
-    </div>
-  </div>
-</footer>
-
-<!-- ══════════════════════════════════════
-     QUIZ MODAL
-══════════════════════════════════════ -->
-<div class="modal-overlay" id="quizOverlay">
-  <div class="modal">
-    <div class="modal-header">
-      <button class="modal-close" id="quizClose">×</button>
-      <h3>🔍 나에게 맞는 검사 찾기</h3>
-      <p>4가지 질문으로 <strong>검사 2가지 + 패키지</strong>를 추천해 드려요.</p>
-    </div>
-    <div class="modal-body">
-      <div class="quiz-progress">
-        <span></span><span></span><span></span>
-      </div>
-
-      <div class="quiz-step active" data-step="0">
-        <h4>Q1. 어떤 고민으로 검사를 찾으셨나요?</h4>
-        <div class="quiz-options">
-          <button class="quiz-option" data-value="self">😔 나 자신·성격을<br>이해하고 싶어요</button>
-          <button class="quiz-option" data-value="relation">🤝 관계·소통이<br>어려워요</button>
-          <button class="quiz-option" data-value="learn">📚 학습·진로가<br>막막해요</button>
-          <button class="quiz-option" data-value="child">🏠 내 아이가<br>걱정돼요</button>
-        </div>
-      </div>
-
-      <div class="quiz-step" data-step="1">
-        <h4 id="q2Title">Q2. 구체적으로 어떤 부분이 힘드신가요?</h4>
-        <div class="quiz-options" id="q2Options"></div>
-      </div>
-
-      <div class="quiz-step" data-step="2">
-        <h4>Q3. 검사로 얻고 싶은 결과는?</h4>
-        <div class="quiz-options">
-          <button class="quiz-option" data-value="deep">🔍 근본 원인을<br>깊이 이해하고 싶어요</button>
-          <button class="quiz-option" data-value="action">✏️ 실질적인<br>개선 방법을 알고 싶어요</button>
-          <button class="quiz-option" data-value="precise">🔬 정밀하고<br>과학적인 분석이 필요해요</button>
-          <button class="quiz-option" data-value="strength">⭐ 강점과<br>가능성에 집중하고 싶어요</button>
-        </div>
-      </div>
-
-      <div class="quiz-result" id="quizResult">
-        <div class="result-tests">
-          <div class="result-box">
-            <div class="result-tag">⭐ 1순위 검사</div>
-            <div class="result-icon" id="result1Emoji">🌟</div>
-            <h4 id="result1Title"></h4>
-            <p id="result1Desc"></p>
-            <a href="#" id="result1Link" class="btn btn-primary" style="font-size:.82rem;padding:10px 18px;width:100%;justify-content:center;margin-top:auto;">자세히 보기 →</a>
-          </div>
-          <div class="result-box">
-            <div class="result-tag result-tag-pkg">✨ 2순위 검사</div>
-            <div class="result-icon" id="result2Emoji">🌟</div>
-            <h4 id="result2Title"></h4>
-            <p id="result2Desc"></p>
-            <a href="#" id="result2Link" class="btn btn-outline" style="font-size:.82rem;padding:10px 18px;width:100%;justify-content:center;margin-top:auto;">자세히 보기 →</a>
-          </div>
-        </div>
-        <div class="result-pkg-box">
-          <div class="result-tag result-tag-pkg" style="display:inline-block;margin-bottom:10px;">📦 추천 패키지</div>
-          <div class="result-pkg-inner">
-            <div class="result-icon" id="resultPkgEmoji">📦</div>
-            <div class="pkg-text">
-              <h4 id="resultPkgTitle"></h4>
-              <p id="resultPkgDesc"></p>
-            </div>
-            <button id="resultPkgBtn" class="btn btn-outline" style="font-size:.8rem;padding:8px 14px;white-space:nowrap;flex-shrink:0;">자세히 보기 →</button>
-          </div>
-        </div>
-        <button class="btn btn-outline" id="quizRetry" style="font-size:.85rem;padding:10px 20px;width:100%;justify-content:center;">↺ 다시 선택하기</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     PACKAGE DETAIL MODAL
-══════════════════════════════════════ -->
-<div class="pkg-overlay" id="pkgModalOverlay">
-  <div class="pkg-modal-card">
-    <button class="pkg-modal-close" id="pkgModalClose">×</button>
-    <div class="pkg-modal-head">
-      <div class="pkg-modal-icon" id="pkgMIcon">🌟</div>
-      <h3 id="pkgMTitle"></h3>
-      <div class="pkg-modal-head-tags" id="pkgMTags"></div>
-    </div>
-    <div class="pkg-modal-body">
-      <div class="pkg-why-box">
-        <h4>🤔 왜 이 검사를 함께하는 게 좋을까요?</h4>
-        <p id="pkgMWhy"></p>
-      </div>
-      <div class="pkg-steps-title">검사 구성</div>
-      <div class="pkg-steps" id="pkgMSteps"></div>
-      <div id="pkgMPrice" class="pkg-price-box" style="display:none;"></div>
-      <a id="pkgMCta" href="https://open.kakao.com/o/sPbZfmsi" target="_blank" class="pkg-cta-btn">
-        💬 카카오로 문의하기
-      </a>
-    </div>
-  </div>
-</div>
-
-<script src="js/links.js"></script>
-<script src="js/main.js"></script>
-</body>
-</html>
+        <a data-store="store" href="https://open.kakao.com/o/sPbZfmsi" target="_blank" style="color:rgba(255,

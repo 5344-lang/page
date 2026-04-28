@@ -45,10 +45,9 @@ const QUIZ = {
       { value: 'career',  label: '🧭 진로·전공 방향이 막막해요' }
     ],
     child: [
-      { value: 'behavior',      label: '❓ 아이 행동을 이해 못하겠어요' },
-      { value: 'comm',          label: '💬 아이와 소통이 잘 안 돼요' },
-      { value: 'school',        label: '📚 아이 학습·학교생활이 걱정돼요' },
-      { value: 'emotion_child', label: '💙 아이 정서·심리가 불안해요' }
+      { value: 'infant',     label: '🍼 영아·유아 자녀 (0 ~ 7세)' },
+      { value: 'child_age',  label: '👧 아동 자녀 (8 ~ 12세)' },
+      { value: 'teen_child', label: '🎒 청소년 자녀 (13 ~ 18세)' }
     ]
   },
 
@@ -72,7 +71,11 @@ const QUIZ = {
     cst:   { _: { emoji:'⭐', title:'CST 성격강점검사',      desc:'VIA 강점 모델로 나만의 고유한 강점을 발견하고 활용 방법을 찾습니다.',      href:'pages/cst.html' } },
     sct:   { _: { emoji:'💬', title:'SCT 문장완성검사',       desc:'미완성 문장을 완성하며 무의식적 욕구와 감정을 탐색합니다.',                href:'pages/sct.html' } },
     mlst:  { _: { emoji:'📚', title:'MLST-II 학습전략검사',  desc:'동기·인지·행동·정서 4대 학습 전략을 과학적으로 진단합니다.',             href:'pages/mlst.html' } },
-    kcmii: { _: { emoji:'🎓', title:'KCMII-2 전공선택검사', desc:'Holland 적성이론으로 나에게 맞는 전공·직업 방향을 탐색합니다.',          href:'pages/kcmii.html' } }
+    kcmii: { _: { emoji:'🎓', title:'KCMII-2 전공선택검사', desc:'Holland 적성이론으로 나에게 맞는 전공·직업 방향을 탐색합니다.',          href:'pages/kcmii.html' } },
+    sts: {
+      young: { emoji:'🦎', title:'STS 6요인 기질검사 (영아·유아)', desc:'0~7세 자녀의 타고난 기질을 6요인·동물 유형으로 직관적으로 이해합니다.',  href:'pages/sts.html' },
+      _:     { emoji:'🦎', title:'STS 6요인 기질검사',             desc:'타고난 기질을 6가지 요인과 동물 유형으로 직관적으로 이해합니다.',          href:'pages/sts.html' }
+    }
   },
 
   PRIMARY: {
@@ -124,6 +127,22 @@ const QUIZ = {
   },
 
   lookup() {
+    // 자녀 이해: q2 = 자녀 나이 → 나이별 검사 직접 매핑
+    if (this.q1 === 'child') {
+      const age = this.q2;
+      let t1, t2;
+      if (age === 'infant') {
+        t1 = this.TESTS.sts.young;
+        t2 = this.TESTS.pai.young;
+      } else if (age === 'child_age') {
+        t1 = this.TESTS.tci.young;
+        t2 = this.TESTS.pai.young;
+      } else { // teen_child
+        t1 = this.TESTS.tci.teen;
+        t2 = this.TESTS.pai.teen;
+      }
+      return { t1, t2, pkgKey: 'pkg_parenting' };
+    }
     const path = `${this.q1}+${this.q2}`;
     const pKey = this.PRIMARY[path]; if (!pKey) return null;
     const ov   = this.SEC_OVERRIDE[path] || {};
@@ -185,7 +204,13 @@ const QUIZ = {
       btn.addEventListener('click', () => {
         c.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected'); this.q2 = btn.dataset.value;
-        setTimeout(() => this.goStep(2), 280);
+        if (this.q1 === 'child') {
+          // 자녀 나이만으로 바로 결과 표시 (q3 생략)
+          this.q3 = 'deep';
+          setTimeout(() => this.showResult(), 280);
+        } else {
+          setTimeout(() => this.goStep(2), 280);
+        }
       });
     });
   },
@@ -291,11 +316,12 @@ const PKG_INFO = {
   },
   pkg_parenting: {
     icon: '👨‍👩‍👧', title: '부모-자녀 양육 패키지',
-    tags: ['JTCI 3-11', 'PAI-A', 'PAT-2'],
+    tags: ['STS / JTCI', 'PAI-A', 'PAT-2'],
     testKeys: ['tci', 'pai'],
-    why: '아이의 타고난 기질(JTCI)을 이해하고, 아이의 성격·임상적 특성(PAI-A)을 파악하며, 부모의 양육 태도(PAT-2)까지 함께 분석해 가족 전체의 역동을 이해합니다. 갈등을 오해가 아닌 "차이"로 이해하게 됩니다.',
+    why: '자녀 나이에 따라 최적의 기질검사를 선택합니다. 영아·유아(0~7세)는 STS로, 아동·청소년(8~18세)은 JTCI로 기질을 파악하고, PAI-A와 PAT-2로 가족 전체의 역동을 이해합니다. 갈등을 오해가 아닌 "차이"로 이해하게 됩니다.',
     steps: [
-      { icon: '🐣', name: 'JTCI 유아·아동 기질검사', desc: '아이의 타고난 기질을 이해해 맞춤 양육의 출발점을 잡습니다.' },
+      { icon: '🦎', name: 'STS 6요인 기질검사 (영아·유아, 0~7세)', desc: '영아·유아의 타고난 기질을 6요인과 동물 유형으로 직관적으로 파악합니다.' },
+      { icon: '🐣', name: 'JTCI 기질검사 (아동·청소년, 8~18세)', desc: '아동·청소년의 기질을 7차원으로 분석해 맞춤 양육의 출발점을 잡습니다.' },
       { icon: '🔬', name: 'PAI-A 성격평가', desc: '아이의 성격 전반과 심리적 특성을 정밀하게 측정합니다.' },
       { icon: '🏠', name: 'PAT-2 부모양육태도검사', desc: '부모의 양육 방식을 점검하고 가족 역동을 함께 이해합니다.' }
     ]
