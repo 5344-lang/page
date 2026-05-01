@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 심리분석 프롬프트 생성 — 똑심마인드</title>
+  <link rel="icon" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --brand: #4f46e5;
+      --brand-light: #eef2ff;
+      --border: #e2e8f0;
+      --muted: #64748b;
+      --success: #059669;
+    }
+    * { box-sizing: border-box; }
+
+    .ai-hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
+      color: #fff; padding: 52px 24px 44px; text-align: center;
+    }
+    .ai-hero .badge {
+      display: inline-block; background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3); border-radius: 20px;
+      padding: 4px 14px; font-size: .8rem; margin-bottom: 16px;
+    }
+    .ai-hero h1 { font-size: clamp(1.5rem, 4vw, 2.1rem); margin: 0 0 10px; }
+    .ai-hero p { opacity: .8; font-size: .95rem; margin: 0; line-height: 1.7; }
+
+    .gen-wrap { max-width: 720px; margin: 0 auto; padding: 32px 16px 72px; }
+
+    /* ── Mode Selector ── */
+    .mode-selector {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px;
+    }
+    .mode-card {
+      border: 2px solid var(--border); border-radius: 14px;
+      padding: 18px 16px; cursor: pointer; transition: all .18s;
+      background: #fff; text-align: center; position: relative;
+    }
+    .mode-card:hover { border-color: var(--brand); }
+    .mode-card.active { border-color: var(--brand); background: var(--brand-light); }
+    .mode-card .mode-icon { font-size: 2rem; margin-bottom: 6px; }
+    .mode-card .mode-title { font-weight: 700; font-size: .95rem; color: #1e293b; margin-bottom: 4px; }
+    .mode-card .mode-sub { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+    .mode-badge {
+      position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+      background: var(--brand); color: #fff; font-size: .68rem; font-weight: 700;
+      padding: 2px 10px; border-radius: 10px; white-space: nowrap;
+    }
+
+    /* ── Accuracy / Privacy Notices ── */
+    .notice-box {
+      border-radius: 10px; padding: 13px 16px; font-size: .85rem;
+      line-height: 1.65; margin-bottom: 20px;
+    }
+    .notice-accuracy {
+      background: #fffbeb; border: 1px solid #fcd34d;
+    }
+    .notice-accuracy strong { color: #92400e; }
+    .notice-privacy {
+      background: #fef2f2; border: 1px solid #fecaca;
+    }
+    .notice-privacy strong { color: #991b1b; }
+    .notice-ok {
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+    }
+    .notice-ok strong { color: #166534; }
+
+    /* ── Section Cards ── */
+    .section-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 14px;
+      margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 15px 18px; gap: 10px;
+    }
+    .section-title {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 700; font-size: .93rem; color: #1e293b; flex: 1;
+    }
+    .section-emoji { font-size: 1.1rem; }
+    .section-sub { font-size: .76rem; font-weight: 400; color: var(--muted); }
+
+    .toggle-group { display: flex; gap: 5px; flex-shrink: 0; }
+    .toggle-btn {
+      padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: #fff; font-size: .78rem; cursor: pointer; font-weight: 600;
+      transition: all .14s; white-space: nowrap; color: var(--muted);
+    }
+    .toggle-btn.active-yes { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .toggle-btn.active-no { background: #e2e8f0; border-color: #cbd5e1; color: #475569; }
+
+    .section-body { padding: 0 18px 18px; border-top: 1px solid var(--border); }
+    .section-body.hidden { display: none; }
+    .section-body.skipped {
+      background: #f8fafc; padding: 10px 18px;
+      color: var(--muted); font-size: .83rem; text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Form Fields ── */
+    .field-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 9px; margin-top: 12px; }
+    .field-row.single { grid-template-columns: 1fr; }
+    .field-group { display: flex; flex-direction: column; gap: 3px; }
+    .field-group label { font-size: .74rem; font-weight: 600; color: var(--muted); letter-spacing: .03em; text-transform: uppercase; }
+    .field-group input, .field-group select, .field-group textarea {
+      padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: .88rem; width: 100%; outline: none; font-family: inherit; transition: border-color .14s;
+    }
+    .field-group input:focus, .field-group select:focus, .field-group textarea:focus { border-color: var(--brand); }
+    .field-group textarea { resize: vertical; min-height: 75px; }
+    .field-hint { font-size: .72rem; color: #94a3b8; }
+    .subsection-label { font-size: .75rem; font-weight: 700; color: var(--brand); margin: 14px 0 2px; letter-spacing: .05em; text-transform: uppercase; }
+    .divider { border: none; border-top: 1px dashed #e2e8f0; margin: 12px 0; }
+
+    .basic-card { background: var(--brand-light); border: 1px solid #c7d2fe; border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .basic-card h3 { margin: 0 0 12px; font-size: .93rem; color: #3730a3; }
+    .concern-card { background: #fff7f0; border: 1px solid #fed7aa; border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .concern-card h3 { margin: 0 0 4px; font-size: .93rem; color: #9a3412; }
+    .concern-card p { font-size: .8rem; color: #c2410c; margin: 0 0 10px; }
+    .concern-card textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #fdba74; border-radius: 8px; font-size: .88rem; font-family: inherit; resize: vertical; min-height: 90px; outline: none; background: #fff; }
+    .concern-card textarea:focus { border-color: #f97316; }
+
+    /* ── PDF Upload Mode ── */
+    .pdf-mode-wrap { padding: 4px 0; }
+    .pdf-steps { counter-reset: step; list-style: none; padding: 0; margin: 0 0 16px; }
+    .pdf-steps li {
+      counter-increment: step; display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: .88rem;
+    }
+    .pdf-steps li:last-child { border-bottom: none; }
+    .pdf-steps li::before {
+      content: counter(step); width: 24px; height: 24px; min-width: 24px;
+      background: var(--brand); color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700; margin-top: 1px;
+    }
+    .pdf-steps li strong { display: block; margin-bottom: 2px; color: #1e293b; }
+    .pdf-steps li .sub { color: var(--muted); font-size: .8rem; }
+
+    .ai-links { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0; }
+    .ai-link-btn {
+      display: inline-block; padding: 5px 14px; border-radius: 20px;
+      background: #1e293b; color: #fff; font-size: .78rem; font-weight: 600;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .ai-link-btn:hover { opacity: .85; }
+
+    /* ── Generate ── */
+    .gen-btn {
+      display: block; width: 100%; padding: 15px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #fff; font-size: 1rem; font-weight: 700;
+      border: none; border-radius: 12px; cursor: pointer; margin-top: 20px;
+      transition: opacity .15s; letter-spacing: .02em;
+    }
+    .gen-btn:hover { opacity: .92; }
+
+    /* ── Output ── */
+    .output-section { margin-top: 24px; display: none; }
+    .output-section.visible { display: block; }
+    .output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .output-header h3 { margin: 0; font-size: .98rem; }
+    .copy-btn { padding: 7px 16px; background: var(--success); color: #fff; border: none; border-radius: 8px; font-size: .82rem; font-weight: 700; cursor: pointer; }
+    .copy-btn:hover { opacity: .88; }
+    .output-box {
+      background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 12px;
+      font-size: .8rem; line-height: 1.8; white-space: pre-wrap; word-break: break-word;
+      max-height: 460px; overflow-y: auto; font-family: monospace;
+    }
+    .copy-notice { font-size: .8rem; color: var(--success); margin-top: 6px; display: none; font-weight: 600; }
+    .step-guide {
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;
+      padding: 14px 16px; margin-top: 14px; font-size: .83rem; line-height: 1.8; color: #166534;
+    }
+    .step-guide strong { display: block; margin-bottom: 3px; }
+
+    .subscore-toggle-btn {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid #c4b5fd; background: #f5f3ff;
+      color: #6d28d9; font-size: .78rem; font-weight: 700;
+      cursor: pointer; transition: all .14s;
+    }
+    .subscore-toggle-btn:hover { background: #ede9fe; }
+    .subscore-toggle-btn.open { background: #ede9fe; }
+
+    @media (max-width: 480px) {
+      .mode-selector { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="header">
+  <div class="container">
+    <nav class="nav">
+      <a href="index.html" class="logo">🐻 똑심마인드</a>
+      <div class="nav-links">
+        <a href="index.html">홈으로</a>
+        <a href="index.html#packages">추천 패키지</a>
+        <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank">문의하기</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="ai-hero">
+  <div class="badge">🤖 AI 심리분석 서비스</div>
+  <h1>검사 결과로 AI 상담 받기</h1>
+  <p>결과지의 수치를 입력하거나 PDF를 활용하면<br>AI가 나만을 위한 통합 심리 분석을 제공합니다.</p>
+</section>
+
+<div class="gen-wrap">
+
+  <!-- Mode Selector -->
+  <div class="mode-selector">
+    <div class="mode-card active" id="mode-input" onclick="setMode('input')">
+      <div class="mode-badge">추천</div>
+      <div class="mode-icon">📝</div>
+      <div class="mode-title">수치 직접 입력</div>
+      <div class="mode-sub">결과지 숫자를 직접 입력<br>개인정보 노출 없음</div>
+    </div>
+    <div class="mode-card" id="mode-pdf" onclick="setMode('pdf')">
+      <div class="mode-icon">📄</div>
+      <div class="mode-title">PDF 결과지 활용</div>
+      <div class="mode-sub">결과지 파일을 AI에 직접 업로드<br>더 정밀한 해석 가능</div>
+    </div>
+  </div>
+
+  <!-- ══ MODE: 직접 입력 ══ -->
+  <div id="section-input">
+
+    <div class="notice-box notice-accuracy">
+      <strong>⚠️ 정확도 안내</strong><br>
+      결과지 수치를 직접 입력하는 방식은 PDF 전체를 업로드하는 것보다 해석의 정밀도가 낮을 수 있습니다.
+      핵심 점수만 입력해도 충분한 분석이 가능하지만, 더 깊은 해석을 원하신다면 PDF 활용 방식을 권장합니다.
+    </div>
+    <div class="notice-box notice-ok">
+      <strong>🔒 개인정보 안전</strong><br>
+      이름을 입력하지 않아도 됩니다. 검사 수치만으로 충분한 분석이 가능합니다.
+      가명이나 이니셜 사용을 권장합니다.
+    </div>
+
+    <!-- 기본 정보 -->
+    <div class="basic-card">
+      <h3>📋 기본 정보</h3>
+      <div class="field-row">
+        <div class="field-group">
+          <label>이름 (가명 가능)</label>
+          <input type="text" id="alias" placeholder="예: 김지훈, JH, 별명">
+        </div>
+        <div class="field-group">
+          <label>성별</label>
+          <select id="gender"><option value="">선택</option><option>남성</option><option>여성</option></select>
+        </div>
+        <div class="field-group">
+          <label>나이 (만)</label>
+          <input type="number" id="age" placeholder="예: 28" min="1" max="100">
+        </div>
+        <div class="field-group">
+          <label>직업 / 학업</label>
+          <input type="text" id="job" placeholder="예: 직장인, 대학생">
+        </div>
+      </div>
+    </div>
+
+    <!-- 현재 고민 -->
+    <div class="concern-card">
+      <h3>🔴 현재 고민 상황</h3>
+      <p>많이 적을수록 분석이 정밀해집니다.</p>
+      <textarea id="concern" placeholder="요즘 가장 힘든 점, 반복되는 패턴, 가장 두려워하는 것, 나에게 필요한 것 등 자유롭게 적어주세요."></textarea>
+    </div>
+
+    <!-- TCI -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-emoji">🧬</span> TCI 기질 및 성격검사
+          <span class="section-sub">백분위 입력</span>
+        </div>
+        <div class="toggle-group">
+          <button class="toggle-btn active-yes" id="tci-yes" onclick="setToggle(event,'tci',true)">실시함</button>
+          <button class="toggle-btn" id="tci-no" onclick="setToggle(event,'tci',false)">해당 없음</button>
+        </div>
+      </div>
+      <div class="section-body" id="body-tci">
+        <p class="subsection-label">기질 차원</p>
+        <div class="field-row">
+          <div class="field-group"><label>NS 자극추구</label><input type="number" id="tci-ns" placeholder="백분위 (예: 74)" min="0" max="100"></div>
+          <div class="field-group"><label>HA 위험회피</label><input type="number" id="tci-ha" placeholder="백분위" min="0" max="100"></div>
+          <div class="field-group"><label>RD 사회적민감성</label><input type="number" id="tci-rd" placeholder="백분위" min="0" max="100"></div>
+          <div class="field-group"><label>PS 인내력</label><input type="number" id="tci-ps" placeholder="백분위" min="0" max="100"></div>
+        </div>
+        <p class="subsection-label">성격 차원</p>
+        <div class="field-row">
+          <div class="field-group"><label>SD 자율성</label><input type="number" id="tci-sd" placeholder="백분위" min="0" max="100"></div>
+          <div class="field-group"><label>CO 연대감</label><input type="number" id="tci-co" placeholder="백분위" min="0" max="100"></div>
+          <div class="field-group"><label>ST 자기초월</label><input type="number" id="tci-st" placeholder="백분위" min="0" max="100"></div>
+          <div class="field-group"><label>SC (SD+CO 합산)</label><input type="number" id="tci-sc" placeholder="백분위" min="0" max="100"><span class="field-hint">결과지에 있으면 입력</span></div>
+        </div>
+
+        <!-- 하위척도 토글 -->
+        <div style="margin-top:14px;">
+          <button class="subscore-toggle-btn" id="tci-sub-toggle" onclick="toggleTciSub()" type="button">
+            ＋ 하위척도 입력 (선택사항)
+          </button>
+        </div>
+        <div id="tci-sub-body" style="display:none; margin-top:12px;">
+          <p class="subsection-label" style="color:#6d28d9;">NS 하위척도</p>
+          <div class="field-row">
+            <div class="field-group"><label>NS1 탐험적 흥분</label><input type="number" id="tci-ns1" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>NS2 충동성</label><input type="number" id="tci-ns2" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>NS3 사치·무절제</label><input type="number" id="tci-ns3" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>NS4 무질서·자유</label><input type="number" id="tci-ns4" placeholder="백분위" min="0" max="100"></div>
+          </div>
+          <p class="subsection-label" style="color:#6d28d9;">HA 하위척도</p>
+          <div class="field-row">
+            <div class="field-group"><label>HA1 예상불안</label><input type="number" id="tci-ha1" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>HA2 불확실성 공포</label><input type="number" id="tci-ha2" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>HA3 낯가림·수줍음</label><input type="number" id="tci-ha3" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>HA4 피로·무력감</label><input type="number" id="tci-ha4" placeholder="백분위" min="0" max="100"></div>
+          </div>
+          <p class="subsection-label" style="color:#6d28d9;">RD 하위척도</p>
+          <div class="field-row">
+            <div class="field-group"><label>RD1 감상성</label><input type="number" id="tci-rd1" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>RD3 애착</label><input type="number" id="tci-rd3" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>RD4 의존성</label><input type="number" id="tci-rd4" placeholder="백분위" min="0" max="100"></div>
+          </div>
+          <p class="subsection-label" style="color:#6d28d9;">SD 하위척도</p>
+          <div class="field-row">
+            <div class="field-group"><label>SD1 책임감</label><input type="number" id="tci-sd1" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>SD2 목적의식</label><input type="number" id="tci-sd2" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>SD3 자원활용능력</label><input type="number" id="tci-sd3" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>SD4 자기수용</label><input type="number" id="tci-sd4" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>SD5 일치된 의지</label><input type="number" id="tci-sd5" placeholder="백분위" min="0" max="100"></div>
+          </div>
+          <p class="subsection-label" style="color:#6d28d9;">CO 하위척도</p>
+          <div class="field-row">
+            <div class="field-group"><label>CO1 사회적 수용</label><input type="number" id="tci-co1" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>CO2 공감</label><input type="number" id="tci-co2" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>CO3 이타심</label><input type="number" id="tci-co3" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>CO4 협조성</label><input type="number" id="tci-co4" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>CO5 순수한 양심</label><input type="number" id="tci-co5" placeholder="백분위" min="0" max="100"></div>
+          </div>
+          <p class="subsection-label" style="color:#6d28d9;">ST 하위척도</p>
+          <div class="field-row">
+            <div class="field-group"><label>ST1 창조적 자기망각</label><input type="number" id="tci-st1" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>ST2 우주와의 동일시</label><input type="number" id="tci-st2" placeholder="백분위" min="0" max="100"></div>
+            <div class="field-group"><label>ST3 영적 수용</label><input type="number" id="tci-st3" placeholder="백분위" min="0" max="100"></div>
+          </div>
+        </div>
+
+        <hr class="divider">
+        <div class="field-group"><label>특이사항 / 메모</label><input type="text" id="tci-memo" placeholder="예: NS2 충동성 특히 높음, 결과지 서술 내용 중 인상적인 부분"></div>
+      </div>
+      <div class="section-body skipped hidden" id="body-tci-skip">해당 검사를 실시하지 않았습니다.</div>
+    </div>
+
+    <!-- MMPI-2 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><span class="section-emoji">🧠</span> MMPI-2 <span class="section-sub">T점수 입력</span></div>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="mmpi-yes" onclick="setToggle(event,'mmpi',true)">실시함</button>
+          <button class="toggle-btn active-no" id="mmpi-no" onclick="setToggle(event,'mmpi',false)">해당 없음</button>
+        </div>
+      </div>
+      <div class="section-body hidden" id="body-mmpi">
+        <p class="subsection-label">타당도 척도</p>
+        <div class="field-row">
+          <div class="field-group"><label>VRIN</label><input type="number" id="mmpi-vrin" placeholder="T점수"></div>
+          <div class="field-group"><label>F (비전형)</label><input type="number" id="mmpi-f" placeholder="T점수"></div>
+          <div class="field-group"><label>L (부인)</label><input type="number" id="mmpi-l" placeholder="T점수"></div>
+          <div class="field-group"><label>K (교정)</label><input type="number" id="mmpi-k" placeholder="T점수"></div>
+        </div>
+        <p class="subsection-label">임상 척도</p>
+        <div class="field-row">
+          <div class="field-group"><label>1번 건강염려증</label><input type="number" id="mmpi-1" placeholder="T점수"></div>
+          <div class="field-group"><label>2번 우울</label><input type="number" id="mmpi-2" placeholder="T점수"></div>
+          <div class="field-group"><label>3번 히스테리</label><input type="number" id="mmpi-3" placeholder="T점수"></div>
+          <div class="field-group"><label>4번 반사회성</label><input type="number" id="mmpi-4" placeholder="T점수"></div>
+          <div class="field-group"><label>6번 편집증</label><input type="number" id="mmpi-6" placeholder="T점수"></div>
+          <div class="field-group"><label>7번 강박증</label><input type="number" id="mmpi-7" placeholder="T점수"></div>
+          <div class="field-group"><label>8번 정신분열</label><input type="number" id="mmpi-8" placeholder="T점수"></div>
+          <div class="field-group"><label>9번 경조증</label><input type="number" id="mmpi-9" placeholder="T점수"></div>
+          <div class="field-group"><label>0번 내향성</label><input type="number" id="mmpi-0" placeholder="T점수"></div>
+        </div>
+      </div>
+      <div class="section-body skipped" id="body-mmpi-skip">해당 검사를 실시하지 않았습니다.</div>
+    </div>
+
+    <!-- MBTI / GOLDEN -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><span class="section-emoji">🎭</span> MBTI / GOLDEN 성격유형검사</div>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="mbti-yes" onclick="setToggle(event,'mbti',true)">실시함</button>
+          <button class="toggle-btn active-no" id="mbti-no" onclick="setToggle(event,'mbti',false)">해당 없음</button>
+        </div>
+      </div>
+      <div class="section-body hidden" id="body-mbti">
+        <p class="subsection-label">MBTI Form M</p>
+        <div class="field-row">
+          <div class="field-group"><label>유형</label><input type="text" id="mbti-type" placeholder="예: INFP" maxlength="4" style="text-transform:uppercase"></div>
+          <div class="field-group"><label>E/I 선호 강도</label><input type="number" id="mbti-ei" placeholder="점수"></div>
+          <div class="field-group"><label>S/N 선호 강도</label><input type="number" id="mbti-sn" placeholder="점수"></div>
+          <div class="field-group"><label>T/F 선호 강도</label><input type="number" id="mbti-tf" placeholder="점수"></div>
+          <div class="field-group"><label>J/P 선호 강도</label><input type="number" id="mbti-jp" placeholder="점수"></div>
+        </div>
+        <hr class="divider">
+        <p class="subsection-label">GOLDEN 성격유형검사 (있으면)</p>
+        <div class="field-row">
+          <div class="field-group"><label>유형</label><input type="text" id="golden-type" placeholder="예: ISFZ-C" maxlength="6" style="text-transform:uppercase"></div>
+          <div class="field-group"><label>E/I 점수</label><input type="number" id="golden-ei" placeholder="점수"></div>
+          <div class="field-group"><label>T/F 점수</label><input type="number" id="golden-tf" placeholder="점수"></div>
+        </div>
+      </div>
+      <div class="section-body skipped" id="body-mbti-skip">해당 검사를 실시하지 않았습니다.</div>
+    </div>
+
+    <!-- SCT -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><span class="section-emoji">✍️</span> SCT 문장완성검사 <span class="section-sub">기억나는 것만</span></div>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="sct-yes" onclick="setToggle(event,'sct',true)">실시함</button>
+          <button class="toggle-btn active-no" id="sct-no" onclick="setToggle(event,'sct',false)">해당 없음</button>
+        </div>
+      </div>
+      <div class="section-body hidden" id="body-sct">
+        <p style="font-size:.8rem; color:var(--muted); margin:10px 0 4px;">기억나거나 인상 깊었던 항목만 입력하세요. 빈칸은 자동 제외됩니다.</p>
+        <div class="field-row single">
+          <div class="field-group"><label>나에게 가장 힘든 것은</label><input type="text" id="sct-1" placeholder="응답 입력"></div>
+          <div class="field-group"><label>내가 아이였을 때</label><input type="text" id="sct-2" placeholder="응답 입력"></div>
+          <div class="field-group"><label>나의 가장 큰 두려움은</label><input type="text" id="sct-3" placeholder="응답 입력"></div>
+          <div class="field-group"><label>다른 사람들이 나를 볼 때</label><input type="text" id="sct-4" placeholder="응답 입력"></div>
+          <div class="field-group"><label>나는 ~할 수 없어서 슬프다</label><input type="text" id="sct-5" placeholder="응답 입력"></div>
+          <div class="field-group"><label>내가 정말 원하는 것은</label><input type="text" id="sct-6" placeholder="응답 입력"></div>
+          <div class="field-group"><label>나는 ~ 때 행복하다</label><input type="text" id="sct-7" placeholder="응답 입력"></div>
+          <div class="field-group"><label>나를 화나게 하는 것은</label><input type="text" id="sct-8" placeholder="응답 입력"></div>
+          <div class="field-group"><label>나는 혼자 있을 때</label><input type="text" id="sct-9" placeholder="응답 입력"></div>
+          <div class="field-group"><label>나의 어머니는</label><input type="text" id="sct-10" placeholder="응답 입력"></div>
+          <div class="field-group"><label>나의 아버지는</label><input type="text" id="sct-11" placeholder="응답 입력"></div>
+          <div class="field-group"><label>작성이 어려웠던 항목 / 반복된 주제</label><input type="text" id="sct-memo" placeholder="예: 가족 관련 항목에서 자주 막힘"></div>
+        </div>
+      </div>
+      <div class="section-body skipped" id="body-sct-skip">해당 검사를 실시하지 않았습니다.</div>
+    </div>
+
+    <!-- K-IIP -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><span class="section-emoji">🔄</span> K-IIP 대인관계 문제검사 <span class="section-sub">T점수 입력</span></div>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="kiip-yes" onclick="setToggle(event,'kiip',true)">실시함</button>
+          <button class="toggle-btn active-no" id="kiip-no" onclick="setToggle(event,'kiip',false)">해당 없음</button>
+        </div>
+      </div>
+      <div class="section-body hidden" id="body-kiip">
+        <div class="field-row">
+          <div class="field-group"><label>C1 지배적</label><input type="number" id="kiip-c1" placeholder="T점수"></div>
+          <div class="field-group"><label>C2 자기중심적</label><input type="number" id="kiip-c2" placeholder="T점수"></div>
+          <div class="field-group"><label>C3 냉담한</label><input type="number" id="kiip-c3" placeholder="T점수"></div>
+          <div class="field-group"><label>C4 사회적 회피</label><input type="number" id="kiip-c4" placeholder="T점수"></div>
+          <div class="field-group"><label>C5 비주장적</label><input type="number" id="kiip-c5" placeholder="T점수"></div>
+          <div class="field-group"><label>C6 과순응적</label><input type="number" id="kiip-c6" placeholder="T점수"></div>
+          <div class="field-group"><label>C7 자기희생적</label><input type="number" id="kiip-c7" placeholder="T점수"></div>
+          <div class="field-group"><label>C8 간섭적·의존적</label><input type="number" id="kiip-c8" placeholder="T점수"></div>
+        </div>
+      </div>
+      <div class="section-body skipped" id="body-kiip-skip">해당 검사를 실시하지 않았습니다.</div>
+    </div>
+
+    <!-- 기타 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><span class="section-emoji">📌</span> 기타 검사 결과 <span class="section-sub">NEO, Holland, PAI 등</span></div>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="etc-yes" onclick="setToggle(event,'etc',true)">실시함</button>
+          <button class="toggle-btn active-no" id="etc-no" onclick="setToggle(event,'etc',false)">해당 없음</button>
+        </div>
+      </div>
+      <div class="section-body hidden" id="body-etc">
+        <div class="field-group" style="margin-top:12px;">
+          <label>검사명 및 주요 결과 (자유 입력)</label>
+          <textarea id="etc-content" placeholder="예) NEO 성격검사: 개방성 82%, 신경증 71%&#10;Holland: RIA 코드, 1순위 현실형"></textarea>
+        </div>
+      </div>
+      <div class="section-body skipped" id="body-etc-skip">해당 검사를 실시하지 않았습니다.</div>
+    </div>
+
+    <button class="gen-btn" onclick="generatePrompt()">✨ AI 분석 프롬프트 생성하기</button>
+
+    <!-- Output -->
+    <div class="output-section" id="output-section">
+      <div class="output-header">
+        <h3>📋 생성된 프롬프트</h3>
+        <button class="copy-btn" onclick="copyPrompt()">복사하기</button>
+      </div>
+      <div class="output-box" id="output-box"></div>
+      <div class="copy-notice" id="copy-notice">✅ 클립보드에 복사되었습니다!</div>
+      <div class="step-guide">
+        <strong>이제 이렇게 하세요 👇</strong>
+        1. ChatGPT(chat.openai.com) / Claude(claude.ai) / Gemini(gemini.google.com) 접속<br>
+        2. 위 프롬프트 전체를 복사해서 채팅창에 붙여넣기 (Ctrl+V)<br>
+        3. 전송 → AI가 분석을 시작합니다
+      </div>
+    </div>
+
+  </div><!-- /section-input -->
+
+  <!-- ══ MODE: PDF 활용 ══ -->
+  <div id="section-pdf" style="display:none;">
+
+    <div class="notice-box notice-privacy">
+      <strong>⚠️ 개인정보 학습 주의</strong><br>
+      PDF 결과지를 AI에 직접 업로드하면 결과지에 포함된 이름·생년월일 등 개인정보가
+      AI 서비스에 전송됩니다. 해당 내용이 AI 학습 데이터로 활용될 가능성이 있습니다.<br>
+      <span style="margin-top:6px; display:block;">이름이 포함된 경우 결과지의 이름 부분을 가리거나,
+      수치 직접 입력 방식을 이용하시기 바랍니다.</span>
+    </div>
+
+    <div class="notice-box notice-accuracy" style="background:#f0f9ff; border-color:#bae6fd;">
+      <strong style="color:#075985;">✅ PDF 활용의 장점</strong><br>
+      하위척도, 그래프 패턴, 서술 해석 등 결과지의 모든 정보를 AI가 읽어
+      수치 입력 방식보다 훨씬 정밀한 분석을 제공합니다.
+      Claude.ai(claude.ai)는 PDF를 직접 업로드할 수 있어 가장 권장합니다.
+    </div>
+
+    <div class="pdf-mode-wrap">
+      <p style="font-weight:700; font-size:.95rem; margin: 0 0 14px; color:#1e293b;">📄 PDF 활용 방법 (Claude.ai 권장)</p>
+      <ol class="pdf-steps">
+        <li>
+          <div>
+            <strong>Claude.ai에 접속합니다</strong>
+            <span class="sub">무료 계정으로도 PDF 업로드 가능합니다.</span>
+            <div class="ai-links" style="margin-top:6px;">
+              <a href="https://claude.ai" target="_blank" class="ai-link-btn">Claude.ai 열기 →</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>아래 분석 지시 프롬프트를 먼저 붙여넣습니다</strong>
+            <span class="sub">채팅창에 입력한 뒤, 전송하지 말고 다음 단계로 이동하세요.</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>PDF 결과지 파일을 채팅창에 첨부합니다</strong>
+            <span class="sub">채팅창 하단의 📎 아이콘으로 파일 첨부 → 여러 개도 가능합니다.</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>현재 고민 상황을 추가로 입력 후 전송합니다</strong>
+            <span class="sub">요즘 힘든 점, 반복되는 패턴, 바라는 것 등을 함께 적으면 분석이 더 깊어집니다.</span>
+          </div>
+        </li>
+      </ol>
+
+      <p style="font-weight:700; font-size:.9rem; margin: 20px 0 10px; color:#1e293b;">📋 분석 지시 프롬프트 (복사해서 사용)</p>
+      <div class="output-header" style="margin-bottom:6px;">
+        <span style="font-size:.8rem; color:var(--muted);">아래 전체를 복사해서 Claude에 붙여넣으세요</span>
+        <button class="copy-btn" onclick="copyPdfPrompt()">복사하기</button>
+      </div>
+      <div class="output-box" id="pdf-prompt-box">당신은 30년 임상 경험을 가진 수석 상담심리전문가입니다.
+
+첨부된 심리검사 결과지 PDF를 바탕으로 저를 깊이 이해할 수 있도록 통합 심리 분석을 제공해 주세요.
+
+[분석 원칙]
+1. 숫자를 단순 나열하지 않고, "내가 왜 이런 감정을 느끼고, 왜 이런 행동을 반복하는지" 이유를 밝혀주세요.
+2. 병리 중심이 아닌 강점과 성장 가능성을 함께 이야기해 주세요.
+3. 검사 간 결과가 서로 다를 경우, 이를 모순이 아닌 더 깊은 이해의 단서로 활용해 주세요.
+4. 어렵고 전문적인 용어 대신 일상적인 언어로 설명해 주세요.
+5. 마지막에 반드시: "※ 이 분석은 AI 해석이며, 정확한 임상 진단은 전문 상담사와 상담하시기 바랍니다."
+
+[출력 구조]
+1. 지금 나의 심리 상태 요약
+2. 타고난 나 — 기질 분석
+3. 내가 만들어온 나 — 성격 및 대처 방식
+4. 내 마음속 반복 이야기 — 핵심 신념과 무의식 주제
+5. 관계 속의 나 — 대인관계 패턴
+6. 지금 이 고민의 심층 의미
+7. 성장을 위한 구체적인 제언
+8. 한 줄 핵심 요약: "당신은 이런 사람입니다"
+
+[현재 고민 상황 — 여기에 직접 입력해 주세요]
+요즘 가장 힘든 점:
+반복되는 패턴이 있다면:
+가장 두려워하는 것:
+나에게 가장 필요하다고 생각하는 것:</div>
+      <div class="copy-notice" id="pdf-copy-notice">✅ 클립보드에 복사되었습니다!</div>
+    </div>
+  </div><!-- /section-pdf -->
+
+</div><!-- /gen-wrap -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div style="text-align:center; padding: 8px 0;">
+      <p style="margin:0 0 4px; font-size:.85rem; opacity:.7;">© 2025 똑심마인드. All rights reserved.</p>
+      <a href="index.html" style="color:rgba(255,255,255,.6); font-size:.82rem;">← 메인으로 돌아가기</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Mode Selector ──
+  function setMode(mode) {
+    document.getElementById('mode-input').classList.toggle('active', mode==='input');
+    document.getElementById('mode-pdf').classList.toggle('active', mode==='pdf');
+    document.getElementById('section-input').style.display = mode==='input' ? '' : 'none';
+    document.getElementById('section-pdf').style.display = mode==='pdf' ? '' : 'none';
+  }
+
+  // ── Toggle ──
+  const state = { tci:true, mmpi:false, mbti:false, sct:false, kiip:false, etc:false };
+
+  function setToggle(e, key, val) {
+    e.stopPropagation();
+    state[key] = val;
+    document.getElementById(key+'-yes').className = 'toggle-btn' + (val ? ' active-yes' : '');
+    document.getElementById(key+'-no').className = 'toggle-btn' + (!val ? ' active-no' : '');
+    const body = document.getElementById('body-'+key);
+    const skip = document.getElementById('body-'+key+'-skip');
+    if (body) body.classList.toggle('hidden', !val);
+    if (skip) skip.style.display = val ? 'none' : 'block';
+  }
+
+  // Init
+  Object.keys(state).forEach(key => {
+    const body = document.getElementById('body-'+key);
+    const skip = document.getElementById('body-'+key+'-skip');
+    if (body) body.classList.toggle('hidden', !state[key]);
+    if (skip) skip.style.display = state[key] ? 'none' : 'block';
+  });
+
+  function v(id) { const el=document.getElementById(id); return el ? el.value.trim() : ''; }
+
+  // ── TCI Sub-scale Toggle ──
+  function toggleTciSub() {
+    const body = document.getElementById('tci-sub-body');
+    const btn = document.getElementById('tci-sub-toggle');
+    const open = body.style.display === 'none';
+    body.style.display = open ? '' : 'none';
+    btn.textContent = open ? '－ 하위척도 접기' : '＋ 하위척도 입력 (선택사항)';
+    btn.classList.toggle('open', open);
+  }
+
+  // ── Generate Prompt ──
+  function generatePrompt() {
+    const lines = [];
+    lines.push(`당신은 30년 임상 경험을 가진 수석 상담심리전문가입니다.\n\n저는 제 심리검사 결과지를 바탕으로 저 자신을 깊이 이해하고 싶습니다.\n아래 원칙과 구조에 따라 통합 심리 분석을 제공해 주세요.\n\n[분석 원칙]\n1. 숫자를 단순 나열하지 않고, "내가 왜 이런 감정을 느끼고, 왜 이런 행동을 반복하는지" 이유를 밝혀주세요.\n2. 병리 중심이 아닌 강점과 성장 가능성을 함께 이야기해 주세요.\n3. 검사 간 결과가 서로 다를 경우, 이를 모순이 아닌 더 깊은 이해의 단서로 활용해 주세요.\n4. 어렵고 전문적인 용어 대신 일상적인 언어로 설명해 주세요.\n5. 마지막에 반드시: "※ 이 분석은 AI 해석이며, 정확한 임상 진단은 전문 상담사와 상담하시기 바랍니다."\n\n[출력 구조]\n1. 지금 나의 심리 상태 요약\n2. 타고난 나 — 기질 분석\n3. 내가 만들어온 나 — 성격 및 대처 방식\n4. 내 마음속 반복 이야기 — 핵심 신념과 무의식 주제\n5. 관계 속의 나 — 대인관계 패턴\n6. 지금 이 고민의 심층 의미\n7. 성장을 위한 구체적인 제언\n8. 한 줄 핵심 요약: "당신은 이런 사람입니다"\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+
+    const al=v('alias'), g=v('gender'), a=v('age'), j=v('job');
+    lines.push(`\n📋 기본 정보`);
+    if(al) lines.push(`이름(가명): ${al}`);
+    if(g) lines.push(`성별: ${g}`);
+    if(a) lines.push(`나이: 만 ${a}세`);
+    if(j) lines.push(`직업/학업: ${j}`);
+
+    lines.push(`\n🔴 현재 고민 상황\n${v('concern')||'(별도 고민 없음)'}`);
+
+    if(state.tci) {
+      lines.push(`\n🧬 TCI 기질 및 성격검사 (백분위)`);
+      const ns=v('tci-ns'),ha=v('tci-ha'),rd=v('tci-rd'),ps=v('tci-ps');
+      const sd=v('tci-sd'),co=v('tci-co'),st=v('tci-st'),sc=v('tci-sc');
+      if(ns||ha||rd||ps) lines.push(`[기질] NS 자극추구: ${ns||'?'}% | HA 위험회피: ${ha||'?'}% | RD 사회적민감성: ${rd||'?'}% | PS 인내력: ${ps||'?'}%`);
+      if(sd||co||st) lines.push(`[성격] SD 자율성: ${sd||'?'}% | CO 연대감: ${co||'?'}% | ST 자기초월: ${st||'?'}%${sc?` | SC 합산: ${sc}%`:''}`);
+      // 하위척도
+      const nsSub=[['NS1 탐험적흥분','tci-ns1'],['NS2 충동성','tci-ns2'],['NS3 사치무절제','tci-ns3'],['NS4 무질서자유','tci-ns4']].filter(f=>v(f[1])).map(f=>`${f[0]}: ${v(f[1])}%`);
+      if(nsSub.length) lines.push(`  NS 하위: ${nsSub.join(' | ')}`);
+      const haSub=[['HA1 예상불안','tci-ha1'],['HA2 불확실성공포','tci-ha2'],['HA3 낯가림','tci-ha3'],['HA4 피로무력','tci-ha4']].filter(f=>v(f[1])).map(f=>`${f[0]}: ${v(f[1])}%`);
+      if(haSub.length) lines.push(`  HA 하위: ${haSub.join(' | ')}`);
+      const rdSub=[['RD1 감상성','tci-rd1'],['RD3 애착','tci-rd3'],['RD4 의존성','tci-rd4']].filter(f=>v(f[1])).map(f=>`${f[0]}: ${v(f[1])}%`);
+      if(rdSub.length) lines.push(`  RD 하위: ${rdSub.join(' | ')}`);
+      const sdSub=[['SD1 책임감','tci-sd1'],['SD2 목적의식','tci-sd2'],['SD3 자원활용','tci-sd3'],['SD4 자기수용','tci-sd4'],['SD5 일치의지','tci-sd5']].filter(f=>v(f[1])).map(f=>`${f[0]}: ${v(f[1])}%`);
+      if(sdSub.length) lines.push(`  SD 하위: ${sdSub.join(' | ')}`);
+      const coSub=[['CO1 사회적수용','tci-co1'],['CO2 공감','tci-co2'],['CO3 이타심','tci-co3'],['CO4 협조성','tci-co4'],['CO5 순수양심','tci-co5']].filter(f=>v(f[1])).map(f=>`${f[0]}: ${v(f[1])}%`);
+      if(coSub.length) lines.push(`  CO 하위: ${coSub.join(' | ')}`);
+      const stSub=[['ST1 창조적자기망각','tci-st1'],['ST2 우주동일시','tci-st2'],['ST3 영적수용','tci-st3']].filter(f=>v(f[1])).map(f=>`${f[0]}: ${v(f[1])}%`);
+      if(stSub.length) lines.push(`  ST 하위: ${stSub.join(' | ')}`);
+      const m=v('tci-memo'); if(m) lines.push(`특이사항: ${m}`);
+    }
+
+    if(state.mmpi) {
+      lines.push(`\n🧠 MMPI-2 (T점수)`);
+      const tv=[['VRIN','mmpi-vrin'],['F','mmpi-f'],['L','mmpi-l'],['K','mmpi-k']].filter(x=>v(x[1])).map(x=>`${x[0]}=${v(x[1])}`).join(' | ');
+      if(tv) lines.push(`[타당도] ${tv}`);
+      const cl=[['1번Hs','mmpi-1'],['2번D','mmpi-2'],['3번Hy','mmpi-3'],['4번Pd','mmpi-4'],['6번Pa','mmpi-6'],['7번Pt','mmpi-7'],['8번Sc','mmpi-8'],['9번Ma','mmpi-9'],['0번Si','mmpi-0']].filter(x=>v(x[1])).map(x=>`${x[0]}=${v(x[1])}`).join(' | ');
+      if(cl) lines.push(`[임상] ${cl}`);
+    }
+
+    if(state.mbti) {
+      lines.push(`\n🎭 MBTI / GOLDEN`);
+      const mt=v('mbti-type');
+      if(mt) lines.push(`MBTI: ${mt.toUpperCase()}${v('mbti-ei')?` | E/I:${v('mbti-ei')}`:''}${v('mbti-sn')?` | S/N:${v('mbti-sn')}`:''}${v('mbti-tf')?` | T/F:${v('mbti-tf')}`:''}${v('mbti-jp')?` | J/P:${v('mbti-jp')}`:''}`);
+      const gt=v('golden-type');
+      if(gt) lines.push(`GOLDEN: ${gt.toUpperCase()}${v('golden-ei')?` | E/I:${v('golden-ei')}`:''}${v('golden-tf')?` | T/F:${v('golden-tf')}`:''}`);
+    }
+
+    if(state.sct) {
+      const sf=[['나에게 가장 힘든 것은','sct-1'],['내가 아이였을 때','sct-2'],['나의 가장 큰 두려움은','sct-3'],['다른 사람들이 나를 볼 때','sct-4'],['나는 ~할 수 없어서 슬프다','sct-5'],['내가 정말 원하는 것은','sct-6'],['나는 ~ 때 행복하다','sct-7'],['나를 화나게 하는 것은','sct-8'],['나는 혼자 있을 때','sct-9'],['나의 어머니는','sct-10'],['나의 아버지는','sct-11']].filter(f=>v(f[1]));
+      if(sf.length){lines.push(`\n✍️ SCT 문장완성검사`); sf.forEach(f=>lines.push(`${f[0]}: ${v(f[1])}`)); const m=v('sct-memo'); if(m) lines.push(`[특이사항] ${m}`);}
+    }
+
+    if(state.kiip) {
+      const kf=[['C1 지배','kiip-c1'],['C2 자기중심','kiip-c2'],['C3 냉담','kiip-c3'],['C4 회피','kiip-c4'],['C5 비주장','kiip-c5'],['C6 과순응','kiip-c6'],['C7 자기희생','kiip-c7'],['C8 의존','kiip-c8']].filter(f=>v(f[1])).map(f=>`${f[0]}=${v(f[1])}`).join(' | ');
+      if(kf){lines.push(`\n🔄 K-IIP 대인관계검사 (T점수)`); lines.push(kf);}
+    }
+
+    if(state.etc){const ec=v('etc-content'); if(ec){lines.push(`\n📌 기타 검사 결과`); lines.push(ec);}}
+
+    lines.push(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n위 모든 결과를 통합하여, 제가 왜 이런 감정을 느끼고 이런 행동을 반복하는지 분석해 주세요.\n출력 구조 8개 항목 순서를 따라주세요.`);
+
+    document.getElementById('output-box').textContent = lines.join('\n');
+    document.getElementById('output-section').classList.add('visible');
+    setTimeout(()=>document.getElementById('output-section').scrollIntoView({behavior:'smooth',block:'start'}), 100);
+  }
+
+  function copyPrompt() {
+    navigator.clipboard.writeText(document.getElementById('output-box').textContent).then(()=>{
+      const n=document.getElementById('copy-notice'); n.style.display='block';
+      setTimeout(()=>n.style.display='none', 2500);
+    });
+  }
+
+  function copyPdfPrompt() {
+    navigator.clipboard.writeText(document.getElementById('pdf-prompt-box').textContent).then(()=>{
+      const n=document.getElementById('pdf-copy-notice'); n.style.display='block';
+      setTimeout(()=>n.style.display='none', 2500);
+    });
+  }
+</script>
+
+<script src="js/links.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
