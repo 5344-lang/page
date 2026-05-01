@@ -4,188 +4,206 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI 심리분석 프롬프트 생성 — 똑심마인드</title>
-  <link rel="icon" href="favicon.svg">
+  <meta name="description" content="검사 결과지 수치를 입력하면 AI에 전달할 통합 심리분석 프롬프트를 자동 생성합니다.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    :root {
-      --brand: #4f46e5;
-      --brand-light: #eef2ff;
-      --border: #e2e8f0;
-      --muted: #64748b;
-      --success: #059669;
-    }
-    * { box-sizing: border-box; }
+    /* ── ai.html 전용 오버라이드 (style.css 변수 활용) ── */
 
     .ai-hero {
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
-      color: #fff; padding: 52px 24px 44px; text-align: center;
+      background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
+      color: #fff; padding: 56px 24px 48px; text-align: center;
     }
     .ai-hero .badge {
-      display: inline-block; background: rgba(255,255,255,.15);
+      display: inline-block; background: rgba(255,255,255,.18);
       border: 1px solid rgba(255,255,255,.3); border-radius: 20px;
-      padding: 4px 14px; font-size: .8rem; margin-bottom: 16px;
+      padding: 4px 16px; font-size: .8rem; margin-bottom: 18px; letter-spacing: .04em;
     }
-    .ai-hero h1 { font-size: clamp(1.5rem, 4vw, 2.1rem); margin: 0 0 10px; }
-    .ai-hero p { opacity: .8; font-size: .95rem; margin: 0; line-height: 1.7; }
+    .ai-hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); margin: 0 0 12px; color: #fff; }
+    .ai-hero p  { opacity: .85; font-size: .97rem; margin: 0; line-height: 1.75; color: rgba(255,255,255,.85); }
 
-    .gen-wrap { max-width: 720px; margin: 0 auto; padding: 32px 16px 72px; }
+    /* ── Wrapper ── */
+    .gen-wrap { max-width: 760px; margin: 0 auto; padding: 40px 5% 80px; }
 
     /* ── Mode Selector ── */
-    .mode-selector {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px;
-    }
+    .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
     .mode-card {
-      border: 2px solid var(--border); border-radius: 14px;
-      padding: 18px 16px; cursor: pointer; transition: all .18s;
-      background: #fff; text-align: center; position: relative;
+      border: 2px solid var(--beige-dark); border-radius: var(--radius);
+      padding: 20px 16px; cursor: pointer; transition: var(--transition);
+      background: var(--white); text-align: center; position: relative;
     }
-    .mode-card:hover { border-color: var(--brand); }
-    .mode-card.active { border-color: var(--brand); background: var(--brand-light); }
-    .mode-card .mode-icon { font-size: 2rem; margin-bottom: 6px; }
-    .mode-card .mode-title { font-weight: 700; font-size: .95rem; color: #1e293b; margin-bottom: 4px; }
-    .mode-card .mode-sub { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+    .mode-card:hover { border-color: var(--brown-light); }
+    .mode-card.active { border-color: var(--brown); background: var(--beige); }
+    .mode-card .mode-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .mode-card .mode-title { font-weight: 700; font-size: .95rem; color: var(--brown-dark); margin-bottom: 4px; }
+    .mode-card .mode-sub { font-size: .78rem; color: var(--text-muted); line-height: 1.5; }
     .mode-badge {
-      position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
-      background: var(--brand); color: #fff; font-size: .68rem; font-weight: 700;
-      padding: 2px 10px; border-radius: 10px; white-space: nowrap;
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      background: var(--brown); color: #fff; font-size: .68rem; font-weight: 700;
+      padding: 2px 12px; border-radius: 10px; white-space: nowrap;
     }
 
-    /* ── Accuracy / Privacy Notices ── */
-    .notice-box {
-      border-radius: 10px; padding: 13px 16px; font-size: .85rem;
-      line-height: 1.65; margin-bottom: 20px;
-    }
-    .notice-accuracy {
-      background: #fffbeb; border: 1px solid #fcd34d;
-    }
+    /* ── Notice Boxes ── */
+    .notice-box { border-radius: var(--radius-sm); padding: 13px 16px; font-size: .85rem; line-height: 1.65; margin-bottom: 14px; }
+    .notice-accuracy { background: #fffbeb; border: 1px solid #fcd34d; }
     .notice-accuracy strong { color: #92400e; }
-    .notice-privacy {
-      background: #fef2f2; border: 1px solid #fecaca;
-    }
+    .notice-privacy  { background: #fef2f2; border: 1px solid #fecaca; }
     .notice-privacy strong { color: #991b1b; }
-    .notice-ok {
-      background: #f0fdf4; border: 1px solid #bbf7d0;
-    }
+    .notice-ok       { background: #f0fdf4; border: 1px solid #bbf7d0; }
     .notice-ok strong { color: #166534; }
 
     /* ── Section Cards ── */
-    .section-card {
-      background: #fff; border: 1px solid var(--border); border-radius: 14px;
-      margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    .ac {
+      background: var(--white); border-radius: var(--radius);
+      margin-bottom: 14px; overflow: hidden; box-shadow: var(--shadow); position: relative;
     }
-    .section-header {
+    .ac::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--brown), var(--green));
+    }
+    .ac-hd {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 15px 18px; gap: 10px;
+      padding: 15px 18px 13px; gap: 10px;
     }
-    .section-title {
+    .ac-title {
       display: flex; align-items: center; gap: 8px;
-      font-weight: 700; font-size: .93rem; color: #1e293b; flex: 1;
+      font-weight: 700; font-size: .93rem; color: var(--brown-dark); flex: 1;
     }
-    .section-emoji { font-size: 1.1rem; }
-    .section-sub { font-size: .76rem; font-weight: 400; color: var(--muted); }
+    .ac-sub { font-size: .76rem; font-weight: 400; color: var(--text-muted); }
 
+    /* ── Toggle Buttons ── */
     .toggle-group { display: flex; gap: 5px; flex-shrink: 0; }
     .toggle-btn {
-      padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--border);
-      background: #fff; font-size: .78rem; cursor: pointer; font-weight: 600;
-      transition: all .14s; white-space: nowrap; color: var(--muted);
+      padding: 5px 13px; border-radius: 20px; border: 1.5px solid var(--beige-dark);
+      background: var(--white); font-size: .78rem; cursor: pointer; font-weight: 600;
+      transition: var(--transition); white-space: nowrap; color: var(--text-muted);
     }
-    .toggle-btn.active-yes { background: var(--brand); border-color: var(--brand); color: #fff; }
-    .toggle-btn.active-no { background: #e2e8f0; border-color: #cbd5e1; color: #475569; }
+    .toggle-btn.active-yes { background: var(--brown); border-color: var(--brown); color: #fff; }
+    .toggle-btn.active-no  { background: var(--beige-dark); border-color: #d4c5b5; color: var(--text-muted); }
 
-    .section-body { padding: 0 18px 18px; border-top: 1px solid var(--border); }
-    .section-body.hidden { display: none; }
-    .section-body.skipped {
-      background: #f8fafc; padding: 10px 18px;
-      color: var(--muted); font-size: .83rem; text-align: center;
-      border-top: 1px solid var(--border);
+    /* ── Card Body ── */
+    .ac-body { padding: 0 18px 18px; border-top: 1px solid var(--beige-dark); }
+    .ac-body.hidden { display: none; }
+    .ac-body.skipped {
+      background: var(--beige); padding: 10px 18px;
+      color: var(--text-muted); font-size: .83rem; text-align: center;
+      border-top: 1px solid var(--beige-dark);
     }
 
     /* ── Form Fields ── */
     .field-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 9px; margin-top: 12px; }
     .field-row.single { grid-template-columns: 1fr; }
     .field-group { display: flex; flex-direction: column; gap: 3px; }
-    .field-group label { font-size: .74rem; font-weight: 600; color: var(--muted); letter-spacing: .03em; text-transform: uppercase; }
-    .field-group input, .field-group select, .field-group textarea {
-      padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px;
-      font-size: .88rem; width: 100%; outline: none; font-family: inherit; transition: border-color .14s;
+    .field-group label {
+      font-size: .72rem; font-weight: 700; color: var(--text-muted);
+      letter-spacing: .04em; text-transform: uppercase;
     }
-    .field-group input:focus, .field-group select:focus, .field-group textarea:focus { border-color: var(--brand); }
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      padding: 7px 10px; border: 1.5px solid var(--beige-dark); border-radius: var(--radius-sm);
+      font-size: .88rem; width: 100%; outline: none; font-family: inherit; transition: border-color .14s;
+      background: var(--white); color: var(--text);
+    }
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus { border-color: var(--brown); }
     .field-group textarea { resize: vertical; min-height: 75px; }
-    .field-hint { font-size: .72rem; color: #94a3b8; }
-    .subsection-label { font-size: .75rem; font-weight: 700; color: var(--brand); margin: 14px 0 2px; letter-spacing: .05em; text-transform: uppercase; }
-    .divider { border: none; border-top: 1px dashed #e2e8f0; margin: 12px 0; }
+    .field-hint { font-size: .72rem; color: var(--text-muted); }
 
-    .basic-card { background: var(--brand-light); border: 1px solid #c7d2fe; border-radius: 14px; padding: 18px; margin-bottom: 14px; }
-    .basic-card h3 { margin: 0 0 12px; font-size: .93rem; color: #3730a3; }
-    .concern-card { background: #fff7f0; border: 1px solid #fed7aa; border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .sub-label {
+      font-size: .73rem; font-weight: 700; color: var(--brown); margin: 14px 0 2px;
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+    .sub-label.green { color: var(--green); }
+    .divider { border: none; border-top: 1px dashed var(--beige-dark); margin: 14px 0; }
+
+    /* ── Basic Info Card ── */
+    .basic-card {
+      background: var(--beige); border: 1px solid var(--brown-light);
+      border-radius: var(--radius); padding: 20px; margin-bottom: 14px;
+    }
+    .basic-card h3 { margin: 0 0 14px; font-size: .93rem; color: var(--brown-dark); }
+
+    /* ── Concern Card ── */
+    .concern-card {
+      background: #fff7f0; border: 1px solid #fed7aa;
+      border-radius: var(--radius); padding: 20px; margin-bottom: 14px;
+    }
     .concern-card h3 { margin: 0 0 4px; font-size: .93rem; color: #9a3412; }
-    .concern-card p { font-size: .8rem; color: #c2410c; margin: 0 0 10px; }
-    .concern-card textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #fdba74; border-radius: 8px; font-size: .88rem; font-family: inherit; resize: vertical; min-height: 90px; outline: none; background: #fff; }
+    .concern-card > p { font-size: .8rem; color: #c2410c; margin: 0 0 10px; }
+    .concern-card textarea {
+      width: 100%; padding: 10px 12px; border: 1.5px solid #fdba74;
+      border-radius: var(--radius-sm); font-size: .88rem; font-family: inherit;
+      resize: vertical; min-height: 90px; outline: none; background: #fff;
+    }
     .concern-card textarea:focus { border-color: #f97316; }
 
-    /* ── PDF Upload Mode ── */
-    .pdf-mode-wrap { padding: 4px 0; }
-    .pdf-steps { counter-reset: step; list-style: none; padding: 0; margin: 0 0 16px; }
+    /* ── PDF Mode ── */
+    .pdf-steps { counter-reset: step; list-style: none; padding: 0; margin: 0 0 18px; }
     .pdf-steps li {
       counter-increment: step; display: flex; gap: 12px; align-items: flex-start;
-      padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: .88rem;
+      padding: 12px 0; border-bottom: 1px solid var(--beige-dark); font-size: .88rem; color: var(--text-muted);
     }
     .pdf-steps li:last-child { border-bottom: none; }
     .pdf-steps li::before {
-      content: counter(step); width: 24px; height: 24px; min-width: 24px;
-      background: var(--brand); color: #fff; border-radius: 50%;
+      content: counter(step); width: 26px; height: 26px; min-width: 26px;
+      background: var(--brown); color: #fff; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: .75rem; font-weight: 700; margin-top: 1px;
     }
-    .pdf-steps li strong { display: block; margin-bottom: 2px; color: #1e293b; }
-    .pdf-steps li .sub { color: var(--muted); font-size: .8rem; }
-
-    .ai-links { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0; }
+    .pdf-steps li strong { display: block; margin-bottom: 3px; color: var(--brown-dark); }
+    .pdf-steps li .sub { color: var(--text-muted); font-size: .8rem; }
+    .ai-links { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0; }
     .ai-link-btn {
-      display: inline-block; padding: 5px 14px; border-radius: 20px;
-      background: #1e293b; color: #fff; font-size: .78rem; font-weight: 600;
+      display: inline-block; padding: 6px 16px; border-radius: 50px;
+      background: var(--brown); color: #fff; font-size: .78rem; font-weight: 700;
       text-decoration: none; transition: opacity .15s;
     }
     .ai-link-btn:hover { opacity: .85; }
 
-    /* ── Generate ── */
+    /* ── Generate Button ── */
     .gen-btn {
-      display: block; width: 100%; padding: 15px;
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      display: block; width: 100%; padding: 16px;
+      background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
       color: #fff; font-size: 1rem; font-weight: 700;
-      border: none; border-radius: 12px; cursor: pointer; margin-top: 20px;
+      border: none; border-radius: 50px; cursor: pointer; margin-top: 20px;
       transition: opacity .15s; letter-spacing: .02em;
+      box-shadow: 0 4px 16px rgba(107,76,53,.35); font-family: inherit;
     }
-    .gen-btn:hover { opacity: .92; }
+    .gen-btn:hover { opacity: .9; }
 
     /* ── Output ── */
-    .output-section { margin-top: 24px; display: none; }
+    .output-section { margin-top: 28px; display: none; }
     .output-section.visible { display: block; }
-    .output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .output-header h3 { margin: 0; font-size: .98rem; }
-    .copy-btn { padding: 7px 16px; background: var(--success); color: #fff; border: none; border-radius: 8px; font-size: .82rem; font-weight: 700; cursor: pointer; }
+    .output-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .output-hd h3 { margin: 0; font-size: .98rem; color: var(--brown-dark); }
+    .copy-btn {
+      padding: 7px 18px; background: var(--green); color: #fff;
+      border: none; border-radius: 50px; font-size: .82rem; font-weight: 700; cursor: pointer;
+    }
     .copy-btn:hover { opacity: .88; }
     .output-box {
-      background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 12px;
-      font-size: .8rem; line-height: 1.8; white-space: pre-wrap; word-break: break-word;
+      background: var(--brown-dark); color: #f5e6d3; padding: 18px; border-radius: var(--radius-sm);
+      font-size: .8rem; line-height: 1.85; white-space: pre-wrap; word-break: break-word;
       max-height: 460px; overflow-y: auto; font-family: monospace;
     }
-    .copy-notice { font-size: .8rem; color: var(--success); margin-top: 6px; display: none; font-weight: 600; }
+    .copy-notice { font-size: .8rem; color: var(--green); margin-top: 6px; display: none; font-weight: 600; }
     .step-guide {
-      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;
-      padding: 14px 16px; margin-top: 14px; font-size: .83rem; line-height: 1.8; color: #166534;
+      background: var(--beige); border: 1px solid var(--brown-light);
+      border-radius: var(--radius-sm); padding: 16px 18px; margin-top: 14px;
+      font-size: .85rem; line-height: 1.85; color: var(--brown-dark);
     }
-    .step-guide strong { display: block; margin-bottom: 3px; }
+    .step-guide strong { display: block; margin-bottom: 4px; font-size: .95rem; }
 
+    /* ── Subscore Toggle ── */
     .subscore-toggle-btn {
       padding: 6px 14px; border-radius: 20px;
-      border: 1.5px solid #c4b5fd; background: #f5f3ff;
-      color: #6d28d9; font-size: .78rem; font-weight: 700;
-      cursor: pointer; transition: all .14s;
+      border: 1.5px solid var(--green-light); background: #f0fdf4;
+      color: var(--green); font-size: .78rem; font-weight: 700;
+      cursor: pointer; transition: var(--transition);
     }
-    .subscore-toggle-btn:hover { background: #ede9fe; }
-    .subscore-toggle-btn.open { background: #ede9fe; }
+    .subscore-toggle-btn:hover, .subscore-toggle-btn.open { background: #E0EFE5; }
 
     @media (max-width: 480px) {
       .mode-selector { grid-template-columns: 1fr; }
@@ -194,25 +212,35 @@
 </head>
 <body>
 
-<!-- NAV -->
-<header class="header">
-  <div class="container">
-    <nav class="nav">
-      <a href="index.html" class="logo">🐻 똑심마인드</a>
-      <div class="nav-links">
-        <a href="index.html">홈으로</a>
-        <a href="index.html#packages">추천 패키지</a>
-        <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank">문의하기</a>
-      </div>
-    </nav>
+<!-- ══ GNB ══ -->
+<nav class="gnb">
+  <div class="gnb-inner">
+    <a href="index.html" class="gnb-logo">🐻 똑심마인드</a>
+    <div class="gnb-menu">
+      <a href="index.html#tests">전체 검사</a>
+      <a href="index.html#packages">추천 패키지</a>
+      <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank" class="gnb-store-btn">
+        <span>💬</span> 문의하기
+      </a>
+    </div>
+    <button class="gnb-hamburger" id="hamburger" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
   </div>
-</header>
+</nav>
 
-<!-- HERO -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">🏠 홈으로</a>
+  <a href="index.html#tests">📋 전체 검사</a>
+  <a href="index.html#packages">📦 추천 패키지</a>
+  <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank">💬 문의하기</a>
+</div>
+
+<!-- ══ HERO ══ -->
 <section class="ai-hero">
   <div class="badge">🤖 AI 심리분석 서비스</div>
   <h1>검사 결과로 AI 상담 받기</h1>
-  <p>결과지의 수치를 입력하거나 PDF를 활용하면<br>AI가 나만을 위한 통합 심리 분석을 제공합니다.</p>
+  <p>결과지 수치를 입력하거나 PDF를 활용하면<br>AI가 나만을 위한 통합 심리 분석을 제공합니다.</p>
 </section>
 
 <div class="gen-wrap">
@@ -237,13 +265,12 @@
 
     <div class="notice-box notice-accuracy">
       <strong>⚠️ 정확도 안내</strong><br>
-      결과지 수치를 직접 입력하는 방식은 PDF 전체를 업로드하는 것보다 해석의 정밀도가 낮을 수 있습니다.
-      핵심 점수만 입력해도 충분한 분석이 가능하지만, 더 깊은 해석을 원하신다면 PDF 활용 방식을 권장합니다.
+      수치 직접 입력 방식은 PDF 업로드보다 해석 정밀도가 낮을 수 있습니다.
+      핵심 점수만 입력해도 충분하지만, 더 깊은 해석을 원하신다면 PDF 활용을 권장합니다.
     </div>
     <div class="notice-box notice-ok">
       <strong>🔒 개인정보 안전</strong><br>
-      이름을 입력하지 않아도 됩니다. 검사 수치만으로 충분한 분석이 가능합니다.
-      가명이나 이니셜 사용을 권장합니다.
+      이름 없이 수치만 입력해도 됩니다. 가명이나 이니셜을 권장합니다.
     </div>
 
     <!-- 기본 정보 -->
@@ -277,26 +304,26 @@
     </div>
 
     <!-- TCI -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title">
-          <span class="section-emoji">🧬</span> TCI 기질 및 성격검사
-          <span class="section-sub">백분위 입력</span>
+    <div class="ac">
+      <div class="ac-hd">
+        <div class="ac-title">
+          🧬 TCI 기질 및 성격검사
+          <span class="ac-sub">백분위 입력</span>
         </div>
         <div class="toggle-group">
           <button class="toggle-btn active-yes" id="tci-yes" onclick="setToggle(event,'tci',true)">실시함</button>
           <button class="toggle-btn" id="tci-no" onclick="setToggle(event,'tci',false)">해당 없음</button>
         </div>
       </div>
-      <div class="section-body" id="body-tci">
-        <p class="subsection-label">기질 차원</p>
+      <div class="ac-body" id="body-tci">
+        <p class="sub-label">기질 차원</p>
         <div class="field-row">
           <div class="field-group"><label>NS 자극추구</label><input type="number" id="tci-ns" placeholder="백분위 (예: 74)" min="0" max="100"></div>
           <div class="field-group"><label>HA 위험회피</label><input type="number" id="tci-ha" placeholder="백분위" min="0" max="100"></div>
           <div class="field-group"><label>RD 사회적민감성</label><input type="number" id="tci-rd" placeholder="백분위" min="0" max="100"></div>
           <div class="field-group"><label>PS 인내력</label><input type="number" id="tci-ps" placeholder="백분위" min="0" max="100"></div>
         </div>
-        <p class="subsection-label">성격 차원</p>
+        <p class="sub-label">성격 차원</p>
         <div class="field-row">
           <div class="field-group"><label>SD 자율성</label><input type="number" id="tci-sd" placeholder="백분위" min="0" max="100"></div>
           <div class="field-group"><label>CO 연대감</label><input type="number" id="tci-co" placeholder="백분위" min="0" max="100"></div>
@@ -304,34 +331,33 @@
           <div class="field-group"><label>SC (SD+CO 합산)</label><input type="number" id="tci-sc" placeholder="백분위" min="0" max="100"><span class="field-hint">결과지에 있으면 입력</span></div>
         </div>
 
-        <!-- 하위척도 토글 -->
         <div style="margin-top:14px;">
           <button class="subscore-toggle-btn" id="tci-sub-toggle" onclick="toggleTciSub()" type="button">
             ＋ 하위척도 입력 (선택사항)
           </button>
         </div>
         <div id="tci-sub-body" style="display:none; margin-top:12px;">
-          <p class="subsection-label" style="color:#6d28d9;">NS 하위척도</p>
+          <p class="sub-label green">NS 하위척도</p>
           <div class="field-row">
             <div class="field-group"><label>NS1 탐험적 흥분</label><input type="number" id="tci-ns1" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>NS2 충동성</label><input type="number" id="tci-ns2" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>NS3 사치·무절제</label><input type="number" id="tci-ns3" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>NS4 무질서·자유</label><input type="number" id="tci-ns4" placeholder="백분위" min="0" max="100"></div>
           </div>
-          <p class="subsection-label" style="color:#6d28d9;">HA 하위척도</p>
+          <p class="sub-label green">HA 하위척도</p>
           <div class="field-row">
             <div class="field-group"><label>HA1 예상불안</label><input type="number" id="tci-ha1" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>HA2 불확실성 공포</label><input type="number" id="tci-ha2" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>HA3 낯가림·수줍음</label><input type="number" id="tci-ha3" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>HA4 피로·무력감</label><input type="number" id="tci-ha4" placeholder="백분위" min="0" max="100"></div>
           </div>
-          <p class="subsection-label" style="color:#6d28d9;">RD 하위척도</p>
+          <p class="sub-label green">RD 하위척도</p>
           <div class="field-row">
             <div class="field-group"><label>RD1 감상성</label><input type="number" id="tci-rd1" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>RD3 애착</label><input type="number" id="tci-rd3" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>RD4 의존성</label><input type="number" id="tci-rd4" placeholder="백분위" min="0" max="100"></div>
           </div>
-          <p class="subsection-label" style="color:#6d28d9;">SD 하위척도</p>
+          <p class="sub-label green">SD 하위척도</p>
           <div class="field-row">
             <div class="field-group"><label>SD1 책임감</label><input type="number" id="tci-sd1" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>SD2 목적의식</label><input type="number" id="tci-sd2" placeholder="백분위" min="0" max="100"></div>
@@ -339,7 +365,7 @@
             <div class="field-group"><label>SD4 자기수용</label><input type="number" id="tci-sd4" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>SD5 일치된 의지</label><input type="number" id="tci-sd5" placeholder="백분위" min="0" max="100"></div>
           </div>
-          <p class="subsection-label" style="color:#6d28d9;">CO 하위척도</p>
+          <p class="sub-label green">CO 하위척도</p>
           <div class="field-row">
             <div class="field-group"><label>CO1 사회적 수용</label><input type="number" id="tci-co1" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>CO2 공감</label><input type="number" id="tci-co2" placeholder="백분위" min="0" max="100"></div>
@@ -347,7 +373,7 @@
             <div class="field-group"><label>CO4 협조성</label><input type="number" id="tci-co4" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>CO5 순수한 양심</label><input type="number" id="tci-co5" placeholder="백분위" min="0" max="100"></div>
           </div>
-          <p class="subsection-label" style="color:#6d28d9;">ST 하위척도</p>
+          <p class="sub-label green">ST 하위척도</p>
           <div class="field-row">
             <div class="field-group"><label>ST1 창조적 자기망각</label><input type="number" id="tci-st1" placeholder="백분위" min="0" max="100"></div>
             <div class="field-group"><label>ST2 우주와의 동일시</label><input type="number" id="tci-st2" placeholder="백분위" min="0" max="100"></div>
@@ -358,27 +384,27 @@
         <hr class="divider">
         <div class="field-group"><label>특이사항 / 메모</label><input type="text" id="tci-memo" placeholder="예: NS2 충동성 특히 높음, 결과지 서술 내용 중 인상적인 부분"></div>
       </div>
-      <div class="section-body skipped hidden" id="body-tci-skip">해당 검사를 실시하지 않았습니다.</div>
+      <div class="ac-body skipped hidden" id="body-tci-skip">해당 검사를 실시하지 않았습니다.</div>
     </div>
 
     <!-- MMPI-2 -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title"><span class="section-emoji">🧠</span> MMPI-2 <span class="section-sub">T점수 입력</span></div>
+    <div class="ac">
+      <div class="ac-hd">
+        <div class="ac-title">🧠 MMPI-2 <span class="ac-sub">T점수 입력</span></div>
         <div class="toggle-group">
           <button class="toggle-btn" id="mmpi-yes" onclick="setToggle(event,'mmpi',true)">실시함</button>
           <button class="toggle-btn active-no" id="mmpi-no" onclick="setToggle(event,'mmpi',false)">해당 없음</button>
         </div>
       </div>
-      <div class="section-body hidden" id="body-mmpi">
-        <p class="subsection-label">타당도 척도</p>
+      <div class="ac-body hidden" id="body-mmpi">
+        <p class="sub-label">타당도 척도</p>
         <div class="field-row">
           <div class="field-group"><label>VRIN</label><input type="number" id="mmpi-vrin" placeholder="T점수"></div>
           <div class="field-group"><label>F (비전형)</label><input type="number" id="mmpi-f" placeholder="T점수"></div>
           <div class="field-group"><label>L (부인)</label><input type="number" id="mmpi-l" placeholder="T점수"></div>
           <div class="field-group"><label>K (교정)</label><input type="number" id="mmpi-k" placeholder="T점수"></div>
         </div>
-        <p class="subsection-label">임상 척도</p>
+        <p class="sub-label">임상 척도</p>
         <div class="field-row">
           <div class="field-group"><label>1번 건강염려증</label><input type="number" id="mmpi-1" placeholder="T점수"></div>
           <div class="field-group"><label>2번 우울</label><input type="number" id="mmpi-2" placeholder="T점수"></div>
@@ -391,20 +417,20 @@
           <div class="field-group"><label>0번 내향성</label><input type="number" id="mmpi-0" placeholder="T점수"></div>
         </div>
       </div>
-      <div class="section-body skipped" id="body-mmpi-skip">해당 검사를 실시하지 않았습니다.</div>
+      <div class="ac-body skipped" id="body-mmpi-skip">해당 검사를 실시하지 않았습니다.</div>
     </div>
 
     <!-- MBTI / GOLDEN -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title"><span class="section-emoji">🎭</span> MBTI / GOLDEN 성격유형검사</div>
+    <div class="ac">
+      <div class="ac-hd">
+        <div class="ac-title">🎭 MBTI / GOLDEN 성격유형검사</div>
         <div class="toggle-group">
           <button class="toggle-btn" id="mbti-yes" onclick="setToggle(event,'mbti',true)">실시함</button>
           <button class="toggle-btn active-no" id="mbti-no" onclick="setToggle(event,'mbti',false)">해당 없음</button>
         </div>
       </div>
-      <div class="section-body hidden" id="body-mbti">
-        <p class="subsection-label">MBTI Form M</p>
+      <div class="ac-body hidden" id="body-mbti">
+        <p class="sub-label">MBTI Form M</p>
         <div class="field-row">
           <div class="field-group"><label>유형</label><input type="text" id="mbti-type" placeholder="예: INFP" maxlength="4" style="text-transform:uppercase"></div>
           <div class="field-group"><label>E/I 선호 강도</label><input type="number" id="mbti-ei" placeholder="점수"></div>
@@ -413,27 +439,27 @@
           <div class="field-group"><label>J/P 선호 강도</label><input type="number" id="mbti-jp" placeholder="점수"></div>
         </div>
         <hr class="divider">
-        <p class="subsection-label">GOLDEN 성격유형검사 (있으면)</p>
+        <p class="sub-label">GOLDEN 성격유형검사 (있으면)</p>
         <div class="field-row">
           <div class="field-group"><label>유형</label><input type="text" id="golden-type" placeholder="예: ISFZ-C" maxlength="6" style="text-transform:uppercase"></div>
           <div class="field-group"><label>E/I 점수</label><input type="number" id="golden-ei" placeholder="점수"></div>
           <div class="field-group"><label>T/F 점수</label><input type="number" id="golden-tf" placeholder="점수"></div>
         </div>
       </div>
-      <div class="section-body skipped" id="body-mbti-skip">해당 검사를 실시하지 않았습니다.</div>
+      <div class="ac-body skipped" id="body-mbti-skip">해당 검사를 실시하지 않았습니다.</div>
     </div>
 
     <!-- SCT -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title"><span class="section-emoji">✍️</span> SCT 문장완성검사 <span class="section-sub">기억나는 것만</span></div>
+    <div class="ac">
+      <div class="ac-hd">
+        <div class="ac-title">✍️ SCT 문장완성검사 <span class="ac-sub">기억나는 것만</span></div>
         <div class="toggle-group">
           <button class="toggle-btn" id="sct-yes" onclick="setToggle(event,'sct',true)">실시함</button>
           <button class="toggle-btn active-no" id="sct-no" onclick="setToggle(event,'sct',false)">해당 없음</button>
         </div>
       </div>
-      <div class="section-body hidden" id="body-sct">
-        <p style="font-size:.8rem; color:var(--muted); margin:10px 0 4px;">기억나거나 인상 깊었던 항목만 입력하세요. 빈칸은 자동 제외됩니다.</p>
+      <div class="ac-body hidden" id="body-sct">
+        <p style="font-size:.8rem; color:var(--text-muted); margin:10px 0 4px;">기억나거나 인상 깊었던 항목만 입력하세요. 빈칸은 자동 제외됩니다.</p>
         <div class="field-row single">
           <div class="field-group"><label>나에게 가장 힘든 것은</label><input type="text" id="sct-1" placeholder="응답 입력"></div>
           <div class="field-group"><label>내가 아이였을 때</label><input type="text" id="sct-2" placeholder="응답 입력"></div>
@@ -449,19 +475,19 @@
           <div class="field-group"><label>작성이 어려웠던 항목 / 반복된 주제</label><input type="text" id="sct-memo" placeholder="예: 가족 관련 항목에서 자주 막힘"></div>
         </div>
       </div>
-      <div class="section-body skipped" id="body-sct-skip">해당 검사를 실시하지 않았습니다.</div>
+      <div class="ac-body skipped" id="body-sct-skip">해당 검사를 실시하지 않았습니다.</div>
     </div>
 
     <!-- K-IIP -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title"><span class="section-emoji">🔄</span> K-IIP 대인관계 문제검사 <span class="section-sub">T점수 입력</span></div>
+    <div class="ac">
+      <div class="ac-hd">
+        <div class="ac-title">🔄 K-IIP 대인관계 문제검사 <span class="ac-sub">T점수 입력</span></div>
         <div class="toggle-group">
           <button class="toggle-btn" id="kiip-yes" onclick="setToggle(event,'kiip',true)">실시함</button>
           <button class="toggle-btn active-no" id="kiip-no" onclick="setToggle(event,'kiip',false)">해당 없음</button>
         </div>
       </div>
-      <div class="section-body hidden" id="body-kiip">
+      <div class="ac-body hidden" id="body-kiip">
         <div class="field-row">
           <div class="field-group"><label>C1 지배적</label><input type="number" id="kiip-c1" placeholder="T점수"></div>
           <div class="field-group"><label>C2 자기중심적</label><input type="number" id="kiip-c2" placeholder="T점수"></div>
@@ -473,32 +499,32 @@
           <div class="field-group"><label>C8 간섭적·의존적</label><input type="number" id="kiip-c8" placeholder="T점수"></div>
         </div>
       </div>
-      <div class="section-body skipped" id="body-kiip-skip">해당 검사를 실시하지 않았습니다.</div>
+      <div class="ac-body skipped" id="body-kiip-skip">해당 검사를 실시하지 않았습니다.</div>
     </div>
 
     <!-- 기타 -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title"><span class="section-emoji">📌</span> 기타 검사 결과 <span class="section-sub">NEO, Holland, PAI 등</span></div>
+    <div class="ac">
+      <div class="ac-hd">
+        <div class="ac-title">📌 기타 검사 결과 <span class="ac-sub">NEO, Holland, PAI 등</span></div>
         <div class="toggle-group">
           <button class="toggle-btn" id="etc-yes" onclick="setToggle(event,'etc',true)">실시함</button>
           <button class="toggle-btn active-no" id="etc-no" onclick="setToggle(event,'etc',false)">해당 없음</button>
         </div>
       </div>
-      <div class="section-body hidden" id="body-etc">
+      <div class="ac-body hidden" id="body-etc">
         <div class="field-group" style="margin-top:12px;">
           <label>검사명 및 주요 결과 (자유 입력)</label>
           <textarea id="etc-content" placeholder="예) NEO 성격검사: 개방성 82%, 신경증 71%&#10;Holland: RIA 코드, 1순위 현실형"></textarea>
         </div>
       </div>
-      <div class="section-body skipped" id="body-etc-skip">해당 검사를 실시하지 않았습니다.</div>
+      <div class="ac-body skipped" id="body-etc-skip">해당 검사를 실시하지 않았습니다.</div>
     </div>
 
     <button class="gen-btn" onclick="generatePrompt()">✨ AI 분석 프롬프트 생성하기</button>
 
     <!-- Output -->
     <div class="output-section" id="output-section">
-      <div class="output-header">
+      <div class="output-hd">
         <h3>📋 생성된 프롬프트</h3>
         <button class="copy-btn" onclick="copyPrompt()">복사하기</button>
       </div>
@@ -519,21 +545,17 @@
 
     <div class="notice-box notice-privacy">
       <strong>⚠️ 개인정보 학습 주의</strong><br>
-      PDF 결과지를 AI에 직접 업로드하면 결과지에 포함된 이름·생년월일 등 개인정보가
-      AI 서비스에 전송됩니다. 해당 내용이 AI 학습 데이터로 활용될 가능성이 있습니다.<br>
-      <span style="margin-top:6px; display:block;">이름이 포함된 경우 결과지의 이름 부분을 가리거나,
-      수치 직접 입력 방식을 이용하시기 바랍니다.</span>
+      PDF 결과지를 AI에 직접 업로드하면 이름·생년월일 등 개인정보가 AI 서비스에 전송됩니다.
+      이름 부분을 가리거나 수치 직접 입력 방식을 이용하시기 바랍니다.
     </div>
-
-    <div class="notice-box notice-accuracy" style="background:#f0f9ff; border-color:#bae6fd;">
+    <div class="notice-box notice-ok" style="background:#f0f9ff; border-color:#bae6fd;">
       <strong style="color:#075985;">✅ PDF 활용의 장점</strong><br>
       하위척도, 그래프 패턴, 서술 해석 등 결과지의 모든 정보를 AI가 읽어
       수치 입력 방식보다 훨씬 정밀한 분석을 제공합니다.
-      Claude.ai(claude.ai)는 PDF를 직접 업로드할 수 있어 가장 권장합니다.
     </div>
 
-    <div class="pdf-mode-wrap">
-      <p style="font-weight:700; font-size:.95rem; margin: 0 0 14px; color:#1e293b;">📄 PDF 활용 방법 (Claude.ai 권장)</p>
+    <div style="padding: 4px 0;">
+      <p style="font-weight:700; font-size:.95rem; margin: 0 0 16px; color:var(--brown-dark);">📄 PDF 활용 방법 (Claude.ai 권장)</p>
       <ol class="pdf-steps">
         <li>
           <div>
@@ -541,6 +563,7 @@
             <span class="sub">무료 계정으로도 PDF 업로드 가능합니다.</span>
             <div class="ai-links" style="margin-top:6px;">
               <a href="https://claude.ai" target="_blank" class="ai-link-btn">Claude.ai 열기 →</a>
+              <a href="https://chat.openai.com" target="_blank" class="ai-link-btn">ChatGPT 열기 →</a>
             </div>
           </div>
         </li>
@@ -553,7 +576,7 @@
         <li>
           <div>
             <strong>PDF 결과지 파일을 채팅창에 첨부합니다</strong>
-            <span class="sub">채팅창 하단의 📎 아이콘으로 파일 첨부 → 여러 개도 가능합니다.</span>
+            <span class="sub">채팅창 하단의 📎 아이콘으로 파일 첨부 · 여러 개도 가능합니다.</span>
           </div>
         </li>
         <li>
@@ -564,9 +587,9 @@
         </li>
       </ol>
 
-      <p style="font-weight:700; font-size:.9rem; margin: 20px 0 10px; color:#1e293b;">📋 분석 지시 프롬프트 (복사해서 사용)</p>
-      <div class="output-header" style="margin-bottom:6px;">
-        <span style="font-size:.8rem; color:var(--muted);">아래 전체를 복사해서 Claude에 붙여넣으세요</span>
+      <p style="font-weight:700; font-size:.9rem; margin: 20px 0 10px; color:var(--brown-dark);">📋 분석 지시 프롬프트 (복사해서 사용)</p>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <span style="font-size:.8rem; color:var(--text-muted);">아래 전체를 복사해서 Claude에 붙여넣으세요</span>
         <button class="copy-btn" onclick="copyPdfPrompt()">복사하기</button>
       </div>
       <div class="output-box" id="pdf-prompt-box">당신은 30년 임상 경험을 가진 수석 상담심리전문가입니다.
@@ -601,18 +624,55 @@
 
 </div><!-- /gen-wrap -->
 
-<!-- FOOTER -->
+<!-- ══ FOOTER ══ -->
 <footer class="footer">
   <div class="container">
-    <div style="text-align:center; padding: 8px 0;">
-      <p style="margin:0 0 4px; font-size:.85rem; opacity:.7;">© 2025 똑심마인드. All rights reserved.</p>
-      <a href="index.html" style="color:rgba(255,255,255,.6); font-size:.82rem;">← 메인으로 돌아가기</a>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-name">🐻 똑심마인드</span>
+        <p>과학과 공감으로 마음을 읽는 심리검사 전문 연구소입니다.<br>
+        11종의 검증된 심리검사로 기질·성격·강점·진로·관계를 탐색하세요.</p>
+      </div>
+      <div class="footer-links">
+        <h4>검사 목록</h4>
+        <a href="pages/tci.html">TCI 기질 및 성격검사</a>
+        <a href="pages/kocean.html">K-OCEAN 5요인 성격</a>
+        <a href="pages/golden.html">GOLDEN 성격유형</a>
+        <a href="pages/rs.html">RS 회복탄력성</a>
+        <a href="pages/kiri.html">KiRi 대인관계</a>
+        <a href="pages/pai.html">PAI 성격평가</a>
+        <a href="pages/sct.html">SCT 문장완성</a>
+      </div>
+      <div class="footer-links">
+        <h4>바로가기</h4>
+        <a href="ai.html">🤖 AI 심리분석</a>
+        <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank">💬 카카오 문의하기</a>
+        <a href="index.html#packages">추천 패키지</a>
+        <a href="index.html#benefits">왜 똑심인가요?</a>
+      </div>
+      <div class="footer-social">
+        <h4>SNS 채널</h4>
+        <a href="https://www.instagram.com/talk_sim_mind" target="_blank">
+          <span class="sns-icon sns-insta">📸</span> 인스타그램
+        </a>
+        <a href="https://www.youtube.com/@talk_sim_mind" target="_blank">
+          <span class="sns-icon sns-youtube">▶</span> 유튜브
+        </a>
+        <a href="https://blog.naver.com/talk_sim_mind" target="_blank">
+          <span class="sns-icon sns-blog">N</span> 네이버 블로그
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 똑심마인드. All rights reserved. |
+        <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">카카오 문의하기</a>
+      </p>
     </div>
   </div>
 </footer>
 
 <script>
-  // ── Mode Selector ──
+  // ── Mode ──
   function setMode(mode) {
     document.getElementById('mode-input').classList.toggle('active', mode==='input');
     document.getElementById('mode-pdf').classList.toggle('active', mode==='pdf');
@@ -674,7 +734,6 @@
       const sd=v('tci-sd'),co=v('tci-co'),st=v('tci-st'),sc=v('tci-sc');
       if(ns||ha||rd||ps) lines.push(`[기질] NS 자극추구: ${ns||'?'}% | HA 위험회피: ${ha||'?'}% | RD 사회적민감성: ${rd||'?'}% | PS 인내력: ${ps||'?'}%`);
       if(sd||co||st) lines.push(`[성격] SD 자율성: ${sd||'?'}% | CO 연대감: ${co||'?'}% | ST 자기초월: ${st||'?'}%${sc?` | SC 합산: ${sc}%`:''}`);
-      // 하위척도
       const nsSub=[['NS1 탐험적흥분','tci-ns1'],['NS2 충동성','tci-ns2'],['NS3 사치무절제','tci-ns3'],['NS4 무질서자유','tci-ns4']].filter(f=>v(f[1])).map(f=>`${f[0]}: ${v(f[1])}%`);
       if(nsSub.length) lines.push(`  NS 하위: ${nsSub.join(' | ')}`);
       const haSub=[['HA1 예상불안','tci-ha1'],['HA2 불확실성공포','tci-ha2'],['HA3 낯가림','tci-ha3'],['HA4 피로무력','tci-ha4']].filter(f=>v(f[1])).map(f=>`${f[0]}: ${v(f[1])}%`);
@@ -739,7 +798,6 @@
     });
   }
 </script>
-
 <script src="js/links.js"></script>
 <script src="js/main.js"></script>
 </body>
