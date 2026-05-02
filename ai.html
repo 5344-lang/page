@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 심리분석 프롬프트 생성 — 똑심마인드</title>
-  <meta name="description" content="검사 결과지 수치를 입력하면 AI에 전달할 통합 심리분석 프롬프트를 자동 생성합니다.">
+  <title>AI 해석 프롬프트 생성 — 똑심마인드</title>
+  <meta name="description" content="검사 결과지 수치를 입력하면 ChatGPT · Claude · Gemini에 바로 사용할 수 있는 통합 심리분석 프롬프트를 자동 생성합니다.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
   <style>
@@ -131,13 +131,17 @@
       border-radius: var(--radius); padding: 20px; margin-bottom: 14px;
     }
     .concern-card h3 { margin: 0 0 4px; font-size: .93rem; color: #9a3412; }
-    .concern-card > p { font-size: .8rem; color: #c2410c; margin: 0 0 10px; }
-    .concern-card textarea {
-      width: 100%; padding: 10px 12px; border: 1.5px solid #fdba74;
+    .concern-card > p { font-size: .8rem; color: #c2410c; margin: 0 0 14px; }
+    .concern-field { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
+    .concern-field:last-child { margin-bottom: 0; }
+    .concern-field label { font-size: .78rem; font-weight: 700; color: #9a3412; }
+    .concern-field textarea {
+      width: 100%; padding: 9px 12px; border: 1.5px solid #fdba74;
       border-radius: var(--radius-sm); font-size: .88rem; font-family: inherit;
-      resize: vertical; min-height: 90px; outline: none; background: #fff;
+      resize: vertical; min-height: 68px; outline: none; background: #fff;
+      transition: border-color .14s;
     }
-    .concern-card textarea:focus { border-color: #f97316; }
+    .concern-field textarea:focus { border-color: #f97316; }
 
     /* ── PDF Mode ── */
     .pdf-steps { counter-reset: step; list-style: none; padding: 0; margin: 0 0 18px; }
@@ -238,9 +242,9 @@
 
 <!-- ══ HERO ══ -->
 <section class="ai-hero">
-  <div class="badge">🤖 AI 심리분석 서비스</div>
-  <h1>검사 결과로 AI 상담 받기</h1>
-  <p>결과지 수치를 입력하거나 PDF를 활용하면<br>AI가 나만을 위한 통합 심리 분석을 제공합니다.</p>
+  <div class="badge">🤖 AI 해석 프롬프트 도구</div>
+  <h1>AI 심층 분석 프롬프트 생성</h1>
+  <p>결과지 수치를 입력하거나 PDF를 활용하면<br>ChatGPT · Claude · Gemini에 바로 사용할 수 있는 맞춤 프롬프트를 생성합니다.</p>
 </section>
 
 <div class="gen-wrap">
@@ -299,8 +303,27 @@
     <!-- 현재 고민 -->
     <div class="concern-card">
       <h3>🔴 현재 고민 상황</h3>
-      <p>많이 적을수록 분석이 정밀해집니다.</p>
-      <textarea id="concern" placeholder="요즘 가장 힘든 점, 반복되는 패턴, 가장 두려워하는 것, 나에게 필요한 것 등 자유롭게 적어주세요."></textarea>
+      <p>해당하는 항목만 입력해도 됩니다. 많이 적을수록 분석이 정밀해집니다.</p>
+      <div class="concern-field">
+        <label>요즘 힘든 점</label>
+        <textarea id="concern-1" placeholder="최근에 힘들거나 스트레스받는 상황을 자유롭게 적어주세요."></textarea>
+      </div>
+      <div class="concern-field">
+        <label>반복되는 패턴</label>
+        <textarea id="concern-2" placeholder="비슷한 상황이 반복되는 것, 관계에서 자꾸 같은 문제가 생기는 것 등"></textarea>
+      </div>
+      <div class="concern-field">
+        <label>가장 두려워하는 것</label>
+        <textarea id="concern-3" placeholder="나를 가장 불안하게 만드는 것, 피하고 싶은 상황 등"></textarea>
+      </div>
+      <div class="concern-field">
+        <label>나에게 필요한 것</label>
+        <textarea id="concern-4" placeholder="지금 내게 가장 필요하다고 느끼는 것, 바라는 변화 등"></textarea>
+      </div>
+      <div class="concern-field">
+        <label>상담자에게 하고 싶은 말</label>
+        <textarea id="concern-5" placeholder="위 항목 외에 AI에게 추가로 전달하고 싶은 내용"></textarea>
+      </div>
     </div>
 
     <!-- TCI -->
@@ -555,15 +578,16 @@
     </div>
 
     <div style="padding: 4px 0;">
-      <p style="font-weight:700; font-size:.95rem; margin: 0 0 16px; color:var(--brown-dark);">📄 PDF 활용 방법 (Claude.ai 권장)</p>
+      <p style="font-weight:700; font-size:.95rem; margin: 0 0 16px; color:var(--brown-dark);">📄 PDF 활용 방법</p>
       <ol class="pdf-steps">
         <li>
           <div>
-            <strong>Claude.ai에 접속합니다</strong>
-            <span class="sub">무료 계정으로도 PDF 업로드 가능합니다.</span>
+            <strong>아래 AI 중 하나에 접속합니다</strong>
+            <span class="sub">세 서비스 모두 무료 계정으로 PDF 업로드가 가능합니다.</span>
             <div class="ai-links" style="margin-top:6px;">
-              <a href="https://claude.ai" target="_blank" class="ai-link-btn">Claude.ai 열기 →</a>
+              <a href="https://claude.ai" target="_blank" class="ai-link-btn">Claude 열기 →</a>
               <a href="https://chat.openai.com" target="_blank" class="ai-link-btn">ChatGPT 열기 →</a>
+              <a href="https://gemini.google.com" target="_blank" class="ai-link-btn">Gemini 열기 →</a>
             </div>
           </div>
         </li>
@@ -582,14 +606,40 @@
         <li>
           <div>
             <strong>현재 고민 상황을 추가로 입력 후 전송합니다</strong>
-            <span class="sub">요즘 힘든 점, 반복되는 패턴, 바라는 것 등을 함께 적으면 분석이 더 깊어집니다.</span>
+            <span class="sub">아래 입력창에 고민을 적으면 프롬프트에 자동 반영됩니다.</span>
           </div>
         </li>
       </ol>
 
+      <p style="font-weight:700; font-size:.9rem; margin: 20px 0 4px; color:var(--brown-dark);">📝 현재 고민 상황 (선택)</p>
+      <div class="concern-card" style="margin-bottom:16px;">
+        <h3 style="display:none;"></h3>
+        <p>해당하는 항목만 입력해도 됩니다. 아래 내용이 프롬프트에 자동 반영됩니다.</p>
+        <div class="concern-field">
+          <label>요즘 힘든 점</label>
+          <textarea id="pdf-concern-1" placeholder="최근에 힘들거나 스트레스받는 상황을 자유롭게 적어주세요."></textarea>
+        </div>
+        <div class="concern-field">
+          <label>반복되는 패턴</label>
+          <textarea id="pdf-concern-2" placeholder="비슷한 상황이 반복되는 것, 관계에서 자꾸 같은 문제가 생기는 것 등"></textarea>
+        </div>
+        <div class="concern-field">
+          <label>가장 두려워하는 것</label>
+          <textarea id="pdf-concern-3" placeholder="나를 가장 불안하게 만드는 것, 피하고 싶은 상황 등"></textarea>
+        </div>
+        <div class="concern-field">
+          <label>나에게 필요한 것</label>
+          <textarea id="pdf-concern-4" placeholder="지금 내게 가장 필요하다고 느끼는 것, 바라는 변화 등"></textarea>
+        </div>
+        <div class="concern-field">
+          <label>상담자에게 하고 싶은 말</label>
+          <textarea id="pdf-concern-5" placeholder="위 항목 외에 AI에게 추가로 전달하고 싶은 내용"></textarea>
+        </div>
+      </div>
+
       <p style="font-weight:700; font-size:.9rem; margin: 20px 0 10px; color:var(--brown-dark);">📋 분석 지시 프롬프트 (복사해서 사용)</p>
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-        <span style="font-size:.8rem; color:var(--text-muted);">아래 전체를 복사해서 Claude에 붙여넣으세요</span>
+        <span style="font-size:.8rem; color:var(--text-muted);">아래 전체를 복사해서 AI에 붙여넣으세요</span>
         <button class="copy-btn" onclick="copyPdfPrompt()">복사하기</button>
       </div>
       <div class="output-box" id="pdf-prompt-box">당신은 30년 임상 경험을 가진 수석 상담심리전문가입니다.
@@ -613,11 +663,8 @@
 7. 성장을 위한 구체적인 제언
 8. 한 줄 핵심 요약: "당신은 이런 사람입니다"
 
-[현재 고민 상황 — 여기에 직접 입력해 주세요]
-요즘 가장 힘든 점:
-반복되는 패턴이 있다면:
-가장 두려워하는 것:
-나에게 가장 필요하다고 생각하는 것:</div>
+[현재 고민 상황]
+(입력한 내용이 여기에 반영됩니다)</div>
       <div class="copy-notice" id="pdf-copy-notice">✅ 클립보드에 복사되었습니다!</div>
     </div>
   </div><!-- /section-pdf -->
@@ -645,7 +692,7 @@
       </div>
       <div class="footer-links">
         <h4>바로가기</h4>
-        <a href="ai.html">🤖 AI 심리분석</a>
+        <a href="ai.html">🤖 AI 해석 프롬프트</a>
         <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank">💬 카카오 문의하기</a>
         <a href="index.html#packages">추천 패키지</a>
         <a href="index.html#benefits">왜 똑심인가요?</a>
@@ -726,7 +773,17 @@
     if(a) lines.push(`나이: 만 ${a}세`);
     if(j) lines.push(`직업/학업: ${j}`);
 
-    lines.push(`\n🔴 현재 고민 상황\n${v('concern')||'(별도 고민 없음)'}`);
+    const c1=v('concern-1'),c2=v('concern-2'),c3=v('concern-3'),c4=v('concern-4'),c5=v('concern-5');
+    lines.push(`\n🔴 현재 고민 상황`);
+    if(c1||c2||c3||c4||c5) {
+      if(c1) lines.push(`요즘 힘든 점: ${c1}`);
+      if(c2) lines.push(`반복되는 패턴: ${c2}`);
+      if(c3) lines.push(`가장 두려워하는 것: ${c3}`);
+      if(c4) lines.push(`나에게 필요한 것: ${c4}`);
+      if(c5) lines.push(`상담자에게 하고 싶은 말: ${c5}`);
+    } else {
+      lines.push(`(별도 고민 없음)`);
+    }
 
     if(state.tci) {
       lines.push(`\n🧬 TCI 기질 및 성격검사 (백분위)`);
@@ -792,7 +849,38 @@
   }
 
   function copyPdfPrompt() {
-    navigator.clipboard.writeText(document.getElementById('pdf-prompt-box').textContent).then(()=>{
+    const c1=v('pdf-concern-1'),c2=v('pdf-concern-2'),c3=v('pdf-concern-3'),c4=v('pdf-concern-4'),c5=v('pdf-concern-5');
+    const concernLines = [];
+    if(c1) concernLines.push(`요즘 힘든 점: ${c1}`);
+    if(c2) concernLines.push(`반복되는 패턴: ${c2}`);
+    if(c3) concernLines.push(`가장 두려워하는 것: ${c3}`);
+    if(c4) concernLines.push(`나에게 필요한 것: ${c4}`);
+    if(c5) concernLines.push(`상담자에게 하고 싶은 말: ${c5}`);
+    const concernText = concernLines.length ? concernLines.join('\n') : '(별도 고민 없음)';
+    const base = `당신은 30년 임상 경험을 가진 수석 상담심리전문가입니다.
+
+첨부된 심리검사 결과지 PDF를 바탕으로 저를 깊이 이해할 수 있도록 통합 심리 분석을 제공해 주세요.
+
+[분석 원칙]
+1. 숫자를 단순 나열하지 않고, "내가 왜 이런 감정을 느끼고, 왜 이런 행동을 반복하는지" 이유를 밝혀주세요.
+2. 병리 중심이 아닌 강점과 성장 가능성을 함께 이야기해 주세요.
+3. 검사 간 결과가 서로 다를 경우, 이를 모순이 아닌 더 깊은 이해의 단서로 활용해 주세요.
+4. 어렵고 전문적인 용어 대신 일상적인 언어로 설명해 주세요.
+5. 마지막에 반드시: "※ 이 분석은 AI 해석이며, 정확한 임상 진단은 전문 상담사와 상담하시기 바랍니다."
+
+[출력 구조]
+1. 지금 나의 심리 상태 요약
+2. 타고난 나 — 기질 분석
+3. 내가 만들어온 나 — 성격 및 대처 방식
+4. 내 마음속 반복 이야기 — 핵심 신념과 무의식 주제
+5. 관계 속의 나 — 대인관계 패턴
+6. 지금 이 고민의 심층 의미
+7. 성장을 위한 구체적인 제언
+8. 한 줄 핵심 요약: "당신은 이런 사람입니다"
+
+[현재 고민 상황]
+${concernText}`;
+    navigator.clipboard.writeText(base).then(()=>{
       const n=document.getElementById('pdf-copy-notice'); n.style.display='block';
       setTimeout(()=>n.style.display='none', 2500);
     });
