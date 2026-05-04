@@ -386,7 +386,9 @@ function buildMessage() {
     const t = TESTS_CART.find(x => x.key === k);
     return '[' + (t?.shortName || k) + ']';
   });
-  return '안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n' + names.join(' ') + ' 검사 진행하고 싶습니다.';
+  const reviewPledged = document.getElementById('reviewPledge')?.checked ?? false;
+  const pledge = reviewPledged ? '\n리뷰 약속드립니다.' : '';
+  return '안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n' + names.join(' ') + ' 검사 진행하고 싶습니다.' + pledge;
 }
 
 function render() {
