@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>검사 담기 — 똑심마인드</title>
+  <meta name="description" content="원하는 심리검사를 선택하고 할인 가격을 바로 확인하세요. 2개 10% · 3개 15% · 4개 이상 20% 할인.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .cart-hero {
+      background: linear-gradient(135deg, var(--beige) 0%, var(--beige-dark) 100%);
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+    .cart-hero h1 { color: var(--brown-dark); margin-bottom: 10px; }
+    .cart-hero p  { max-width: 500px; margin: 0 auto; }
+
+    .discount-badges {
+      display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+      margin: 20px 0 0;
+    }
+    .disc-badge {
+      background: var(--white); border-radius: 50px;
+      padding: 8px 18px; font-size: .85rem; font-weight: 700;
+      box-shadow: var(--shadow); color: var(--brown);
+      border: 2px solid transparent; transition: var(--transition);
+    }
+    .disc-badge.active { border-color: var(--green); color: var(--green); }
+
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+      align-items: start;
+      padding: 48px 0;
+    }
+
+    .test-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .test-row {
+      background: var(--white); border-radius: var(--radius);
+      padding: 18px 22px; box-shadow: var(--shadow);
+      display: flex; align-items: center; gap: 16px;
+      cursor: pointer; transition: var(--transition);
+      border: 2px solid transparent;
+    }
+    .test-row:hover { border-color: var(--beige-dark); }
+    .test-row.selected { border-color: var(--green); background: #f4faf6; }
+    .test-row.free-test { border-style: dashed; }
+    .test-row.free-test.selected { border-color: var(--green); border-style: solid; }
+
+    .test-row-check {
+      width: 24px; height: 24px; border-radius: 6px;
+      border: 2px solid var(--beige-dark); background: var(--beige);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: var(--transition); font-size: .9rem;
+    }
+    .test-row.selected .test-row-check {
+      background: var(--green); border-color: var(--green); color: #fff;
+    }
+
+    .test-row-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .test-row-info { flex: 1; }
+    .test-row-name { font-weight: 700; color: var(--brown-dark); font-size: .95rem; }
+    .test-row-desc { font-size: .8rem; color: var(--text-muted); margin-top: 2px; }
+
+    .test-row-price { text-align: right; flex-shrink: 0; }
+    .price-original { font-size: .78rem; color: var(--text-muted); text-decoration: line-through; }
+    .price-main { font-size: 1.05rem; font-weight: 900; color: var(--brown); }
+    .free-badge {
+      display: inline-block; background: var(--green); color: #fff;
+      font-size: .72rem; font-weight: 700; padding: 3px 9px;
+      border-radius: 20px; margin-top: 2px;
+    }
+
+    /* Sticky summary */
+    .cart-summary {
+      background: var(--white); border-radius: var(--radius);
+      padding: 28px; box-shadow: var(--shadow);
+      position: sticky; top: 80px;
+    }
+    .cart-summary h3 { color: var(--brown-dark); margin-bottom: 20px; font-size: 1.1rem; }
+
+    .summary-rows { border-top: 1px solid var(--beige-dark); padding-top: 16px; }
+    .summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; font-size: .88rem; color: var(--text-muted);
+      border-bottom: 1px solid var(--beige-dark);
+    }
+    .summary-row-name { font-weight: 600; color: var(--text); }
+    .summary-row-price { font-weight: 700; color: var(--brown); }
+    .summary-row.free-row .summary-row-price { color: var(--green); }
+
+    .summary-empty {
+      text-align: center; padding: 24px 0;
+      color: var(--text-muted); font-size: .88rem;
+    }
+
+    .summary-total-area {
+      margin-top: 16px; padding-top: 16px;
+      border-top: 2px solid var(--brown-light);
+    }
+    .summary-subtotal {
+      display: flex; justify-content: space-between;
+      font-size: .88rem; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .summary-discount {
+      display: flex; justify-content: space-between;
+      font-size: .88rem; color: var(--green); font-weight: 700; margin-bottom: 6px;
+    }
+    .summary-final {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-top: 10px;
+    }
+    .summary-final-label { font-weight: 700; color: var(--brown-dark); font-size: 1rem; }
+    .summary-final-price { font-weight: 900; color: var(--brown); font-size: 1.5rem; }
+
+    .discount-tier-info {
+      background: linear-gradient(135deg, var(--beige), var(--beige-dark));
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      margin: 14px 0; font-size: .82rem; color: var(--text-muted);
+    }
+    .discount-tier-info .tier-row {
+      display: flex; justify-content: space-between; padding: 3px 0;
+    }
+    .discount-tier-info .tier-row.current {
+      color: var(--green); font-weight: 700;
+    }
+    .discount-tier-info .tier-row .tier-pct { font-weight: 700; }
+
+    .cart-cta {
+      width: 100%; justify-content: center; margin-top: 16px;
+      font-size: 1rem; padding: 14px;
+    }
+    .cart-cta:disabled {
+      opacity: .45; pointer-events: none; cursor: default;
+    }
+    .sct-note {
+      font-size: .78rem; color: var(--text-muted);
+      text-align: center; margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .cart-layout { grid-template-columns: 1fr; }
+      .cart-summary { position: static; }
+      .discount-badges { gap: 6px; }
+      .disc-badge { font-size: .78rem; padding: 6px 12px; }
+    }
+    @media (max-width: 480px) {
+      .test-row { padding: 14px 16px; gap: 10px; }
+      .test-row-icon { font-size: 1.3rem; }
+      .test-row-desc { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="gnb">
+  <div class="gnb-inner">
+    <a href="../index.html" class="gnb-logo">🐻 똑심마인드</a>
+    <div class="gnb-menu">
+      <a href="../index.html#tests">전체 검사</a>
+      <a href="../index.html#packages">추천 패키지</a>
+      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">💬 문의하기</a>
+    </div>
+    <button class="gnb-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="../index.html">🏠 홈으로</a>
+  <a href="../index.html#tests">📋 전체 검사</a>
+  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">💬 문의하기</a>
+</div>
+
+<section class="cart-hero">
+  <div class="container">
+    <div class="breadcrumb" style="justify-content:center;display:flex;margin-bottom:12px;">
+      <a href="../index.html" style="color:var(--brown);">홈</a>&nbsp;›&nbsp;검사 담기
+    </div>
+    <h1>🛒 검사 담기</h1>
+    <p>원하는 검사를 선택하면 할인 가격을 바로 확인할 수 있습니다.<br>SCT 문장완성검사는 <strong>무료 증정</strong>!</p>
+    <div class="discount-badges">
+      <div class="disc-badge" id="badge1">1개&nbsp; 정가</div>
+      <div class="disc-badge" id="badge2">2개&nbsp; 10% 할인</div>
+      <div class="disc-badge" id="badge3">3개&nbsp; 15% 할인</div>
+      <div class="disc-badge" id="badge4">4개+&nbsp; 20% 할인</div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="cart-layout">
+
+    <!-- 검사 목록 -->
+    <div>
+      <p style="font-size:.88rem;color:var(--text-muted);margin-bottom:16px;">클릭하여 담을 검사를 선택하세요.</p>
+      <div class="test-list" id="testList"></div>
+    </div>
+
+    <!-- 가격 요약 -->
+    <div class="cart-summary">
+      <h3>📋 선택한 검사</h3>
+      <div class="summary-rows" id="summaryRows">
+        <div class="summary-empty">아직 선택한 검사가 없어요</div>
+      </div>
+
+      <div class="summary-total-area" id="totalArea" style="display:none;">
+        <div class="discount-tier-info" id="tierInfo"></div>
+        <div class="summary-subtotal">
+          <span>정가 합계</span>
+          <span id="subtotalEl">₩0</span>
+        </div>
+        <div class="summary-discount" id="discountRow" style="display:none;">
+          <span id="discountLabel">할인 (-10%)</span>
+          <span id="discountEl">-₩0</span>
+        </div>
+        <div class="summary-final">
+          <span class="summary-final-label">최종 금액</span>
+          <span class="summary-final-price" id="finalEl">₩0</span>
+        </div>
+      </div>
+
+      <a href="https://kmong.com/gig/766983" target="_blank" id="cartCta"
+         class="btn btn-green cart-cta" style="display:flex;" aria-disabled="true">
+        💬 문의하기
+      </a>
+      <p class="sct-note">SCT 문장완성검사는 리뷰 약속 시 무료 제공됩니다 🎁</p>
+    </div>
+
+  </div>
+</div>
+
+<section class="cta-section" style="margin-top:0;">
+  <div class="container">
+    <h2>어떤 검사부터 시작할지 모르겠나요? 🔍</h2>
+    <p>2가지 질문으로 나에게 맞는 검사를 추천받으세요.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+      <a href="../index.html" class="btn btn-outline" style="color:#fff;border-color:#fff;">맞춤 검사 찾기 →</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+      <span style="color:#fff;font-weight:700;">🐻 똑심마인드</span>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <a href="../index.html" style="color:rgba(255,255,255,.7);font-size:.85rem;">홈으로</a>
+        <a href="../index.html#packages" style="color:rgba(255,255,255,.7);font-size:.85rem;">추천 패키지</a>
+        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" style="color:rgba(255,255,255,.7);font-size:.85rem;">문의하기</a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 똑심마인드. All rights reserved.</p></div>
+  </div>
+</footer>
+
+<script src="../js/links.js"></script>
+<script src="../js/main.js"></script>
+<script>
+const TESTS_CART = [
+  { key:'tci',   icon:'🧬', name:'TCI 기질 및 성격검사',   desc:'타고난 기질 + 성장한 성격 7차원 분석',    href:'tci.html' },
+  { key:'kocean',icon:'🌊', name:'K-OCEAN 5요인 성격검사',  desc:'개방성·성실성·외향성·친화성·신경증',       href:'kocean.html' },
+  { key:'golden',icon:'✨', name:'GOLDEN 골든성격유형검사',  desc:'4가지 성격 유형 선호도 분석',              href:'golden.html' },
+  { key:'rs',    icon:'💚', name:'RS 회복탄력성검사',        desc:'심리적 회복 능력 측정',                    href:'rs.html' },
+  { key:'kiri',  icon:'🤝', name:'KiRi 통합적 대인관계검사', desc:'대인관계 패턴과 핵심 욕구 분석',           href:'kiri.html' },
+  { key:'pai',   icon:'🔬', name:'PAI / PAI-A 성격평가',    desc:'임상 표준 성격 전반 정밀 측정',            href:'pai.html' },
+  { key:'cst',   icon:'⭐', name:'CST 성격강점검사',         desc:'VIA 강점 모델 기반 고유 강점 발견',        href:'cst.html' },
+  { key:'sct',   icon:'💬', name:'SCT 문장완성검사',         desc:'무의식 탐색 · 리뷰 약속 시 무료 증정',     href:'sct.html', free: true },
+  { key:'mlst',  icon:'📚', name:'MLST-II 학습전략검사',    desc:'동기·인지·행동·정서 4대 학습 전략 진단',   href:'mlst.html' },
+  { key:'kcmii', icon:'🎓', name:'KCMII-2 대학전공선택검사', desc:'Holland 적성이론 진로·전공 탐색',          href:'kcmii.html' },
+  { key:'sts',   icon:'🦎', name:'STS 6요인 기질검사',       desc:'영아~성인 동물 유형 직관적 기질 이해',     href:'sts.html' },
+  { key:'pat',   icon:'🏠', name:'PAT-2 부모양육태도검사',   desc:'부모 양육 방식 6차원 과학적 진단',         href:'pat.html' },
+];
+
+const selected = new Set();
+const prices = (typeof TEST_PRICES !== 'undefined') ? TEST_PRICES : {};
+
+function fmtWon(n) {
+  return '₩' + n.toLocaleString('ko-KR');
+}
+
+function getDiscount(paidCount) {
+  if (paidCount >= 4) return 0.20;
+  if (paidCount === 3) return 0.15;
+  if (paidCount === 2) return 0.10;
+  return 0;
+}
+
+function render() {
+  const paidSelected = [...selected].filter(k => !prices[k]?.free);
+  const paidCount = paidSelected.length;
+  const rate = getDiscount(paidCount);
+  const pct  = Math.round(rate * 100);
+
+  // Update badge highlights
+  ['badge1','badge2','badge3','badge4'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    const thresholds = [1, 2, 3, 4];
+    el.classList.toggle('active', paidCount >= thresholds[i] && (i === 0 ? paidCount === 1 : (i === 3 ? paidCount >= 4 : paidCount === thresholds[i])));
+  });
+  document.getElementById('badge1').classList.toggle('active', paidCount === 1);
+  document.getElementById('badge2').classList.toggle('active', paidCount === 2);
+  document.getElementById('badge3').classList.toggle('active', paidCount === 3);
+  document.getElementById('badge4').classList.toggle('active', paidCount >= 4);
+
+  // Update test rows
+  TESTS_CART.forEach(t => {
+    const row = document.getElementById('row-' + t.key);
+    if (!row) return;
+    row.classList.toggle('selected', selected.has(t.key));
+    const chk = row.querySelector('.test-row-check');
+    chk.textContent = selected.has(t.key) ? '✓' : '';
+  });
+
+  // Summary rows
+  const summaryEl = document.getElementById('summaryRows');
+  const totalAreaEl = document.getElementById('totalArea');
+
+  if (selected.size === 0) {
+    summaryEl.innerHTML = '<div class="summary-empty">아직 선택한 검사가 없어요</div>';
+    totalAreaEl.style.display = 'none';
+    return;
+  }
+
+  let subtotal = 0;
+  let html = '';
+  [...selected].forEach(k => {
+    const t = TESTS_CART.find(x => x.key === k);
+    const p = prices[k];
+    const isFree = p?.free;
+    const price  = isFree ? 0 : (p?.price || 0);
+    subtotal += price;
+    html += `<div class="summary-row${isFree ? ' free-row' : ''}">
+      <span class="summary-row-name">${t?.icon || ''} ${t?.name || k}</span>
+      <span class="summary-row-price">${isFree ? '무료 🎁' : fmtWon(price)}</span>
+    </div>`;
+  });
+  summaryEl.innerHTML = html;
+
+  // Totals
+  const discountAmt = Math.round(subtotal * rate);
+  const final       = subtotal - discountAmt;
+
+  const tierInfo = document.getElementById('tierInfo');
+  tierInfo.innerHTML = `
+    <div style="font-weight:700;color:var(--brown-dark);margin-bottom:6px;">📊 할인 단계</div>
+    <div class="tier-row${paidCount===1?' current':''}"><span>1개</span><span class="tier-pct">정가</span></div>
+    <div class="tier-row${paidCount===2?' current':''}"><span>2개</span><span class="tier-pct">10% 할인</span></div>
+    <div class="tier-row${paidCount===3?' current':''}"><span>3개</span><span class="tier-pct">15% 할인</span></div>
+    <div class="tier-row${paidCount>=4?' current':''}"><span>4개 이상</span><span class="tier-pct">20% 할인</span></div>
+  `;
+
+  document.getElementById('subtotalEl').textContent = fmtWon(subtotal);
+  const discRow = document.getElementById('discountRow');
+  if (pct > 0) {
+    discRow.style.display = 'flex';
+    document.getElementById('discountLabel').textContent = `할인 (-${pct}%)`;
+    document.getElementById('discountEl').textContent = '-' + fmtWon(discountAmt);
+  } else {
+    discRow.style.display = 'none';
+  }
+  document.getElementById('finalEl').textContent = fmtWon(final);
+  totalAreaEl.style.display = 'block';
+}
+
+function buildList() {
+  const list = document.getElementById('testList');
+  list.innerHTML = TESTS_CART.map(t => {
+    const p = prices[t.key];
+    const isFree = t.free || p?.free;
+    const price  = isFree ? 0 : (p?.price || 0);
+    const priceHtml = isFree
+      ? `<span class="free-badge">무료 🎁</span>`
+      : `<span class="price-main">${fmtWon(price)}</span>`;
+    return `
+      <div class="test-row${isFree ? ' free-test' : ''}" id="row-${t.key}" data-key="${t.key}">
+        <div class="test-row-check"></div>
+        <div class="test-row-icon">${t.icon}</div>
+        <div class="test-row-info">
+          <div class="test-row-name">${t.name}</div>
+          <div class="test-row-desc">${t.desc}</div>
+        </div>
+        <div class="test-row-price">
+          ${priceHtml}
+          <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px;">
+            <a href="${t.href}" style="color:var(--green);text-decoration:underline;" onclick="event.stopPropagation()">상세보기</a>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  list.querySelectorAll('.test-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const k = row.dataset.key;
+      if (selected.has(k)) selected.delete(k);
+      else selected.add(k);
+      render();
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildList();
+  render();
+  applyStoreLinks();
+});
+</script>
+</body>
+</html>

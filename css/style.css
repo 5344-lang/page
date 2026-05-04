@@ -104,16 +104,12 @@ section { padding: 80px 0; }
 .gnb-menu a { font-size: .9rem; font-weight: 500; color: var(--text-muted); transition: var(--transition); }
 .gnb-menu a:hover { color: var(--brown); }
 .gnb-store-btn {
-  background: #FFCB2F; color: var(--brown); padding: 8px 18px;
+  background: var(--green); color: #fff; padding: 8px 18px;
   border-radius: 50px; font-size: .85rem; font-weight: 700;
   display: flex; align-items: center; gap: 6px;
   transition: var(--transition);
 }
-.gnb-store-btn:hover { background: #F5BC00; }
-.gnb-store-green {
-  background: var(--green) !important; color: #fff !important;
-}
-.gnb-store-green:hover { background: #3a6647 !important; }
+.gnb-store-btn:hover { background: #3a6647; }
 .gnb-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
 .gnb-hamburger span { display: block; width: 24px; height: 2px; background: var(--brown); border-radius: 2px; transition: var(--transition); }
 
@@ -397,6 +393,42 @@ section { padding: 80px 0; }
   border-radius: 2px; transition: var(--transition);
 }
 .quiz-progress span.done { background: var(--brown); }
+
+/* ─── Version Grid (tci 연령별 버전 등) ─── */
+.version-grid {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.version-card {
+  background: var(--white); border-radius: var(--radius-sm);
+  padding: 12px 16px; text-align: center; box-shadow: var(--shadow);
+  min-width: 80px; flex: 1;
+}
+.version-icon { font-size: 1.5rem; margin-bottom: 4px; }
+.version-label { font-size: .8rem; font-weight: 700; color: var(--brown-dark); }
+.version-range { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+
+/* ─── Sample Section (결과지 샘플 영역) ─── */
+.sample-section {
+  background: var(--white); border-radius: var(--radius);
+  padding: 28px 32px; box-shadow: var(--shadow);
+  border: 1px solid var(--beige-dark);
+}
+.sample-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+}
+.sample-header h3 { color: var(--brown-dark); font-size: 1.05rem; }
+.sample-sub { font-size: .88rem; color: var(--text-muted); margin-bottom: 16px; }
+.sample-btns {
+  display: flex; flex-wrap: wrap; gap: 10px;
+}
+.btn-sample {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--beige); border: 1.5px solid var(--beige-dark);
+  border-radius: var(--radius-sm); padding: 8px 14px;
+  font-size: .82rem; font-weight: 600; color: var(--brown);
+  cursor: pointer; transition: var(--transition); text-decoration: none;
+}
+.btn-sample:hover { background: var(--beige-dark); border-color: var(--brown-light); }
 
 /* ─── Individual Test Page ─── */
 .test-hero {

@@ -241,11 +241,20 @@ const QUIZ = {
 };
 
 /* ─── Package Price Calculator ─── */
+function getDiscount(paidCount) {
+  if (paidCount >= 4) return 0.20;
+  if (paidCount === 3) return 0.15;
+  if (paidCount === 2) return 0.10;
+  return 0;
+}
+
 function computePkgPrice(testKeys) {
   const saved  = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null');
   const prices = saved || (typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {});
-  const total  = testKeys.reduce((sum, k) => sum + (prices[k]?.price || 0), 0);
-  return { total, discounted: Math.round(total * 0.9) };
+  const paidKeys = testKeys.filter(k => !(prices[k]?.free));
+  const total    = paidKeys.reduce((sum, k) => sum + (prices[k]?.price || 0), 0);
+  const rate     = getDiscount(paidKeys.length);
+  return { total, discounted: Math.round(total * (1 - rate)), rate };
 }
 
 /* ─── Package Modal Data ─── */
@@ -375,13 +384,14 @@ function openPkgModal(key) {
 
   const priceEl = document.getElementById('pkgMPrice');
   if (priceEl && d.testKeys) {
-    const { total, discounted } = computePkgPrice(d.testKeys);
+    const { total, discounted, rate } = computePkgPrice(d.testKeys);
     if (total > 0) {
       priceEl.style.display = 'flex';
+      const pct = Math.round(rate * 100);
       priceEl.innerHTML =
         `<span class="pkg-price-original">정가 ₩${total.toLocaleString('ko-KR')}</span>` +
         `<span class="pkg-price-discount">₩${discounted.toLocaleString('ko-KR')}</span>` +
-        `<span class="pkg-price-badge">패키지 10% 할인</span>`;
+        `<span class="pkg-price-badge">패키지 ${pct}% 할인</span>`;
     }
   }
 
