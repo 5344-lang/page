@@ -203,9 +203,9 @@
     </div>
     <div class="setting-card" style="padding:0; overflow:hidden; border-left:4px solid #f59e0b;">
       <div style="background:#fffbeb; border-bottom:1px solid #fde68a; padding:12px 20px; font-size:.83rem; color:#92400e; line-height:1.6;">
-        🔒 이 기기(브라우저) 로컬에만 저장됩니다. GitHub에 업로드되지 않으며 방문자에게 절대 공개되지 않습니다.
+        🔒 방문자에게 절대 공개되지 않습니다. GitHub 토큰이 있으면 <strong>비공개 Gist에 클라우드 저장</strong>되어 다른 기기에서도 사용 가능합니다. 토큰 없이 저장하면 이 기기 로컬에만 저장됩니다.
       </div>
-      <table class="test-table">
+      <table class="test-table" style="min-width:900px;">
         <thead>
           <tr>
             <th>검사명</th>
@@ -213,14 +213,16 @@
             <th>추천가 (×3)</th>
             <th>추천마진 (×2)</th>
             <th>온라인 판매가</th>
-            <th>순이익 (판매가-원가)</th>
+            <th>순이익</th>
+            <th>수수료 후 (-4.4%)</th>
+            <th>세후 순이익 (-3.3%)</th>
           </tr>
         </thead>
         <tbody id="costTableBody"></tbody>
       </table>
     </div>
     <div style="margin-bottom:36px;">
-      <button class="btn-save-cost" onclick="saveCostPrices()">🔒 원가 저장 (이 기기에만)</button>
+      <button class="btn-save-cost" onclick="saveCostPrices()">☁️ 원가 저장 (토큰 있으면 클라우드, 없으면 로컬)</button>
     </div>
 
     <!-- 저장 -->
@@ -245,10 +247,12 @@ const ADMIN_PW  = 'gosi0912';
 const GH_OWNER  = '5344-lang';
 const GH_REPO   = 'page';
 const GH_FILE   = 'js/links.js';
-const LS_TOKEN  = 'ttok_gh_token';
-const LS_LIVE   = 'ttok_live_prices';
-const LS_SAVED  = 'ttok_saved_at';
-const LS_COST   = 'ttok_cost_prices';
+const LS_TOKEN   = 'ttok_gh_token';
+const LS_LIVE    = 'ttok_live_prices';
+const LS_SAVED   = 'ttok_saved_at';
+const LS_COST    = 'ttok_cost_prices';
+const LS_GIST_ID = 'ttok_cost_gist_id';
+const GIST_FNAME = 'ttok_cost_data.json';
 
 const TESTS = [
   { key: 'tci',    label: 'TCI 기질 및 성격검사' },
@@ -279,7 +283,7 @@ function doLogin() {
     document.getElementById('dashboard').style.display  = 'block';
     loadToken();
     renderTable();
-    renderCostTable();
+    initCostData();
   } else {
     document.getElementById('loginErr').style.display = 'block';
   }
@@ -298,7 +302,7 @@ if (sessionStorage.getItem('ttok_admin_ok')) {
   document.getElementById('dashboard').style.display  = 'block';
   loadToken();
   renderTable();
-  renderCostTable();
+  initCostData();
 }
 
 /* ── Token ── */
@@ -531,6 +535,8 @@ function renderCostTable() {
         <td class="margin-cell" id="recmargin_${t.key}">${_recMarginHtml(cost)}</td>
         <td style="font-size:.9rem; color:var(--text-muted);">${sellPrice.toLocaleString()}원</td>
         <td class="margin-cell" id="margin_${t.key}">${_profitHtml(cost, sellPrice)}</td>
+        <td class="margin-cell" id="afterfee_${t.key}">${_afterFeeHtml(cost, sellPrice)}</td>
+        <td class="margin-cell" id="aftertax_${t.key}">${_afterTaxHtml(cost, sellPrice)}</td>
       </tr>`;
   }).join('');
 }
@@ -557,6 +563,22 @@ function _profitHtml(cost, sellPrice) {
   return `<span class="${cls}">${m >= 0 ? '+' : ''}${m.toLocaleString()}원</span>`;
 }
 
+function _afterFeeHtml(cost, sellPrice) {
+  const c = _num(cost);
+  if (c === null) return '<span class="margin-nil">—</span>';
+  const net = Math.round(sellPrice * 0.956) - c;
+  const cls = net >= 0 ? 'margin-pos' : 'margin-neg';
+  return `<span class="${cls}">${net >= 0 ? '+' : ''}${net.toLocaleString()}원</span>`;
+}
+
+function _afterTaxHtml(cost, sellPrice) {
+  const c = _num(cost);
+  if (c === null) return '<span class="margin-nil">—</span>';
+  const net = Math.round(sellPrice * 0.956 * 0.967) - c;
+  const cls = net >= 0 ? 'margin-pos' : 'margin-neg';
+  return `<span class="${cls}">${net >= 0 ? '+' : ''}${net.toLocaleString()}원</span>`;
+}
+
 function refreshCost(key) {
   const cost      = document.getElementById('cost_' + key).value;
   const live      = JSON.parse(localStorage.getItem(LS_LIVE) || 'null') || {};
@@ -564,16 +586,75 @@ function refreshCost(key) {
   document.getElementById('rec_' + key).innerHTML       = _recHtml(cost);
   document.getElementById('recmargin_' + key).innerHTML = _recMarginHtml(cost);
   document.getElementById('margin_' + key).innerHTML    = _profitHtml(cost, sellPrice);
+  document.getElementById('afterfee_' + key).innerHTML  = _afterFeeHtml(cost, sellPrice);
+  document.getElementById('aftertax_' + key).innerHTML  = _afterTaxHtml(cost, sellPrice);
 }
 
-function saveCostPrices() {
+/* ── GitHub Gist 클라우드 저장 ── */
+async function saveCostToGist(token, costs) {
+  const gistId = localStorage.getItem(LS_GIST_ID) || '';
+  const body = JSON.stringify({
+    description: '똑심마인드 원가 데이터 (비공개)',
+    public: false,
+    files: { [GIST_FNAME]: { content: JSON.stringify(costs, null, 2) } },
+  });
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json',
+  };
+  const res = await fetch(
+    gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists',
+    { method: gistId ? 'PATCH' : 'POST', headers, body }
+  );
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || `Gist API ${res.status}`); }
+  const data = await res.json();
+  localStorage.setItem(LS_GIST_ID, data.id);
+  return data.id;
+}
+
+async function loadCostFromGist(token, gistId) {
+  const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+  });
+  if (!res.ok) throw new Error(`Gist 로드 실패 (${res.status})`);
+  const data = await res.json();
+  const content = data.files?.[GIST_FNAME]?.content;
+  if (!content) throw new Error('Gist 데이터 없음');
+  return JSON.parse(content);
+}
+
+async function initCostData() {
+  const token  = localStorage.getItem(LS_TOKEN)   || '';
+  const gistId = localStorage.getItem(LS_GIST_ID) || '';
+  if (token && gistId) {
+    try {
+      const costs = await loadCostFromGist(token, gistId);
+      localStorage.setItem(LS_COST, JSON.stringify(costs));
+      showToast('☁️ 원가 클라우드에서 불러옴');
+    } catch (_) { /* 로컬 데이터로 폴백 */ }
+  }
+  renderCostTable();
+}
+
+async function saveCostPrices() {
   const costs = {};
   TESTS.forEach(t => {
     const v = document.getElementById('cost_' + t.key).value;
     if (v !== '') costs[t.key] = Number(v);
   });
   localStorage.setItem(LS_COST, JSON.stringify(costs));
-  showToast('🔒 원가 저장됨 (이 기기에만)');
+  const token = localStorage.getItem(LS_TOKEN) || '';
+  if (token) {
+    try {
+      const id = await saveCostToGist(token, costs);
+      showToast('☁️ 원가 클라우드 저장 완료 (Gist ' + id.slice(0, 8) + '…)');
+    } catch (err) {
+      showToast('⚠️ 클라우드 실패 — 로컬엔 저장됨: ' + err.message, true);
+    }
+  } else {
+    showToast('🔒 원가 저장됨 (로컬) — 토큰 입력 시 클라우드 저장 가능');
+  }
 }
 
 /* ── Toast ── */
