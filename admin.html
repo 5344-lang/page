@@ -265,14 +265,19 @@ const TESTS = [
   { key: 'sct',    label: 'SCT 문장완성검사 (무료)',  free: true },
   { key: 'mlst',   label: 'MLST-II 학습전략검사' },
   { key: 'kcmii',  label: 'KCMII-2 대학전공선택검사' },
-  { key: 'sts',    label: 'STS 6요인 기질검사' },
-  { key: 'pat',    label: 'PAT-2 부모양육태도검사' },
+  { key: 'sts',     label: 'STS 6요인 기질검사' },
+  { key: 'pat',     label: 'PAT-2 부모양육태도검사' },
+  { key: 'neo',     label: 'NEO 네오 성격검사' },
+  { key: 'mindfit', label: 'MindFit 마인드핏 적응역량검사' },
+  { key: 'cat',     label: 'CAT-2 대학적응력검사 2판' },
+  { key: 'ieej',    label: 'IEEJ 통합직무스트레스검사' },
 ];
 
 const DEFAULT_PRICES = {
   tci: 27000, kocean: 12000, golden: 28000, rs: 12000,
   kiri: 14000, pai: 15000, cst: 14000, sct: 0,
   mlst: 14000, kcmii: 17000, sts: 12000, pat: 15000,
+  neo: 14000, mindfit: 14000, cat: 12000, ieej: 15000,
 };
 
 /* ── 로그인 ── */
@@ -396,8 +401,12 @@ const STORE_LINKS = {
   sct:    CONTACT_URL,
   mlst:   CONTACT_URL,
   kcmii:  CONTACT_URL,
-  sts:    CONTACT_URL,
-  pat:    CONTACT_URL,
+  sts:     CONTACT_URL,
+  pat:     CONTACT_URL,
+  neo:     CONTACT_URL,
+  mindfit: CONTACT_URL,
+  cat:     CONTACT_URL,
+  ieej:    CONTACT_URL,
   pkg_personality: CONTACT_URL,
   pkg_mental:      CONTACT_URL,
   pkg_relation:    CONTACT_URL,
@@ -405,6 +414,9 @@ const STORE_LINKS = {
   pkg_couple:      CONTACT_URL,
   pkg_exam:        CONTACT_URL,
   pkg_parenting:   CONTACT_URL,
+  pkg_univ:        CONTACT_URL,
+  pkg_burnout:     CONTACT_URL,
+  pkg_neo:         CONTACT_URL,
 };
 
 /* ============================================================
