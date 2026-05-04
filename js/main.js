@@ -2,7 +2,7 @@
    똑심 마음연구소 — Main JavaScript
    ============================================================ */
 
-const STORE_URL = 'https://open.kakao.com/o/sPbZfmsi';
+const STORE_URL = 'https://kmong.com/gig/766983';
 
 /* ─── Mobile Menu ─── */
 const hamburger = document.getElementById('hamburger');

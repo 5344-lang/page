@@ -72,11 +72,11 @@ section { padding: 80px 0; }
 }
 .btn-outline:hover { background: var(--brown); color: #fff; }
 .btn-store {
-  background: #FFCB2F; color: var(--brown);
+  background: var(--green); color: #fff;
   font-size: 1rem; padding: 16px 32px;
-  box-shadow: 0 4px 16px rgba(255,203,47,.4);
+  box-shadow: 0 4px 16px rgba(74,124,89,.4);
 }
-.btn-store:hover { background: #F5BC00; transform: translateY(-2px); }
+.btn-store:hover { background: #3a6647; transform: translateY(-2px); }
 
 /* ─── Tags / Badges ─── */
 .tag {
@@ -110,6 +110,10 @@ section { padding: 80px 0; }
   transition: var(--transition);
 }
 .gnb-store-btn:hover { background: #F5BC00; }
+.gnb-store-green {
+  background: var(--green) !important; color: #fff !important;
+}
+.gnb-store-green:hover { background: #3a6647 !important; }
 .gnb-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
 .gnb-hamburger span { display: block; width: 24px; height: 2px; background: var(--brown); border-radius: 2px; transition: var(--transition); }
 
@@ -524,4 +528,110 @@ section { padding: 80px 0; }
   animation: fadeUp .4s ease .1s both;
 }
 .pkg-why-box h4 { color: var(--brown-dark); margin-bottom: 10px; font-size: 1rem; }
-.pkg-why-box p { font-size: .92rem; line-height: 1.8; color: var(--text-muted);
+.pkg-why-box p { font-size: .92rem; line-height: 1.8; color: var(--text-muted); }
+
+/* ─── Package Modal Steps ─── */
+.pkg-step {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 0; border-bottom: 1px solid var(--beige-dark);
+  animation: fadeUp .4s ease both;
+}
+.pkg-step:last-child { border-bottom: none; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.pkg-step-num {
+  width: 28px; height: 28px; flex-shrink: 0;
+  border-radius: 50%; background: var(--brown); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; font-weight: 700;
+}
+.pkg-step-content h5 { color: var(--brown-dark); margin-bottom: 4px; font-size: .95rem; }
+.pkg-step-content p  { font-size: .85rem; }
+
+/* ─── Package Modal Price ─── */
+.pkg-price-original { font-size: .85rem; color: var(--text-muted); text-decoration: line-through; }
+.pkg-price-discount  { font-size: 1.4rem; font-weight: 900; color: var(--brown); }
+.pkg-price-badge {
+  background: var(--green); color: #fff;
+  font-size: .75rem; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px;
+}
+
+/* ─── Age Split (부모-자녀 패키지) ─── */
+.pkg-age-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+.pkg-age-block {
+  background: var(--beige); border-radius: var(--radius-sm);
+  padding: 14px; border: 1px solid var(--beige-dark);
+}
+.pkg-age-label { font-size: .8rem; font-weight: 700; color: var(--brown); margin-bottom: 4px; }
+.pkg-age-range { font-size: .75rem; color: var(--text-muted); margin-bottom: 8px; }
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 768px) {
+  /* GNB */
+  .gnb-menu { display: none; }
+  .gnb-hamburger { display: flex; }
+
+  /* Hero */
+  .hero { padding: 48px 0 40px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 24px; }
+  .hero-visual { display: none; }
+  .hero-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+  .hero-stats { gap: 16px; }
+  .hero-ctas { flex-direction: column; }
+  .hero-ctas .btn { width: 100%; justify-content: center; }
+
+  /* Section padding */
+  section { padding: 48px 0; }
+  .container { width: 94%; }
+
+  /* Test grid */
+  .test-grid { grid-template-columns: 1fr; }
+  .test-spec-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Package grid */
+  .package-grid { grid-template-columns: 1fr; }
+  .pkg-age-split { grid-template-columns: 1fr; }
+
+  /* Trust grid */
+  .trust-grid { grid-template-columns: 1fr; }
+
+  /* Dimension grid */
+  .dimension-grid { grid-template-columns: 1fr; }
+
+  /* Footer */
+  .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+
+  /* Quiz modal */
+  .modal { border-radius: 16px; }
+  .modal-header { padding: 20px 20px; }
+  .modal-body { padding: 20px 20px; }
+  .quiz-options { grid-template-columns: 1fr; }
+
+  /* Package modal */
+  .pkg-modal-head { padding: 28px 20px 20px; }
+  .pkg-modal-body { padding: 20px 20px 24px; }
+
+  /* CTA section */
+  .cta-section { padding: 48px 0; }
+  .cta-section div[style] { flex-direction: column; }
+  .cta-section .btn { width: 100%; justify-content: center; }
+
+  /* Quiz banner */
+  .quiz-banner { padding: 28px 20px; flex-direction: column; text-align: center; }
+
+  /* AI banner */
+  section > .container > .quiz-banner { padding: 40px 24px; }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: clamp(1.5rem, 7vw, 2rem); }
+  h2 { font-size: clamp(1.2rem, 5vw, 1.6rem); }
+  .hero-stats { flex-wrap: wrap; justify-content: center; }
+  .stat-item { min-width: 80px; }
+  .test-spec-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .flow-step { padding: 20px 16px; }
+  .package-card { padding: 22px; }
+}
