@@ -475,13 +475,15 @@ function applyPrices() {
   if (!specGrid || document.querySelector('.price-hero-badge')) return;
 
   const fmtPrice = info.price.toLocaleString('ko-KR');
+  const pdfNote = page === 'tci' ? '1인 기준 · 8P PDF 리포트 포함' : '1인 기준 · PDF 리포트 포함';
   const badge = document.createElement('div');
   badge.className = 'price-hero-badge';
   badge.innerHTML =
     `<span class="ph-label">검사 가격</span>` +
     `<span class="ph-amount">₩${fmtPrice}</span>` +
-    `<span class="ph-note">1인 기준 · 8P PDF 리포트 포함</span>`;
-  specGrid.after(badge);
+    `<span class="ph-note">${pdfNote}</span>`;
+  const versionGrid = document.querySelector('.version-grid');
+  (versionGrid || specGrid).after(badge);
 }
 
 /* ─── Smooth Anchor Scroll ─── */

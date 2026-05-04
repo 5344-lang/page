@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -14,22 +14,24 @@
 <!-- GNB -->
 <nav class="gnb">
   <div class="gnb-inner">
-    <a href="../index.html" class="gnb-logo">
-      🐻
-      똑심마인드
-    </a>
+    <a href="../index.html" class="gnb-logo">🐻 똑심마인드</a>
     <div class="gnb-menu">
-      <a href="../index.html#tests">전체 검사</a>
-      <a href="../index.html#packages">추천 패키지</a>
-      <a href="../index.html#expert">상담 안내</a>
+      <a href="../index.html">맞춤 검사 찾기</a>
+      <a href="packages.html">추천 패키지</a>
+      <a href="tests.html">전체 검사</a>
+      <a href="../ai.html">🤖 AI 분석</a>
+      <a href="cart.html">🛒 검사 담기</a>
       <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">💬 문의하기</a>
     </div>
     <button class="gnb-hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="../index.html">🏠 홈으로</a>
-  <a href="../index.html#packages">📦 추천 패키지</a>
+  <a href="../index.html">🔍 맞춤 검사 찾기</a>
+  <a href="packages.html">📦 추천 패키지</a>
+  <a href="tests.html">📋 전체 검사</a>
+  <a href="../ai.html">🤖 AI 심리분석</a>
+  <a href="cart.html">🛒 검사 담기</a>
   <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">💬 문의하기</a>
 </div>
 
@@ -38,11 +40,26 @@
   <div class="container">
     <div class="test-hero-inner">
       <div>
-        <div class="breadcrumb"><a href="../index.html">홈</a> › <a href="../index.html#tests">전체 검사</a> › TCI</div>
+        <div class="breadcrumb"><a href="../index.html">홈</a> › <a href="tests.html">전체 검사</a> › TCI</div>
         <div class="hero-badge" style="margin-bottom:12px;">
           <span class="tag tag-green">🧬 대표 검사</span>
         </div>
-        <div class="version-grid" style="margin:16px 0 20px;">
+        
+        <h1 style="font-size:clamp(1.6rem,4vw,2.6rem); margin-bottom:14px;">
+          TCI 기질 및 성격검사<br>
+          <span style="font-size:.65em; color:var(--text-muted); font-weight:400;">Temperament & Character Inventory</span>
+        </h1>
+        <p style="font-size:1rem; max-width:560px;">
+          타고난 <strong>기질(4차원)</strong>과 성장하며 가꾼 <strong>성격(3차원)</strong>을 동시에 분석하는 전 세계 검증된 심층 심리검사.
+          Cloninger 박사의 심리생물학 모델을 기반으로 전 생애 연령별 버전을 제공합니다.
+        </p>
+        <div class="test-spec-grid" style="margin-top:24px;">
+          <div class="spec-item"><div class="spec-icon">👥</div><div class="spec-label">대상</div><div class="spec-value">만 3세~성인</div></div>
+          <div class="spec-item"><div class="spec-icon">📝</div><div class="spec-label">문항 수</div><div class="spec-value">100~240문항</div></div>
+          <div class="spec-item"><div class="spec-icon">⏱️</div><div class="spec-label">소요 시간</div><div class="spec-value">30~50분</div></div>
+          <div class="spec-item"><div class="spec-icon">📊</div><div class="spec-label">측정 차원</div><div class="spec-value">7가지</div></div>
+        </div>
+        <div class="version-grid" style="margin:16px 0 0;">
           <div class="version-card">
             <div class="version-icon">🍼</div>
             <div class="version-label">영아용</div>
@@ -63,21 +80,6 @@
             <div class="version-label">성인용</div>
             <div class="version-range">성인</div>
           </div>
-        </div>
-        
-        <h1 style="font-size:clamp(1.6rem,4vw,2.6rem); margin-bottom:14px;">
-          TCI 기질 및 성격검사<br>
-          <span style="font-size:.65em; color:var(--text-muted); font-weight:400;">Temperament & Character Inventory</span>
-        </h1>
-        <p style="font-size:1rem; max-width:560px;">
-          타고난 <strong>기질(4차원)</strong>과 성장하며 가꾼 <strong>성격(3차원)</strong>을 동시에 분석하는 전 세계 검증된 심층 심리검사.
-          Cloninger 박사의 심리생물학 모델을 기반으로 전 생애 연령별 버전을 제공합니다.
-        </p>
-        <div class="test-spec-grid" style="margin-top:24px;">
-          <div class="spec-item"><div class="spec-icon">👥</div><div class="spec-label">대상</div><div class="spec-value">만 3세~성인</div></div>
-          <div class="spec-item"><div class="spec-icon">📝</div><div class="spec-label">문항 수</div><div class="spec-value">100~240문항</div></div>
-          <div class="spec-item"><div class="spec-icon">⏱️</div><div class="spec-label">소요 시간</div><div class="spec-value">30~50분</div></div>
-          <div class="spec-item"><div class="spec-icon">📊</div><div class="spec-label">측정 차원</div><div class="spec-value">7가지</div></div>
         </div>
       </div>
       <div style="font-size:5rem; text-align:center; opacity:.8;">🧬</div>
@@ -276,7 +278,7 @@
       <span style="color:#fff; font-weight:700;">🐻 똑심마인드</span>
       <div style="display:flex; gap:20px; flex-wrap:wrap;">
         <a href="../index.html" style="color:rgba(255,255,255,.7); font-size:.85rem;">홈으로</a>
-        <a href="../index.html#packages" style="color:rgba(255,255,255,.7); font-size:.85rem;">추천 패키지</a>
+        <a href="packages.html" style="color:rgba(255,255,255,.7); font-size:.85rem;">추천 패키지</a>
         <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" style="color:rgba(255,255,255,.7); font-size:.85rem;">문의하기</a>
       </div>
     </div>

@@ -166,7 +166,7 @@
     <div class="section-title">💬 문의하기 링크</div>
     <div class="setting-card">
       <div class="setting-label">카카오 오픈채팅 URL</div>
-      <input type="url" id="contactUrl" class="setting-input" value="https://open.kakao.com/o/sPbZfmsi">
+      <input type="url" id="contactUrl" class="setting-input" value="https://kmong.com/gig/766983">
     </div>
 
     <!-- 검사 가격 & 상태 -->
@@ -214,15 +214,17 @@ const TESTS = [
   { key: 'kiri',   label: 'KiRi 통합적 대인관계검사' },
   { key: 'pai',    label: 'PAI / PAI-A 성격평가 질문지' },
   { key: 'cst',    label: 'CST 성격강점검사' },
-  { key: 'sct',    label: 'SCT 문장완성검사' },
+  { key: 'sct',    label: 'SCT 문장완성검사 (무료)',  free: true },
   { key: 'mlst',   label: 'MLST-II 학습전략검사' },
   { key: 'kcmii',  label: 'KCMII-2 대학전공선택검사' },
+  { key: 'sts',    label: 'STS 6요인 기질검사' },
+  { key: 'pat',    label: 'PAT-2 부모양육태도검사' },
 ];
 
 const DEFAULT_PRICES = {
   tci: 27000, kocean: 12000, golden: 28000, rs: 12000,
-  kiri: 14000, pai: 15000, cst: 14000, sct: 5000,
-  mlst: 14000, kcmii: 17000,
+  kiri: 14000, pai: 15000, cst: 14000, sct: 0,
+  mlst: 14000, kcmii: 17000, sts: 12000, pat: 15000,
 };
 
 /* ── 로그인 ── */
@@ -319,9 +321,11 @@ function readForm() {
 
 /* ── links.js 생성 ── */
 function buildLinksJs(contactUrl, prices) {
-  const lines = Object.entries(prices).map(([k, v]) =>
-    `  ${k.padEnd(7)}: { price: ${String(v.price).padStart(6)}, active: ${v.active} },`
-  ).join('\n');
+  const freeTests = new Set(TESTS.filter(t => t.free).map(t => t.key));
+  const lines = Object.entries(prices).map(([k, v]) => {
+    const freeStr = freeTests.has(k) ? ', free: true' : '';
+    return `  ${k.padEnd(7)}: { price: ${String(v.price).padStart(6)}, active: ${v.active}${freeStr} },`;
+  }).join('\n');
 
   return `/* ============================================================
    똑심마인드 — 스토어 링크 설정 파일
@@ -342,6 +346,8 @@ const STORE_LINKS = {
   sct:    CONTACT_URL,
   mlst:   CONTACT_URL,
   kcmii:  CONTACT_URL,
+  sts:    CONTACT_URL,
+  pat:    CONTACT_URL,
   pkg_personality: CONTACT_URL,
   pkg_mental:      CONTACT_URL,
   pkg_relation:    CONTACT_URL,

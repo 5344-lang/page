@@ -103,13 +103,15 @@ section { padding: 80px 0; }
 .gnb-menu { display: flex; align-items: center; gap: 28px; }
 .gnb-menu a { font-size: .9rem; font-weight: 500; color: var(--text-muted); transition: var(--transition); }
 .gnb-menu a:hover { color: var(--brown); }
-.gnb-store-btn {
-  background: var(--green); color: #fff; padding: 8px 18px;
+.gnb-store-btn,
+.gnb-menu a.gnb-store-btn {
+  background: var(--green); color: #fff !important; padding: 8px 18px;
   border-radius: 50px; font-size: .85rem; font-weight: 700;
   display: flex; align-items: center; gap: 6px;
   transition: var(--transition);
 }
-.gnb-store-btn:hover { background: #3a6647; }
+.gnb-store-btn:hover,
+.gnb-menu a.gnb-store-btn:hover { background: #3a6647; color: #fff !important; }
 .gnb-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
 .gnb-hamburger span { display: block; width: 24px; height: 2px; background: var(--brown); border-radius: 2px; transition: var(--transition); }
 
