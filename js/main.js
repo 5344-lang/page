@@ -42,7 +42,8 @@ const QUIZ = {
       { value: 'focus',   label: '😴 집중력·동기가 부족해요' },
       { value: 'method',  label: '📖 내게 맞는 공부법을 모르겠어요' },
       { value: 'anxiety', label: '😰 시험 불안·긴장이 심해요' },
-      { value: 'career',  label: '🧭 진로·전공 방향이 막막해요' }
+      { value: 'career',  label: '🧭 진로·전공 방향이 막막해요' },
+      { value: 'adapt',   label: '🏛️ 학교·대학 생활 적응이 어려워요' }
     ],
     child: [
       { value: 'infant',     label: '🍼 영아·유아 자녀 (0 ~ 7세)' },
@@ -75,47 +76,60 @@ const QUIZ = {
     sts: {
       young: { emoji:'🦎', title:'STS 6요인 기질검사 (영아·유아)', desc:'0~7세 자녀의 타고난 기질을 6요인·동물 유형으로 직관적으로 이해합니다.',  href:'pages/sts.html' },
       _:     { emoji:'🦎', title:'STS 6요인 기질검사',             desc:'타고난 기질을 6가지 요인과 동물 유형으로 직관적으로 이해합니다.',          href:'pages/sts.html' }
-    }
+    },
+    neo:     { _: { emoji:'🔭', title:'NEO 네오 성격검사',             desc:'신경질·외향성·개방성·우호성·성실성 5요인 30하위요인으로 성격을 정밀 분석합니다.',           href:'pages/neo.html'     } },
+    mindfit: { _: { emoji:'🧩', title:'MindFit 마인드핏 적응역량검사', desc:'학교 적응도와 심리적 자원을 3개 영역으로 측정하고 개입 방향을 제시합니다.',              href:'pages/mindfit.html' } },
+    cat:     { _: { emoji:'🏛️', title:'CAT-2 대학적응력검사',          desc:'대학 적응력과 중도탈락 위험도를 진단하고 학생지원의 구체적 방향을 제시합니다.',          href:'pages/cat.html'     } },
+    ieej:    { _: { emoji:'💼', title:'IEEJ 통합직무스트레스검사',      desc:'감정노동·번아웃을 4개 척도로 다면 분석하여 심리적 개입 우선순위를 제시합니다.',         href:'pages/ieej.html'    } }
   },
 
   PRIMARY: {
     'self+emotion':'tci',   'self+personality':'tci',  'self+stress':'rs',    'self+strength':'cst',
     'relation+pattern':'kiri','relation+conflict':'tci','relation+fear':'kiri','relation+couple':'tci',
     'learn+focus':'mlst',   'learn+method':'mlst',     'learn+anxiety':'rs',  'learn+career':'kcmii',
+    'learn+adapt':'cat',
     'child+behavior':'tci', 'child+comm':'tci',        'child+school':'tci',  'child+emotion_child':'tci'
   },
 
   SECONDARY: {
-    tci:   { deep:'kocean', action:'cst',    precise:'pai',    strength:'cst'    },
-    rs:    { deep:'tci',    action:'mlst',   precise:'pai',    strength:'cst'    },
-    cst:   { deep:'tci',    action:'golden', precise:'tci',    strength:'golden' },
-    kiri:  { deep:'tci',    action:'golden', precise:'pai',    strength:'cst'    },
-    mlst:  { deep:'tci',    action:'cst',    precise:'kocean', strength:'cst'    },
-    kcmii: { deep:'tci',    action:'cst',    precise:'kocean', strength:'cst'    }
+    tci:     { deep:'kocean',  action:'cst',    precise:'pai',    strength:'cst'    },
+    rs:      { deep:'tci',     action:'mlst',   precise:'pai',    strength:'cst'    },
+    cst:     { deep:'tci',     action:'golden', precise:'tci',    strength:'golden' },
+    kiri:    { deep:'tci',     action:'golden', precise:'pai',    strength:'cst'    },
+    mlst:    { deep:'tci',     action:'cst',    precise:'kocean', strength:'cst'    },
+    kcmii:   { deep:'tci',     action:'cst',    precise:'kocean', strength:'cst'    },
+    cat:     { deep:'mindfit', action:'rs',     precise:'mlst',   strength:'cst'    },
+    neo:     { deep:'tci',     action:'kocean', precise:'golden', strength:'cst'    },
+    mindfit: { deep:'cat',     action:'rs',     precise:'mlst',   strength:'cst'    },
+    ieej:    { deep:'tci',     action:'rs',     precise:'pai',    strength:'cst'    }
   },
 
   SEC_OVERRIDE: {
-    'self+emotion':       { deep:'pai',  action:'rs',     precise:'pai',    strength:'cst'    },
-    'self+stress':        { deep:'tci',  action:'tci',    precise:'pai',    strength:'cst'    },
-    'relation+fear':      { deep:'pai',  action:'tci',    precise:'pai',    strength:'rs'     },
-    'relation+couple':    { deep:'kiri', action:'golden', precise:'kiri',   strength:'cst'    },
-    'learn+anxiety':      { deep:'tci',  action:'mlst',   precise:'pai',    strength:'cst'    },
-    'learn+career':       { deep:'tci',  action:'cst',    precise:'kocean', strength:'cst'    },
-    'child+behavior':     { deep:'pai',  action:'kiri',   precise:'pai',    strength:'cst'    },
-    'child+comm':         { deep:'kiri', action:'kiri',   precise:'pai',    strength:'golden' },
-    'child+school':       { deep:'mlst', action:'mlst',   precise:'pai',    strength:'cst'    },
-    'child+emotion_child':{ deep:'pai',  action:'rs',     precise:'pai',    strength:'cst'    }
+    'self+emotion':       { deep:'pai',     action:'rs',      precise:'pai',    strength:'cst'    },
+    'self+personality':   { deep:'neo',     action:'kocean',  precise:'golden', strength:'cst'    },
+    'self+stress':        { deep:'tci',     action:'ieej',    precise:'pai',    strength:'rs'     },
+    'relation+fear':      { deep:'pai',     action:'tci',     precise:'pai',    strength:'rs'     },
+    'relation+couple':    { deep:'kiri',    action:'golden',  precise:'kiri',   strength:'cst'    },
+    'learn+focus':        { deep:'mindfit', action:'mlst',    precise:'tci',    strength:'cst'    },
+    'learn+anxiety':      { deep:'tci',     action:'mlst',    precise:'pai',    strength:'cst'    },
+    'learn+career':       { deep:'tci',     action:'kcmii',   precise:'cat',    strength:'cst'    },
+    'learn+adapt':        { deep:'mindfit', action:'rs',      precise:'mlst',   strength:'cst'    },
+    'child+behavior':     { deep:'pai',     action:'kiri',    precise:'pai',    strength:'cst'    },
+    'child+comm':         { deep:'kiri',    action:'kiri',    precise:'pai',    strength:'golden' },
+    'child+school':       { deep:'mlst',    action:'mlst',    precise:'pai',    strength:'cst'    },
+    'child+emotion_child':{ deep:'pai',     action:'rs',      precise:'pai',    strength:'cst'    }
   },
 
   PACKAGE: {
-    'self+emotion':'pkg_mental',      'self+personality':'pkg_personality',
-    'self+stress':'pkg_mental',       'self+strength':'pkg_personality',
-    'relation+pattern':'pkg_relation','relation+conflict':'pkg_relation',
-    'relation+fear':'pkg_relation',   'relation+couple':'pkg_couple',
-    'learn+focus':'pkg_exam',         'learn+method':'pkg_exam',
-    'learn+anxiety':'pkg_exam',       'learn+career':'pkg_career',
-    'child+behavior':'pkg_parenting', 'child+comm':'pkg_parenting',
-    'child+school':'pkg_parenting',   'child+emotion_child':'pkg_parenting'
+    'self+emotion':'pkg_mental',        'self+personality':'pkg_neo',
+    'self+stress':'pkg_burnout',        'self+strength':'pkg_personality',
+    'relation+pattern':'pkg_relation',  'relation+conflict':'pkg_relation',
+    'relation+fear':'pkg_relation',     'relation+couple':'pkg_couple',
+    'learn+focus':'pkg_exam',           'learn+method':'pkg_exam',
+    'learn+anxiety':'pkg_exam',         'learn+career':'pkg_career',
+    'learn+adapt':'pkg_univ',
+    'child+behavior':'pkg_parenting',   'child+comm':'pkg_parenting',
+    'child+school':'pkg_parenting',     'child+emotion_child':'pkg_parenting'
   },
 
   q1:null, q2:null, q3:null, _lastPkgKey:null,
@@ -355,6 +369,38 @@ const PKG_INFO = {
       { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '직장에서 반복되는 행동·감정 패턴의 기질적 뿌리를 이해합니다.' },
       { icon: '🌊', name: 'K-OCEAN 5요인 성격검사', desc: '현재 나의 업무 방식—성실성·외향성·친화성 등을 객관적으로 측정합니다.' },
       { icon: '🤝', name: 'KiRi 통합적 대인관계검사', desc: '직장 내 관계 패턴과 갈등의 핵심 욕구를 통합적으로 분석합니다.' }
+    ]
+  },
+  pkg_neo: {
+    icon: '🔭', title: '심층 성격 탐색 패키지',
+    tags: ['TCI', 'NEO 네오'],
+    testKeys: ['tci', 'neo'],
+    why: 'TCI는 "타고난 기질"을, NEO는 "현재의 성격 특성"을 5요인 30하위요인으로 정밀 측정합니다. 두 검사 모두 Big Five 이론을 기반으로 하지만 측정 방식이 달라, 함께 받으면 가장 깊고 정확한 자기이해를 완성할 수 있습니다.',
+    steps: [
+      { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '유전적으로 타고난 기질 4차원 + 성장한 성격 3차원을 분석합니다.' },
+      { icon: '🔭', name: 'NEO 네오 성격검사', desc: '신경질·외향성·개방성·우호성·성실성 5요인을 각 6개 하위요인으로 세분화해 30개 지표로 정밀 분석합니다.' }
+    ]
+  },
+  pkg_univ: {
+    icon: '🏛️', title: '대학생 적응 패키지',
+    tags: ['CAT-2', 'MindFit', 'RS 회복탄력성'],
+    testKeys: ['cat', 'mindfit', 'rs'],
+    why: 'CAT-2로 대학 적응 수준과 중도탈락 위험도를 진단하고, MindFit으로 심리적 자원과 스트레스 원인을 파악하며, RS로 역경에서 회복하는 힘을 점검합니다. 대학생활 전반의 심리적 상태를 한번에 이해할 수 있는 최적의 조합입니다.',
+    steps: [
+      { icon: '🏛️', name: 'CAT-2 대학적응력검사 2판', desc: '학업적·심리적·사회적·기관적 측면에서 대학 적응 수준과 중도탈락 위험을 진단합니다.' },
+      { icon: '🧩', name: 'MindFit 마인드핏 적응역량검사', desc: '적응지수·적응역량·스트레스 3개 영역으로 심리적 자원과 취약점을 파악합니다.' },
+      { icon: '💚', name: 'RS 회복탄력성검사', desc: '7가지 요인으로 심리적 회복 능력을 측정하고 강화 방법을 찾습니다.' }
+    ]
+  },
+  pkg_burnout: {
+    icon: '🔥', title: '직장인 번아웃 케어 패키지',
+    tags: ['IEEJ', 'TCI', 'RS 회복탄력성'],
+    testKeys: ['ieej', 'tci', 'rs'],
+    why: 'IEEJ로 감정노동·번아웃의 현재 수준과 원인 척도를 진단하고, TCI로 기질적으로 어떤 스트레스에 취약한지 이해하며, RS로 번아웃에서 회복하는 힘을 측정합니다. 번아웃의 진단부터 원인 이해·회복까지 완결되는 조합입니다.',
+    steps: [
+      { icon: '💼', name: 'IEEJ 통합직무스트레스검사', desc: '감정노동·일의 의미 소실·업무 능력 저하·자기 불신 4개 척도로 번아웃 수준을 정밀 진단합니다.' },
+      { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '기질적으로 어떤 직무 스트레스에 취약한지 근본 원인을 이해합니다.' },
+      { icon: '💚', name: 'RS 회복탄력성검사', desc: '7가지 요인으로 번아웃 회복 가능성과 강화 방법을 찾습니다.' }
     ]
   }
 };
