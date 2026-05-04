@@ -110,6 +110,22 @@
     .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--brown-dark); color: #fff; padding: 14px 28px; border-radius: 50px; font-size: .95rem; font-weight: 700; box-shadow: 0 8px 28px rgba(0,0,0,.25); opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; white-space: nowrap; z-index: 999; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .toast.error-toast { background: #c33; }
+
+    /* ── 원가 섹션 ── */
+    .cost-section-title { font-size: 1.05rem; font-weight: 700; color: #92400e; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid #fde68a; display: flex; align-items: center; gap: 10px; }
+    .cost-badge { font-size: .72rem; font-weight: 700; color: #92400e; background: #fef3c7; padding: 3px 12px; border-radius: 20px; white-space: nowrap; }
+    .btn-save-cost {
+      background: #f59e0b; color: #fff; border: none;
+      padding: 13px 32px; border-radius: 12px; font-size: .97rem; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+      box-shadow: 0 4px 14px rgba(245,158,11,.35);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-save-cost:hover { background: #d97706; transform: translateY(-1px); }
+    .margin-cell { font-weight: 700; font-size: .92rem; }
+    .margin-pos { color: var(--green); }
+    .margin-neg { color: #c33; }
+    .margin-nil { color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -180,6 +196,33 @@
       </table>
     </div>
 
+    <!-- 원가 기록 (내부 전용) -->
+    <div class="cost-section-title">
+      🔒 원가 기록
+      <span class="cost-badge">내부 전용 — 고객 미노출</span>
+    </div>
+    <div class="setting-card" style="padding:0; overflow:hidden; border-left:4px solid #f59e0b;">
+      <div style="background:#fffbeb; border-bottom:1px solid #fde68a; padding:12px 20px; font-size:.83rem; color:#92400e; line-height:1.6;">
+        🔒 이 기기(브라우저) 로컬에만 저장됩니다. GitHub에 업로드되지 않으며 방문자에게 절대 공개되지 않습니다.
+      </div>
+      <table class="test-table">
+        <thead>
+          <tr>
+            <th>검사명</th>
+            <th>원가 (원)</th>
+            <th>추천가 (×3)</th>
+            <th>추천마진 (×2)</th>
+            <th>온라인 판매가</th>
+            <th>순이익 (판매가-원가)</th>
+          </tr>
+        </thead>
+        <tbody id="costTableBody"></tbody>
+      </table>
+    </div>
+    <div style="margin-bottom:36px;">
+      <button class="btn-save-cost" onclick="saveCostPrices()">🔒 원가 저장 (이 기기에만)</button>
+    </div>
+
     <!-- 저장 -->
     <div class="save-area">
       <button class="btn-save" id="btnSave" onclick="saveAll()">
@@ -205,6 +248,7 @@ const GH_FILE   = 'js/links.js';
 const LS_TOKEN  = 'ttok_gh_token';
 const LS_LIVE   = 'ttok_live_prices';
 const LS_SAVED  = 'ttok_saved_at';
+const LS_COST   = 'ttok_cost_prices';
 
 const TESTS = [
   { key: 'tci',    label: 'TCI 기질 및 성격검사' },
@@ -235,6 +279,7 @@ function doLogin() {
     document.getElementById('dashboard').style.display  = 'block';
     loadToken();
     renderTable();
+    renderCostTable();
   } else {
     document.getElementById('loginErr').style.display = 'block';
   }
@@ -253,6 +298,7 @@ if (sessionStorage.getItem('ttok_admin_ok')) {
   document.getElementById('dashboard').style.display  = 'block';
   loadToken();
   renderTable();
+  renderCostTable();
 }
 
 /* ── Token ── */
@@ -467,6 +513,67 @@ function resetBtn() {
   btn.disabled = false;
   document.getElementById('btnIcon').textContent = '💾';
   document.getElementById('btnText').textContent = '저장하기 (모든 방문자에게 반영)';
+}
+
+/* ── 원가 테이블 ── */
+function renderCostTable() {
+  const costs = JSON.parse(localStorage.getItem(LS_COST) || '{}');
+  const live  = JSON.parse(localStorage.getItem(LS_LIVE) || 'null') || {};
+
+  document.getElementById('costTableBody').innerHTML = TESTS.map(t => {
+    const cost      = costs[t.key] !== undefined ? costs[t.key] : '';
+    const sellPrice = live[t.key]?.price ?? DEFAULT_PRICES[t.key];
+    return `
+      <tr>
+        <td><div class="test-name">${t.label}</div><div class="test-key">${t.key}</div></td>
+        <td><input type="number" class="price-input" id="cost_${t.key}" value="${cost}" min="0" step="100" placeholder="—" oninput="refreshCost('${t.key}')"></td>
+        <td class="margin-cell" id="rec_${t.key}">${_recHtml(cost)}</td>
+        <td class="margin-cell" id="recmargin_${t.key}">${_recMarginHtml(cost)}</td>
+        <td style="font-size:.9rem; color:var(--text-muted);">${sellPrice.toLocaleString()}원</td>
+        <td class="margin-cell" id="margin_${t.key}">${_profitHtml(cost, sellPrice)}</td>
+      </tr>`;
+  }).join('');
+}
+
+function _num(cost) { return (cost === '' || cost === undefined || cost === null) ? null : Number(cost); }
+
+function _recHtml(cost) {
+  const c = _num(cost);
+  if (c === null) return '<span class="margin-nil">—</span>';
+  return `<span style="color:var(--brown-dark);font-weight:700;">${(c * 3).toLocaleString()}원</span>`;
+}
+
+function _recMarginHtml(cost) {
+  const c = _num(cost);
+  if (c === null) return '<span class="margin-nil">—</span>';
+  return `<span class="margin-pos">${(c * 2).toLocaleString()}원</span>`;
+}
+
+function _profitHtml(cost, sellPrice) {
+  const c = _num(cost);
+  if (c === null) return '<span class="margin-nil">—</span>';
+  const m = sellPrice - c;
+  const cls = m >= 0 ? 'margin-pos' : 'margin-neg';
+  return `<span class="${cls}">${m >= 0 ? '+' : ''}${m.toLocaleString()}원</span>`;
+}
+
+function refreshCost(key) {
+  const cost      = document.getElementById('cost_' + key).value;
+  const live      = JSON.parse(localStorage.getItem(LS_LIVE) || 'null') || {};
+  const sellPrice = live[key]?.price ?? DEFAULT_PRICES[key];
+  document.getElementById('rec_' + key).innerHTML       = _recHtml(cost);
+  document.getElementById('recmargin_' + key).innerHTML = _recMarginHtml(cost);
+  document.getElementById('margin_' + key).innerHTML    = _profitHtml(cost, sellPrice);
+}
+
+function saveCostPrices() {
+  const costs = {};
+  TESTS.forEach(t => {
+    const v = document.getElementById('cost_' + t.key).value;
+    if (v !== '') costs[t.key] = Number(v);
+  });
+  localStorage.setItem(LS_COST, JSON.stringify(costs));
+  showToast('🔒 원가 저장됨 (이 기기에만)');
 }
 
 /* ── Toast ── */

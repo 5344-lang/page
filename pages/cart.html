@@ -169,6 +169,27 @@
       text-align: center; margin-top: 10px; line-height: 1.5;
     }
 
+    /* ── Review Pledge ── */
+    .review-pledge {
+      margin-top: 14px;
+      background: #f0fdf4; border: 2px solid var(--green);
+      border-radius: var(--radius); padding: 14px 16px;
+    }
+    .review-pledge label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+    .review-pledge input[type="checkbox"] {
+      margin-top: 3px; accent-color: var(--green);
+      width: 18px; height: 18px; flex-shrink: 0; cursor: pointer;
+    }
+    .review-pledge-title { font-weight: 700; color: var(--green); font-size: .88rem; }
+    .review-pledge-sub   { font-size: .75rem; color: var(--text-muted); margin-top: 2px; line-height: 1.5; }
+
+    /* ── BEST badge ── */
+    .best-badge {
+      display: inline-block; background: var(--brown); color: #fff;
+      font-size: .62rem; font-weight: 700; padding: 2px 7px;
+      border-radius: 20px; vertical-align: middle; margin-left: 5px;
+    }
+
     @media (max-width: 800px) {
       .cart-layout { grid-template-columns: 1fr; }
       .cart-summary { position: static; }
@@ -186,16 +207,22 @@
   <div class="gnb-inner">
     <a href="../index.html" class="gnb-logo">🐻 똑심마인드</a>
     <div class="gnb-menu">
-      <a href="tests.html">전체 검사</a>
+      <a href="../index.html">맞춤 검사 찾기</a>
       <a href="packages.html">추천 패키지</a>
+      <a href="tests.html">전체 검사</a>
+      <a href="../ai.html">🤖 AI 분석</a>
+      <a href="cart.html">🛒 검사 담기</a>
       <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">💬 문의하기</a>
     </div>
     <button class="gnb-hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="../index.html">🏠 홈으로</a>
+  <a href="../index.html">🔍 맞춤 검사 찾기</a>
+  <a href="packages.html">📦 추천 패키지</a>
   <a href="tests.html">📋 전체 검사</a>
+  <a href="../ai.html">🤖 AI 심리분석</a>
+  <a href="cart.html">🛒 검사 담기</a>
   <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">💬 문의하기</a>
 </div>
 
@@ -208,7 +235,6 @@
     <h1>🛒 검사 담기</h1>
     <p>원하는 검사를 선택 → 가격 확인 → 문의 내용 복사 → 크몽에서 결제 문의</p>
     <div class="discount-badges">
-      <div class="disc-badge" id="badge1">1개 &nbsp;정가</div>
       <div class="disc-badge" id="badge2">2개 &nbsp;10% 할인</div>
       <div class="disc-badge" id="badge3">3개 &nbsp;15% 할인</div>
       <div class="disc-badge" id="badge4">4개+ &nbsp;20% 할인</div>
@@ -221,8 +247,17 @@
 
     <!-- 검사 목록 -->
     <div>
-      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px;">검사를 클릭해서 담으세요. SCT는 무료 증정!</p>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px;">검사를 클릭해서 담으세요.</p>
       <div class="test-list" id="testList"></div>
+      <div class="review-pledge">
+        <label>
+          <input type="checkbox" id="reviewPledge" onchange="render()">
+          <div>
+            <div class="review-pledge-title">🎁 리뷰를 약속합니다 → SCT 무료 (-₩5,000)</div>
+            <div class="review-pledge-sub">결과 수령 후 크몽에 정성스러운 리뷰를 남겨 주시면 SCT 문장완성검사를 무료로 드립니다.</div>
+          </div>
+        </label>
+      </div>
     </div>
 
     <!-- 요약 패널 -->
@@ -246,6 +281,10 @@
             <span id="discountLabel">할인</span>
             <span id="discountEl"></span>
           </div>
+          <div class="summary-discount-line" id="reviewDiscRow" style="display:none;">
+            <span>리뷰 약속 할인 🎁</span>
+            <span id="reviewDiscEl">-₩5,000</span>
+          </div>
           <div class="summary-final">
             <span class="summary-final-label">최종 금액</span>
             <span class="summary-final-price" id="finalEl">₩0</span>
@@ -266,7 +305,7 @@
          class="btn-inquiry disabled">
         💬 결제 문의하기 (크몽)
       </a>
-      <p class="sct-note">SCT 문장완성검사는 리뷰 약속 시 무료 제공 🎁<br>결제는 크몽 페이지에서 진행합니다.</p>
+      <p class="sct-note">결제는 크몽 페이지에서 진행합니다.</p>
     </div>
 
   </div>
@@ -300,23 +339,28 @@
 <script src="../js/main.js"></script>
 <script>
 const TESTS_CART = [
-  { key:'tci',   icon:'🧬', name:'TCI 기질 및 성격검사',    shortName:'TCI 기질 및 성격검사',    desc:'타고난 기질 + 성장한 성격 7차원 분석',  href:'tci.html' },
-  { key:'kocean',icon:'🌊', name:'K-OCEAN 5요인 성격검사',   shortName:'K-OCEAN 5요인 성격검사',  desc:'개방성·성실성·외향성·친화성·신경증',    href:'kocean.html' },
-  { key:'golden',icon:'✨', name:'GOLDEN 골든성격유형검사',   shortName:'GOLDEN 골든성격유형검사', desc:'4가지 성격 유형 선호도 분석',           href:'golden.html' },
-  { key:'rs',    icon:'💚', name:'RS 회복탄력성검사',         shortName:'RS 회복탄력성검사',       desc:'심리적 회복 능력 측정',                 href:'rs.html' },
-  { key:'kiri',  icon:'🤝', name:'KiRi 통합적 대인관계검사',  shortName:'KiRi 대인관계검사',       desc:'대인관계 패턴과 핵심 욕구 분석',        href:'kiri.html' },
-  { key:'pai',   icon:'🔬', name:'PAI / PAI-A 성격평가',     shortName:'PAI 성격평가',            desc:'임상 표준 성격 전반 정밀 측정',         href:'pai.html' },
-  { key:'cst',   icon:'⭐', name:'CST 성격강점검사',          shortName:'CST 성격강점검사',        desc:'VIA 강점 모델 기반 고유 강점 발견',     href:'cst.html' },
-  { key:'sct',   icon:'💬', name:'SCT 문장완성검사',          shortName:'SCT 문장완성검사',        desc:'무의식 탐색 · 리뷰 약속 시 무료 증정', href:'sct.html', free: true },
-  { key:'mlst',  icon:'📚', name:'MLST-II 학습전략검사',     shortName:'MLST-II 학습전략검사',    desc:'동기·인지·행동·정서 4대 학습 전략 진단',href:'mlst.html' },
-  { key:'kcmii', icon:'🎓', name:'KCMII-2 대학전공선택검사', shortName:'KCMII-2 전공선택검사',    desc:'Holland 적성이론 진로·전공 탐색',       href:'kcmii.html' },
-  { key:'sts',   icon:'🦎', name:'STS 6요인 기질검사',        shortName:'STS 기질검사',            desc:'영아~성인 동물 유형 직관적 기질 이해',  href:'sts.html' },
-  { key:'pat',   icon:'🏠', name:'PAT-2 부모양육태도검사',    shortName:'PAT-2 부모양육태도검사',  desc:'부모 양육 방식 6차원 과학적 진단',      href:'pat.html' },
+  { key:'tci',   icon:'🧬', name:'TCI 기질 및 성격검사',    shortName:'TCI 기질 및 성격검사',    desc:'타고난 기질 + 성장한 성격 7차원 분석',   href:'tci.html',   best:true },
+  { key:'kocean',icon:'🌊', name:'K-OCEAN 5요인 성격검사',   shortName:'K-OCEAN 5요인 성격검사',  desc:'개방성·성실성·외향성·친화성·신경증',     href:'kocean.html' },
+  { key:'golden',icon:'✨', name:'GOLDEN 골든성격유형검사',   shortName:'GOLDEN 골든성격유형검사', desc:'4가지 성격 유형 선호도 분석',            href:'golden.html', best:true },
+  { key:'rs',    icon:'💚', name:'RS 회복탄력성검사',         shortName:'RS 회복탄력성검사',       desc:'심리적 회복 능력 측정',                  href:'rs.html' },
+  { key:'kiri',  icon:'🤝', name:'KiRi 통합적 대인관계검사',  shortName:'KiRi 대인관계검사',       desc:'대인관계 패턴과 핵심 욕구 분석',         href:'kiri.html' },
+  { key:'pai',   icon:'🔬', name:'PAI / PAI-A 성격평가',     shortName:'PAI 성격평가',            desc:'임상 표준 성격 전반 정밀 측정',          href:'pai.html' },
+  { key:'cst',   icon:'⭐', name:'CST 성격강점검사',          shortName:'CST 성격강점검사',        desc:'VIA 강점 모델 기반 고유 강점 발견',      href:'cst.html' },
+  { key:'sct',   icon:'💬', name:'SCT 문장완성검사',          shortName:'SCT 문장완성검사',        desc:'무의식 탐색 · 리뷰 약속 시 무료 증정',  href:'sct.html' },
+  { key:'mlst',  icon:'📚', name:'MLST-II 학습전략검사',     shortName:'MLST-II 학습전략검사',    desc:'동기·인지·행동·정서 4대 학습 전략 진단', href:'mlst.html' },
+  { key:'kcmii', icon:'🎓', name:'KCMII-2 대학전공선택검사', shortName:'KCMII-2 전공선택검사',    desc:'Holland 적성이론 진로·전공 탐색',        href:'kcmii.html' },
+  { key:'sts',   icon:'🦎', name:'STS 6요인 기질검사',        shortName:'STS 기질검사',            desc:'영아~성인 동물 유형 직관적 기질 이해',   href:'sts.html' },
+  { key:'pat',   icon:'🏠', name:'PAT-2 부모양육태도검사',    shortName:'PAT-2 부모양육태도검사',  desc:'부모 양육 방식 6차원 과학적 진단',       href:'pat.html' },
 ];
 
+const SCT_PRICE = 5000;
+
 const selected = new Set();
+
+// sts/pat 같이 lsSaved에 없을 수 있는 키를 TEST_PRICES로 보완
 const lsSaved  = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null');
-const prices   = lsSaved || (typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {});
+const basePrices = typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {};
+const prices   = Object.assign({}, basePrices, lsSaved || {});
 
 function fmtWon(n) { return '₩' + n.toLocaleString('ko-KR'); }
 
@@ -336,16 +380,24 @@ function buildMessage() {
 }
 
 function render() {
-  const paidKeys  = [...selected].filter(k => !prices[k]?.free);
+  const reviewPledged = document.getElementById('reviewPledge')?.checked ?? false;
+  const sctSelected   = selected.has('sct');
+
+  // SCT는 항상 paidKeys에서 분리 (다회 할인 적용 안 됨)
+  const paidKeys  = [...selected].filter(k => k !== 'sct' && !(prices[k]?.free));
   const paidCount = paidKeys.length;
   const rate      = discountRate(paidCount);
   const pct       = Math.round(rate * 100);
-  const subtotal  = paidKeys.reduce((s, k) => s + (prices[k]?.price || 0), 0);
-  const discAmt   = Math.round(subtotal * rate);
-  const final     = subtotal - discAmt;
+  const paidSum   = paidKeys.reduce((s, k) => s + (prices[k]?.price || 0), 0);
+  const discAmt   = Math.round(paidSum * rate);
+
+  // SCT는 항상 5000원으로 표시 (pledged 시 -5000 할인 별도 표시)
+  const sctDisplay = sctSelected ? SCT_PRICE : 0;
+  const reviewDisc = (sctSelected && reviewPledged) ? SCT_PRICE : 0;
+  const displaySubtotal = paidSum + sctDisplay;
+  const final = displaySubtotal - discAmt - reviewDisc;
 
   // 할인 배지
-  document.getElementById('badge1').classList.toggle('active', paidCount === 1);
   document.getElementById('badge2').classList.toggle('active', paidCount === 2);
   document.getElementById('badge3').classList.toggle('active', paidCount === 3);
   document.getElementById('badge4').classList.toggle('active', paidCount >= 4);
@@ -370,27 +422,27 @@ function render() {
     return;
   }
 
-  // 목록
+  // 목록 (SCT: 항상 5000원으로 표시, pledge 여부는 별도 라인으로)
   summaryEl.innerHTML = [...selected].map(k => {
-    const t = TESTS_CART.find(x => x.key === k);
-    const p = prices[k];
-    const isFree = p?.free;
+    const t      = TESTS_CART.find(x => x.key === k);
+    const isFree = k !== 'sct' && prices[k]?.free;
+    const price  = k === 'sct' ? SCT_PRICE : (prices[k]?.price || 0);
     return `<div class="summary-row${isFree ? ' free-row' : ''}">
       <span class="summary-row-name">${t?.icon || ''} ${t?.shortName || k}</span>
-      <span class="summary-row-price">${isFree ? '무료 🎁' : fmtWon(p?.price || 0)}</span>
+      <span class="summary-row-price">${isFree ? '무료 🎁' : fmtWon(price)}</span>
     </div>`;
   }).join('');
 
-  // 할인 칩
-  const chips = ['1개 정가', '2개 10%', '3개 15%', '4개+ 20%'];
+  // 할인 칩 (SCT 제외한 수)
+  const chips = ['2개 10%', '3개 15%', '4개+ 20%'];
+  const thresholds = [2, 3, 4];
   document.getElementById('tierStrip').innerHTML = chips.map((label, i) => {
-    const thresholds = [1, 2, 3, 4];
-    const isActive = (i === 3) ? paidCount >= 4 : paidCount === thresholds[i];
+    const isActive = (i === 2) ? paidCount >= 4 : paidCount === thresholds[i];
     return `<div class="tier-chip${isActive ? ' current' : ''}">${label}</div>`;
   }).join('');
 
   // 금액
-  document.getElementById('subtotalEl').textContent = fmtWon(subtotal);
+  document.getElementById('subtotalEl').textContent = fmtWon(displaySubtotal);
   const discRow = document.getElementById('discountRow');
   if (pct > 0) {
     discRow.style.display = 'flex';
@@ -399,13 +451,15 @@ function render() {
   } else {
     discRow.style.display = 'none';
   }
+  const reviewDiscRow = document.getElementById('reviewDiscRow');
+  reviewDiscRow.style.display = reviewDisc > 0 ? 'flex' : 'none';
+
   document.getElementById('finalEl').textContent = fmtWon(final);
   totalArea.style.display = 'block';
 
   // 문의 메시지
   document.getElementById('msgText').textContent = buildMessage();
 
-  // 복사 버튼 초기화
   const btn = document.getElementById('btnCopy');
   btn.classList.remove('copied');
   btn.textContent = '📋 문의 내용 복사하기';
@@ -418,7 +472,6 @@ async function copyMsg() {
   try {
     await navigator.clipboard.writeText(text);
   } catch {
-    // fallback
     const ta = document.createElement('textarea');
     ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select();
@@ -437,15 +490,23 @@ async function copyMsg() {
 function buildList() {
   document.getElementById('testList').innerHTML = TESTS_CART.map(t => {
     const p      = prices[t.key];
-    const isFree = t.free || p?.free;
-    const priceHtml = isFree
-      ? `<span class="free-badge">무료 🎁</span>`
-      : `<span class="price-main">${fmtWon(p?.price || 0)}</span>`;
+    const isSct  = t.key === 'sct';
+    const isFree = !isSct && (p?.free);
+    const nameHtml = t.name + (t.best ? '<span class="best-badge">BEST</span>' : '');
+    let priceHtml;
+    if (isFree) {
+      priceHtml = `<span class="free-badge">무료 🎁</span>`;
+    } else if (isSct) {
+      priceHtml = `<span class="price-main">${fmtWon(SCT_PRICE)}</span>
+                   <span style="display:block;font-size:.68rem;color:var(--green);margin-top:2px;">리뷰 약속 시 무료 🎁</span>`;
+    } else {
+      priceHtml = `<span class="price-main">${fmtWon(p?.price || 0)}</span>`;
+    }
     return `<div class="test-row${isFree ? ' free-test' : ''}" id="row-${t.key}" data-key="${t.key}">
       <div class="test-row-check"></div>
       <div class="test-row-icon">${t.icon}</div>
       <div class="test-row-info">
-        <div class="test-row-name">${t.name}</div>
+        <div class="test-row-name">${nameHtml}</div>
         <div class="test-row-desc">${t.desc}</div>
       </div>
       <div class="test-row-price">
