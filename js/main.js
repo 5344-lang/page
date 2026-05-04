@@ -72,7 +72,7 @@ const QUIZ = {
     cst:   { _: { emoji:'⭐', title:'CST 성격강점검사',      desc:'VIA 강점 모델로 나만의 고유한 강점을 발견하고 활용 방법을 찾습니다.',      href:'pages/cst.html' } },
     sct:   { _: { emoji:'💬', title:'SCT 문장완성검사',       desc:'미완성 문장을 완성하며 무의식적 욕구와 감정을 탐색합니다.',                href:'pages/sct.html' } },
     mlst:  { _: { emoji:'📚', title:'MLST-II 학습전략검사',  desc:'동기·인지·행동·정서 4대 학습 전략을 과학적으로 진단합니다.',             href:'pages/mlst.html' } },
-    kcmii: { _: { emoji:'🎓', title:'KCMII-2 전공선택검사', desc:'Holland 적성이론으로 나에게 맞는 전공·직업 방향을 탐색합니다.',          href:'pages/kcmii.html' } },
+    kcmii: { _: { emoji:'🎓', title:'KCMII-2 전공선택검사', desc:'활동·직업·전공교과 3가지 선호도로 흥미·적성에 맞는 전공과 직업 방향을 탐색합니다.',  href:'pages/kcmii.html' } },
     sts: {
       young: { emoji:'🦎', title:'STS 6요인 기질검사 (영아·유아)', desc:'0~7세 자녀의 타고난 기질을 6요인·동물 유형으로 직관적으로 이해합니다.',  href:'pages/sts.html' },
       _:     { emoji:'🦎', title:'STS 6요인 기질검사',             desc:'타고난 기질을 6가지 요인과 동물 유형으로 직관적으로 이해합니다.',          href:'pages/sts.html' }
@@ -353,9 +353,9 @@ const PKG_INFO = {
     icon: '🧭', title: '진로 탐색 패키지',
     tags: ['KCMII-2', 'CST', 'TCI'],
     testKeys: ['kcmii', 'cst', 'tci'],
-    why: 'KCMII-2로 Holland 이론에 기반한 적성 방향을, CST로 나만의 고유한 강점을, TCI로 기질에 맞는 일의 스타일을 종합적으로 탐색합니다. 세 검사가 만나면 "내가 잘할 수 있는 일"과 "내가 즐길 수 있는 일"이 명확해집니다.',
+    why: 'KCMII-2로 활동·직업·전공교과 3가지 선호도를 분석해 흥미·적성에 맞는 전공 방향을, CST로 나만의 고유한 강점을, TCI로 기질에 맞는 일의 스타일을 종합적으로 탐색합니다. 세 검사가 만나면 "내가 잘할 수 있는 일"과 "내가 즐길 수 있는 일"이 명확해집니다.',
     steps: [
-      { icon: '🎓', name: 'KCMII-2 전공선택검사', desc: 'Holland 적성이론으로 나에게 맞는 전공·직업 방향을 탐색합니다.' },
+      { icon: '🎓', name: 'KCMII-2 전공선택검사', desc: '활동·직업·전공교과 3가지 선호도로 흥미·적성에 맞는 전공과 직업 방향을 탐색합니다.' },
       { icon: '⭐', name: 'CST 성격강점검사', desc: '나만의 고유한 강점 24가지 중 상위 강점을 발견하고 진로에 연결합니다.' },
       { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '타고난 기질에 맞는 직업 환경과 일의 스타일을 이해합니다.' }
     ]
