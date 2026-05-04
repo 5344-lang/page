@@ -256,20 +256,29 @@ const QUIZ = {
 };
 
 /* ─── Package Price Calculator ─── */
-function getDiscount(paidCount) {
-  if (paidCount >= 4) return 0.20;
-  if (paidCount === 3) return 0.15;
-  if (paidCount === 2) return 0.10;
-  return 0;
+function charmPrice(n) {
+  const base = Math.floor(n / 1000) * 1000;
+  return base >= 1000 ? base - 100 : n;
+}
+
+function getDiscount(paidCount, hasTci) {
+  let rate = 0;
+  if (paidCount >= 4) rate = 0.20;
+  else if (paidCount === 3) rate = 0.15;
+  else if (paidCount === 2) rate = 0.10;
+  if (hasTci && rate > 0) rate -= 0.03;
+  return rate;
 }
 
 function computePkgPrice(testKeys) {
   const saved  = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null');
   const prices = saved || (typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {});
   const paidKeys = testKeys.filter(k => !(prices[k]?.free));
+  const hasTci   = paidKeys.includes('tci');
   const total    = paidKeys.reduce((sum, k) => sum + (prices[k]?.price || 0), 0);
-  const rate     = getDiscount(paidKeys.length);
-  return { total, discounted: Math.round(total * (1 - rate)), rate };
+  const rate     = getDiscount(paidKeys.length, hasTci);
+  const raw      = Math.round(total * (1 - rate));
+  return { total, discounted: charmPrice(raw), rate };
 }
 
 /* ─── Package Modal Data ─── */
