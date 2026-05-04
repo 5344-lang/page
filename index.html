@@ -142,7 +142,7 @@
 </section>
 
 <!-- ══════════════════════════════════════
-     SHORTCUT BUTTONS
+     SHORTCUT CARDS
 ══════════════════════════════════════ -->
 <section style="padding: 48px 0;">
   <div class="container">
@@ -150,13 +150,22 @@
       <div class="pre-label">검사 둘러보기</div>
       <h2>무엇이 궁금하신가요?</h2>
     </div>
-    <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
-      <a href="pages/tests.html" class="btn btn-primary" style="font-size:1.1rem; padding:18px 48px;">
-        📋 전체 검사 바로가기
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; max-width:760px; margin:0 auto;">
+
+      <a href="pages/tests.html" class="trust-card reveal" style="text-decoration:none; display:flex; flex-direction:column; align-items:flex-start; cursor:pointer;">
+        <div class="icon">📋</div>
+        <h4 style="margin-bottom:8px;">전체 검사 보기</h4>
+        <p style="flex:1;">TCI, K-OCEAN, GOLDEN 등 학계 검증 12종 검사를 한눈에 확인하고 상세 정보를 살펴보세요.</p>
+        <span style="margin-top:16px; color:var(--brown); font-weight:700; font-size:.9rem;">전체 검사 바로가기 →</span>
       </a>
-      <a href="pages/packages.html" class="btn btn-outline" style="font-size:1.1rem; padding:18px 48px;">
-        📦 패키지 바로가기
+
+      <a href="pages/packages.html" class="trust-card reveal" style="text-decoration:none; display:flex; flex-direction:column; align-items:flex-start; cursor:pointer;">
+        <div class="icon">📦</div>
+        <h4 style="margin-bottom:8px;">추천 패키지 보기</h4>
+        <p style="flex:1;">목적별로 엄선한 2~3종 조합 패키지로 더 입체적인 자기 이해를 경험해 보세요.</p>
+        <span style="margin-top:16px; color:var(--brown); font-weight:700; font-size:.9rem;">패키지 바로가기 →</span>
       </a>
+
     </div>
   </div>
 </section>
@@ -173,8 +182,8 @@
     <div class="trust-grid">
       <div class="trust-card reveal">
         <div class="icon">📄</div>
-        <h4>8P 정밀 리포트</h4>
-        <p>단순 그래프 2P를 넘어, 각 지표를 상세히 풀어낸 6P 해석 보고서까지 총 8P PDF를 이메일로 발송합니다.</p>
+        <h4>정밀 리포트</h4>
+        <p>단순 그래프가 아니라 각 지표를 상세히 풀어낸 해석 보고서를 이메일로 발송합니다.</p>
       </div>
       <div class="trust-card reveal">
         <div class="icon">🤖</div>
