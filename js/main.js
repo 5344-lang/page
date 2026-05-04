@@ -149,6 +149,7 @@ const QUIZ = {
       if (age === 'infant') {
         t1 = this.TESTS.sts.young;
         t2 = this.TESTS.pat._;
+        return { t1, t2, pkgKey: 'pkg_parenting_infant' };
       } else if (age === 'child_age') {
         t1 = this.TESTS.tci.young;
         t2 = this.TESTS.pai.young;
@@ -156,7 +157,7 @@ const QUIZ = {
         t1 = this.TESTS.tci.teen;
         t2 = this.TESTS.pai.teen;
       }
-      return { t1, t2, pkgKey: 'pkg_parenting' };
+      return { t1, t2, pkgKey: 'pkg_parenting_school' };
     }
     const path = `${this.q1}+${this.q2}`;
     const pKey = this.PRIMARY[path]; if (!pKey) return null;
@@ -284,24 +285,24 @@ function computePkgPrice(testKeys) {
 /* ─── Package Modal Data ─── */
 const PKG_INFO = {
   pkg_personality: {
-    icon: '🌟', title: '종합 성격 패키지',
+    icon: '🌟', title: '기질·성격 기본 패키지',
     tags: ['TCI', 'K-OCEAN'],
     testKeys: ['tci', 'kocean'],
-    why: 'TCI는 "타고난 기질"을, K-OCEAN은 "현재 드러나는 행동 특성"을 측정합니다. 하나는 내 안의 하드웨어, 하나는 소프트웨어—두 렌즈를 함께 쓸 때 나를 가장 입체적으로 이해할 수 있습니다.',
+    why: 'TCI는 "타고난 기질"을, K-OCEAN은 "현재 드러나는 성격"을 측정합니다. 하나는 내 안의 하드웨어, 하나는 소프트웨어—두 렌즈를 함께 쓸 때 나를 가장 입체적으로 이해할 수 있습니다.',
     steps: [
       { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '유전적으로 타고난 기질 4차원 + 성장한 성격 3차원을 분석합니다.' },
       { icon: '🌊', name: 'K-OCEAN 5요인 성격검사', desc: '현재 나의 행동 방식—개방성·성실성·외향성·친화성·신경증을 측정합니다.' }
     ]
   },
   pkg_mental: {
-    icon: '💚', title: '멘탈 회복 패키지',
-    tags: ['TCI', 'RS 회복탄력성', 'SCT'],
+    icon: '💚', title: '마음 회복 패키지',
+    tags: ['TCI', 'RS 회복탄력성', 'SCT 🎁무료'],
     testKeys: ['tci', 'rs', 'sct'],
-    why: 'TCI로 기질적 취약성(왜 나는 이렇게 반응하는가)을 이해하고, RS로 현재의 회복 능력을 점검하며, SCT로 무의식 속의 내면 목소리까지 탐색합니다. 심리 치유의 완전한 지도를 그려주는 조합입니다.',
+    why: 'TCI로 기질적 취약성(왜 나는 이렇게 반응하는가)을 이해하고, RS로 현재의 회복 능력을 점검하며, SCT로 무의식 속의 내면 목소리까지 탐색합니다. SCT는 이 패키지에 무료로 포함됩니다.',
     steps: [
       { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '내가 유독 힘든 상황의 기질적 원인을 이해합니다.' },
       { icon: '💚', name: 'RS 회복탄력성검사', desc: '현재 나의 심리적 회복 능력 수준을 객관적으로 파악합니다.' },
-      { icon: '💬', name: 'SCT 문장완성검사', desc: '무의식의 욕구·감정·갈등을 자유롭게 탐색합니다.' }
+      { icon: '💬', name: 'SCT 문장완성검사 (무료 포함)', desc: '무의식의 욕구·감정·갈등을 자유롭게 탐색합니다.' }
     ]
   },
   pkg_relation: {
@@ -347,23 +348,32 @@ const PKG_INFO = {
       { icon: '⭐', name: 'CST 성격강점검사', desc: '나만의 강점을 활용한 공부 에너지를 찾아줍니다.' }
     ]
   },
-  pkg_parenting: {
-    icon: '👨‍👩‍👧', title: '양육 다이내믹 패키지',
-    tags: ['STS / JTCI', 'PAI-A (아동·청소년)', 'PAT-2'],
-    testKeys: ['tci', 'pai'],
-    why: '자녀 나이에 따라 최적의 기질검사를 선택합니다. 영아·유아(0~7세)는 STS + PAT-2로 기질과 양육 태도를 함께 파악하고, 아동·청소년(8~18세)은 JTCI + PAI-A + PAT-2로 자녀 성격까지 더한 가족 전체의 역동을 이해합니다.',
+  pkg_parenting_infant: {
+    icon: '🍼', title: '영유아 자녀 이해 패키지',
+    tags: ['STS', 'PAT-2'],
+    testKeys: ['sts', 'pat'],
+    why: '0~7세 미취학 자녀의 타고난 기질을 STS로 파악하고, PAT-2로 부모의 양육 방식을 진단합니다. 아이의 기질에 맞는 양육법을 찾고, 부모-자녀 관계를 더 깊이 이해할 수 있습니다.',
     steps: [
-      { icon: '🦎', name: 'STS 6요인 기질검사 (영아·유아, 0~7세)', desc: '영아·유아의 타고난 기질을 6요인과 동물 유형으로 직관적으로 파악합니다.' },
-      { icon: '🐣', name: 'JTCI 기질검사 (아동·청소년, 8~18세)', desc: '아동·청소년의 기질을 7차원으로 분석해 맞춤 양육의 출발점을 잡습니다.' },
-      { icon: '🔬', name: 'PAI-A 성격평가 (아동·청소년 자녀)', desc: '아동·청소년 자녀의 성격 전반과 심리적 특성을 정밀하게 측정합니다.' },
+      { icon: '🦎', name: 'STS 6요인 기질검사', desc: '0~7세 자녀의 타고난 기질을 6요인과 동물 유형으로 직관적으로 파악합니다.' },
+      { icon: '🏠', name: 'PAT-2 부모양육태도검사', desc: '부모의 양육 방식을 점검하고 아이의 기질에 맞는 방향을 찾습니다.' }
+    ]
+  },
+  pkg_parenting_school: {
+    icon: '📚', title: '학령기 자녀 이해 패키지',
+    tags: ['JTCI', 'PAI-A', 'PAT-2'],
+    testKeys: ['tci', 'pai', 'pat'],
+    why: '8~18세 자녀의 기질(JTCI)과 성격 전반(PAI-A)을 파악하고, PAT-2로 부모의 양육 방식까지 진단합니다. 갈등을 "나쁜 아이"가 아닌 "기질 차이"로 이해하게 되는 조합입니다.',
+    steps: [
+      { icon: '🧬', name: 'JTCI 기질검사 (8~18세)', desc: '아동·청소년의 기질을 7차원으로 분석해 맞춤 양육의 출발점을 잡습니다.' },
+      { icon: '🔬', name: 'PAI-A 성격평가', desc: '자녀의 성격 전반과 심리적 특성을 정밀하게 측정합니다.' },
       { icon: '🏠', name: 'PAT-2 부모양육태도검사', desc: '부모의 양육 방식을 점검하고 가족 역동을 함께 이해합니다.' }
     ]
   },
   pkg_career: {
-    icon: '🧭', title: '진로 탐색 패키지',
+    icon: '🧭', title: '진로·전공 설계 패키지',
     tags: ['KCMII-2', 'CST', 'TCI'],
     testKeys: ['kcmii', 'cst', 'tci'],
-    why: 'KCMII-2로 활동·직업·전공교과 3가지 선호도를 분석해 흥미·적성에 맞는 전공 방향을, CST로 나만의 고유한 강점을, TCI로 기질에 맞는 일의 스타일을 종합적으로 탐색합니다. 세 검사가 만나면 "내가 잘할 수 있는 일"과 "내가 즐길 수 있는 일"이 명확해집니다.',
+    why: 'KCMII-2로 활동·직업·전공교과 선호도를, CST로 나만의 고유한 강점을, TCI로 기질에 맞는 일의 스타일을 종합 탐색합니다. 흥미·강점·기질 세 가지가 만나면 "내가 잘할 수 있는 일"과 "내가 즐길 수 있는 일"이 명확해집니다.',
     steps: [
       { icon: '🎓', name: 'KCMII-2 전공선택검사', desc: '활동·직업·전공교과 3가지 선호도로 흥미·적성에 맞는 전공과 직업 방향을 탐색합니다.' },
       { icon: '⭐', name: 'CST 성격강점검사', desc: '나만의 고유한 강점 24가지 중 상위 강점을 발견하고 진로에 연결합니다.' },
@@ -414,7 +424,7 @@ const PKG_INFO = {
     ]
   },
   pkg_deepdive: {
-    icon: '🎯', title: '딥 다이브 패키지',
+    icon: '🔬', title: '심층 성격 분석 패키지',
     tags: ['TCI', 'PAI'],
     testKeys: ['tci', 'pai'],
     why: 'TCI로 타고난 기질의 구조와 성장한 성격을 파악하고, PAI로 성격 전반·임상적 특성·심리적 자원까지 22개 척도로 심층 분석합니다. 일상적인 자기이해를 넘어 심리적 취약성과 강점의 가장 깊은 층위까지 도달하는 전문가 추천 조합입니다.',
@@ -424,7 +434,7 @@ const PKG_INFO = {
     ]
   },
   pkg_relation1: {
-    icon: '🤝', title: '대인관계 솔루션 패키지',
+    icon: '🤝', title: '관계 패턴 분석 패키지',
     tags: ['TCI', 'KiRi'],
     testKeys: ['tci', 'kiri'],
     why: 'TCI로 대인관계에서 반복되는 기질적 패턴(왜 이런 상황에서 이렇게 반응하는가)을 이해하고, KiRi로 나의 관계 욕구와 갈등 구조를 13개 척도로 통합 분석합니다. 혼자서도 관계 문제의 뿌리까지 과학적으로 접근할 수 있는 최적의 1인 조합입니다.',
