@@ -123,8 +123,8 @@ const QUIZ = {
   PACKAGE: {
     'self+emotion':'pkg_mental',        'self+personality':'pkg_neo',
     'self+stress':'pkg_burnout',        'self+strength':'pkg_personality',
-    'relation+pattern':'pkg_relation',  'relation+conflict':'pkg_relation',
-    'relation+fear':'pkg_relation',     'relation+couple':'pkg_couple',
+    'relation+pattern':'pkg_relation1',  'relation+conflict':'pkg_relation1',
+    'relation+fear':'pkg_relation1',    'relation+couple':'pkg_couple',
     'learn+focus':'pkg_exam',           'learn+method':'pkg_exam',
     'learn+anxiety':'pkg_exam',         'learn+career':'pkg_career',
     'learn+adapt':'pkg_univ',
@@ -401,6 +401,26 @@ const PKG_INFO = {
       { icon: '💼', name: 'IEEJ 통합직무스트레스검사', desc: '감정노동·일의 의미 소실·업무 능력 저하·자기 불신 4개 척도로 번아웃 수준을 정밀 진단합니다.' },
       { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '기질적으로 어떤 직무 스트레스에 취약한지 근본 원인을 이해합니다.' },
       { icon: '💚', name: 'RS 회복탄력성검사', desc: '7가지 요인으로 번아웃 회복 가능성과 강화 방법을 찾습니다.' }
+    ]
+  },
+  pkg_deepdive: {
+    icon: '🎯', title: '딥 다이브 패키지',
+    tags: ['TCI', 'PAI'],
+    testKeys: ['tci', 'pai'],
+    why: 'TCI로 타고난 기질의 구조와 성장한 성격을 파악하고, PAI로 성격 전반·임상적 특성·심리적 자원까지 22개 척도로 심층 분석합니다. 일상적인 자기이해를 넘어 심리적 취약성과 강점의 가장 깊은 층위까지 도달하는 전문가 추천 조합입니다.',
+    steps: [
+      { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '유전적으로 타고난 기질 4차원 + 성장한 성격 3차원을 분석합니다.' },
+      { icon: '🔬', name: 'PAI 성격평가 질문지', desc: '성격 전반·임상적 특성·치료 고려 변인까지 22개 척도로 정밀 측정합니다.' }
+    ]
+  },
+  pkg_relation1: {
+    icon: '🤝', title: '대인관계 솔루션 패키지',
+    tags: ['TCI', 'KiRi'],
+    testKeys: ['tci', 'kiri'],
+    why: 'TCI로 대인관계에서 반복되는 기질적 패턴(왜 이런 상황에서 이렇게 반응하는가)을 이해하고, KiRi로 나의 관계 욕구와 갈등 구조를 13개 척도로 통합 분석합니다. 혼자서도 관계 문제의 뿌리까지 과학적으로 접근할 수 있는 최적의 1인 조합입니다.',
+    steps: [
+      { icon: '🧬', name: 'TCI 기질 및 성격검사', desc: '대인관계에 영향을 주는 기질적 특성과 성격 구조를 분석합니다.' },
+      { icon: '🤝', name: 'KiRi 통합적 대인관계검사', desc: '나의 대인관계 패턴과 핵심 욕구를 13개 척도로 통합적으로 분석합니다.' }
     ]
   }
 };
