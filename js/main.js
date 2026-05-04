@@ -80,7 +80,8 @@ const QUIZ = {
     neo:     { _: { emoji:'🔭', title:'NEO 네오 성격검사',             desc:'신경질·외향성·개방성·우호성·성실성 5요인 30하위요인으로 성격을 정밀 분석합니다.',           href:'pages/neo.html'     } },
     mindfit: { _: { emoji:'🧩', title:'MindFit 마인드핏 적응역량검사', desc:'학교 적응도와 심리적 자원을 3개 영역으로 측정하고 개입 방향을 제시합니다.',              href:'pages/mindfit.html' } },
     cat:     { _: { emoji:'🏛️', title:'CAT-2 대학적응력검사',          desc:'대학 적응력과 중도탈락 위험도를 진단하고 학생지원의 구체적 방향을 제시합니다.',          href:'pages/cat.html'     } },
-    ieej:    { _: { emoji:'💼', title:'IEEJ 통합직무스트레스검사',      desc:'감정노동·번아웃을 4개 척도로 다면 분석하여 심리적 개입 우선순위를 제시합니다.',         href:'pages/ieej.html'    } }
+    ieej:    { _: { emoji:'💼', title:'IEEJ 통합직무스트레스검사',      desc:'감정노동·번아웃을 4개 척도로 다면 분석하여 심리적 개입 우선순위를 제시합니다.',         href:'pages/ieej.html'    } },
+    pat:     { _: { emoji:'🏠', title:'PAT-2 부모양육태도검사',         desc:'부모의 양육 방식과 태도를 과학적으로 진단하고 건강한 양육 방향을 찾습니다.',             href:'pages/pat.html'     } }
   },
 
   PRIMARY: {
@@ -147,7 +148,7 @@ const QUIZ = {
       let t1, t2;
       if (age === 'infant') {
         t1 = this.TESTS.sts.young;
-        t2 = this.TESTS.pai.young;
+        t2 = this.TESTS.pat._;
       } else if (age === 'child_age') {
         t1 = this.TESTS.tci.young;
         t2 = this.TESTS.pai.young;
@@ -338,14 +339,14 @@ const PKG_INFO = {
     ]
   },
   pkg_parenting: {
-    icon: '👨‍👩‍👧', title: '부모-자녀 양육 패키지',
-    tags: ['STS / JTCI', 'PAI-A', 'PAT-2'],
+    icon: '👨‍👩‍👧', title: '양육 다이내믹 패키지',
+    tags: ['STS / JTCI', 'PAI-A (아동·청소년)', 'PAT-2'],
     testKeys: ['tci', 'pai'],
-    why: '자녀 나이에 따라 최적의 기질검사를 선택합니다. 영아·유아(0~7세)는 STS로, 아동·청소년(8~18세)은 JTCI로 기질을 파악하고, PAI-A와 PAT-2로 가족 전체의 역동을 이해합니다. 갈등을 오해가 아닌 "차이"로 이해하게 됩니다.',
+    why: '자녀 나이에 따라 최적의 기질검사를 선택합니다. 영아·유아(0~7세)는 STS + PAT-2로 기질과 양육 태도를 함께 파악하고, 아동·청소년(8~18세)은 JTCI + PAI-A + PAT-2로 자녀 성격까지 더한 가족 전체의 역동을 이해합니다.',
     steps: [
       { icon: '🦎', name: 'STS 6요인 기질검사 (영아·유아, 0~7세)', desc: '영아·유아의 타고난 기질을 6요인과 동물 유형으로 직관적으로 파악합니다.' },
       { icon: '🐣', name: 'JTCI 기질검사 (아동·청소년, 8~18세)', desc: '아동·청소년의 기질을 7차원으로 분석해 맞춤 양육의 출발점을 잡습니다.' },
-      { icon: '🔬', name: 'PAI-A 성격평가', desc: '아이의 성격 전반과 심리적 특성을 정밀하게 측정합니다.' },
+      { icon: '🔬', name: 'PAI-A 성격평가 (아동·청소년 자녀)', desc: '아동·청소년 자녀의 성격 전반과 심리적 특성을 정밀하게 측정합니다.' },
       { icon: '🏠', name: 'PAT-2 부모양육태도검사', desc: '부모의 양육 방식을 점검하고 가족 역동을 함께 이해합니다.' }
     ]
   },
