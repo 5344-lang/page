@@ -44,7 +44,7 @@ const STORE_LINKS = {
 const TEST_PRICES = {
   tci    : { price:  27000, active: true },
   kocean : { price:  12000, active: true },
-  golden : { price:  28000, active: true },
+  golden : { price:  27000, active: true },
   rs     : { price:  12000, active: true },
   kiri   : { price:  14000, active: true },
   pai    : { price:  15000, active: true },
