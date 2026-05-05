@@ -448,6 +448,10 @@
             <span>리뷰 약속 할인 🎁</span>
             <span id="reviewDiscEl">-₩5,000</span>
           </div>
+          <div class="summary-discount-line" id="charmDiscRow" style="display:none;">
+            <span>추가 할인 ✂️</span>
+            <span id="charmDiscEl"></span>
+          </div>
           <div class="summary-final">
             <span class="summary-final-label">최종 금액</span>
             <span class="summary-final-price" id="finalEl">₩0</span>
@@ -595,9 +599,10 @@ function getUnifiedCart() {
   const sctFree = sctOn && reviewPledged && allPaidKeys.length > 0;
   const sctCharge = sctOn ? (sctFree ? 0 : SCT_PRICE) : 0;
   const displaySubtotal = paidSum + (sctOn ? SCT_PRICE : 0);
-  const rawFinal = paidSum - discAmt + sctCharge;
-  const final    = allPaidKeys.length >= 2 ? charmPrice(rawFinal) : rawFinal;
-  return { allPaidKeys, hasTci, rate, pct: Math.round(rate * 100), paidSum, discAmt, sctOn, sctFree, displaySubtotal, final };
+  const rawFinal  = paidSum - discAmt + sctCharge;
+  const final     = allPaidKeys.length >= 2 ? charmPrice(rawFinal) : rawFinal;
+  const charmDisc = rawFinal - final; // 절사 추가할인
+  return { allPaidKeys, hasTci, rate, pct: Math.round(rate * 100), paidSum, discAmt, sctOn, sctFree, displaySubtotal, charmDisc, final };
 }
 
 function hasOtherPaidItems() {
@@ -775,7 +780,7 @@ function renderCombinedSummary() {
   const btnInquiry = document.getElementById('btnInquiry');
   const tierStrip  = document.getElementById('tierStrip');
 
-  const { allPaidKeys, hasTci, pct, paidSum, discAmt, sctOn, sctFree, displaySubtotal, final } = getUnifiedCart();
+  const { allPaidKeys, hasTci, pct, paidSum, discAmt, sctOn, sctFree, displaySubtotal, charmDisc, final } = getUnifiedCart();
   const pc = allPaidKeys.length;
 
   const hasPkgs  = typeof PKG_INFO !== 'undefined' && Object.values(pkgQuantities).some(q => q > 0);
@@ -877,6 +882,13 @@ function renderCombinedSummary() {
     discRow.style.display = 'none';
   }
   document.getElementById('reviewDiscRow').style.display = sctFree ? 'flex' : 'none';
+  const charmRow = document.getElementById('charmDiscRow');
+  if (charmDisc > 0) {
+    charmRow.style.display = 'flex';
+    document.getElementById('charmDiscEl').textContent = '-' + fmtWon(charmDisc);
+  } else {
+    charmRow.style.display = 'none';
+  }
   document.getElementById('finalEl').textContent = fmtWon(final);
   totalArea.style.display = 'block';
 
