@@ -282,6 +282,16 @@
     .pkg-final-price {
       font-size: 1rem; font-weight: 900; color: var(--green);
     }
+    .pkg-select-check {
+      width: 22px; height: 22px; border-radius: 6px;
+      border: 2px solid var(--beige-dark); background: var(--beige);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: var(--transition); font-size: .85rem;
+      color: #fff;
+    }
+    .pkg-select-card.active .pkg-select-check {
+      background: var(--green); border-color: var(--green);
+    }
     .pkg-subtotal-row {
       display: flex; justify-content: space-between; align-items: center;
       padding: 5px 0 8px; margin-bottom: 4px;
@@ -687,6 +697,7 @@ function renderPackageTab() {
       const pct      = Math.round(rate * 100);
       const isActive = activePkgKeys.has(key);
       return `<div class="pkg-select-card${isActive ? ' active' : ''}" onclick="selectPkg('${key}')">
+        <div class="pkg-select-check">${isActive ? '✓' : ''}</div>
         <div class="pkg-select-card-icon">${pkg.icon}</div>
         <div class="pkg-select-card-info">
           <div class="pkg-select-card-name">${pkg.title}</div>
