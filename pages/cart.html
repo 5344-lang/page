@@ -696,12 +696,14 @@ function renderPackageTab() {
       const { total, discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
       const pct      = Math.round(rate * 100);
       const isActive = activePkgKeys.has(key);
+      const hasSct   = pkg.testKeys.includes('sct');
       return `<div class="pkg-select-card${isActive ? ' active' : ''}" onclick="selectPkg('${key}')">
         <div class="pkg-select-check">${isActive ? '✓' : ''}</div>
         <div class="pkg-select-card-icon">${pkg.icon}</div>
         <div class="pkg-select-card-info">
           <div class="pkg-select-card-name">${pkg.title}</div>
           <div class="pkg-select-card-tests">${pkg.tags.join(' · ')}</div>
+          ${hasSct ? `<div style="margin-top:4px;"><span class="review-free-badge" style="font-size:.63rem;padding:2px 8px;">🎁 SCT 무료 포함</span></div>` : ''}
         </div>
         <div class="pkg-select-card-price">
           ${pct > 0 ? `<div class="pkg-orig-price">${fmtWon(total)}</div>` : ''}
