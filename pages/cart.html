@@ -269,6 +269,32 @@
     .test-row.sct-row.selected { border-style: solid; background: #f0fdf4; }
     .sct-row .test-row-desc { color: var(--green); font-weight: 600; }
 
+    /* ── 패키지 카드 가격 표시 ── */
+    .pkg-orig-price {
+      font-size: .72rem; color: var(--text-muted);
+      text-decoration: line-through; text-align: right;
+    }
+    .pkg-disc-badge {
+      display: inline-block; font-size: .68rem; font-weight: 700;
+      color: var(--green); background: #e8f7ee;
+      border-radius: 10px; padding: 1px 7px; margin: 1px 0;
+    }
+    .pkg-final-price {
+      font-size: 1rem; font-weight: 900; color: var(--green);
+    }
+    .pkg-subtotal-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 5px 0 8px; margin-bottom: 4px;
+      border-top: 1px dashed var(--beige-dark);
+      font-size: .82rem; color: var(--text-muted);
+    }
+    .pkg-subtotal-row span:last-child {
+      font-weight: 700; color: var(--brown);
+    }
+    .pkg-section-divider {
+      border: none; border-top: 2px solid var(--beige-dark); margin: 10px 0 8px;
+    }
+
     @media (max-width: 800px) {
       .cart-layout { grid-template-columns: 1fr; }
       .cart-summary { position: static; }
@@ -443,9 +469,9 @@ const TESTS_CART = [
 
 const SCT_PRICE = 5000;
 
-const quantities  = {};   // key -> count (단품 탭)
-let activePkgKey  = null; // 패키지 탭 선택
-let currentTab    = 'unit';
+const quantities   = {};         // key -> count (단품 탭)
+const activePkgKeys = new Set(); // 패키지 탭 다중 선택
+let currentTab     = 'unit';
 
 const lsSaved    = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null');
 const basePrices = typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {};
@@ -657,9 +683,9 @@ function renderPackageTab() {
     const cardsHtml = line.keys.map(key => {
       const pkg = PKG_INFO[key];
       if (!pkg) return '';
-      const { discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
+      const { total, discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
       const pct      = Math.round(rate * 100);
-      const isActive = activePkgKey === key;
+      const isActive = activePkgKeys.has(key);
       return `<div class="pkg-select-card${isActive ? ' active' : ''}" onclick="selectPkg('${key}')">
         <div class="pkg-select-card-icon">${pkg.icon}</div>
         <div class="pkg-select-card-info">
@@ -667,8 +693,9 @@ function renderPackageTab() {
           <div class="pkg-select-card-tests">${pkg.tags.join(' · ')}</div>
         </div>
         <div class="pkg-select-card-price">
-          <div class="price-main">${fmtWon(discounted)}</div>
-          ${pct > 0 ? `<div style="font-size:.7rem;color:var(--green);font-weight:700;">${pct}% 할인</div>` : ''}
+          ${pct > 0 ? `<div class="pkg-orig-price">${fmtWon(total)}</div>` : ''}
+          ${pct > 0 ? `<div class="pkg-disc-badge">${pct}% 할인</div>` : ''}
+          <div class="pkg-final-price">${fmtWon(discounted)}</div>
         </div>
       </div>`;
     }).join('');
@@ -680,14 +707,14 @@ function renderPackageTab() {
 }
 
 function selectPkg(key) {
-  activePkgKey = activePkgKey === key ? null : key;
+  activePkgKeys.has(key) ? activePkgKeys.delete(key) : activePkgKeys.add(key);
   renderPackageTab();
   renderPackageSummary();
 }
 
 function buildPkgMessage() {
-  const pkg = PKG_INFO[activePkgKey];
-  return `안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n[${pkg.title}] 패키지 진행하고 싶습니다.`;
+  const names = [...activePkgKeys].map(k => `[${PKG_INFO[k]?.title}]`).join(' ');
+  return `안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n${names} 패키지 진행하고 싶습니다.`;
 }
 
 function renderPackageSummary() {
@@ -696,19 +723,29 @@ function renderPackageSummary() {
   const btnInquiry = document.getElementById('btnInquiry');
   const tierStrip  = document.getElementById('tierStrip');
 
-  if (!activePkgKey) {
+  if (activePkgKeys.size === 0) {
     summaryEl.innerHTML = '<div class="summary-empty">패키지를 선택해주세요</div>';
     totalArea.style.display = 'none';
     btnInquiry.classList.add('disabled');
     return;
   }
 
-  const pkg = PKG_INFO[activePkgKey];
-  const { total, discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
-  const pct = Math.round(rate * 100);
+  let grandTotal = 0;
+  let grandDiscounted = 0;
+  const pkgArr = [...activePkgKeys];
+  let summaryHtml = '';
 
-  summaryEl.innerHTML = `<div class="pkg-summary-name">${pkg.icon} ${pkg.title}</div>` +
-    pkg.testKeys.map(k => {
+  pkgArr.forEach((key, idx) => {
+    const pkg = PKG_INFO[key];
+    if (!pkg) return;
+    const { total, discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
+    const pct = Math.round(rate * 100);
+    grandTotal += total;
+    grandDiscounted += discounted;
+
+    if (idx > 0) summaryHtml += '<hr class="pkg-section-divider">';
+    summaryHtml += `<div class="pkg-summary-name">${pkg.icon} ${pkg.title}${pct > 0 ? ` <span style="font-size:.7rem;color:var(--green);">-${pct}%</span>` : ''}</div>`;
+    summaryHtml += pkg.testKeys.map(k => {
       const isSct  = k === 'sct';
       const isFree = !isSct && (prices[k]?.free);
       const price  = isSct ? 0 : (prices[k]?.price || 0);
@@ -720,18 +757,26 @@ function renderPackageSummary() {
       </div>`;
     }).join('');
 
+    if (pkgArr.length > 1) {
+      summaryHtml += `<div class="pkg-subtotal-row"><span>소계</span><span>${fmtWon(discounted)}</span></div>`;
+    }
+  });
+
+  summaryEl.innerHTML = summaryHtml;
+
   if (tierStrip) tierStrip.innerHTML = '';
-  document.getElementById('subtotalEl').textContent = fmtWon(total);
+  document.getElementById('subtotalEl').textContent = fmtWon(grandTotal);
+  const totalDiscAmt = grandTotal - grandDiscounted;
   const discRow = document.getElementById('discountRow');
-  if (pct > 0) {
+  if (totalDiscAmt > 0) {
     discRow.style.display = 'flex';
-    document.getElementById('discountLabel').textContent = `패키지 할인 (-${pct}%)`;
-    document.getElementById('discountEl').textContent    = '-' + fmtWon(total - discounted);
+    document.getElementById('discountLabel').textContent = '패키지 할인';
+    document.getElementById('discountEl').textContent    = '-' + fmtWon(totalDiscAmt);
   } else {
     discRow.style.display = 'none';
   }
   document.getElementById('reviewDiscRow').style.display = 'none';
-  document.getElementById('finalEl').textContent = fmtWon(discounted);
+  document.getElementById('finalEl').textContent = fmtWon(grandDiscounted);
   totalArea.style.display = 'block';
 
   document.getElementById('msgText').textContent = buildPkgMessage();
