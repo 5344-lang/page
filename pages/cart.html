@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>검사 담기 — 똑심마인드</title>
-  <meta name="description" content="원하는 심리검사를 선택하고 할인 가격을 바로 확인하세요. 2개 10% · 3개 15% · 4개 이상 20% 할인 (TCI 포함 시 -3% 조정).">
+  <meta name="description" content="원하는 심리검사를 선택하고 할인 가격을 바로 확인하세요. 2개 10% · 3개 15% · 4개 이상 20% 할인.">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="stylesheet" href="../css/style.css">
   <style>
@@ -34,6 +34,21 @@
       align-items: start;
       padding: 40px 0 64px;
     }
+
+    /* ── 탭 바 ── */
+    .cart-tab-bar {
+      display: flex; gap: 0; margin-bottom: 20px;
+      border-bottom: 2px solid var(--beige-dark);
+    }
+    .cart-tab {
+      flex: 1; padding: 13px 8px; text-align: center; font-weight: 700;
+      cursor: pointer; font-size: .88rem; color: var(--text-muted);
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      transition: var(--transition); background: none; border-top: none;
+      border-left: none; border-right: none; font-family: inherit;
+    }
+    .cart-tab.active { color: var(--green); border-bottom-color: var(--green); }
+    .cart-tab:hover:not(.active) { color: var(--text); }
 
     /* ── 검사 목록 ── */
     .test-list { display: flex; flex-direction: column; gap: 10px; }
@@ -73,6 +88,51 @@
     .detail-link {
       display: block; font-size: .7rem; color: var(--green);
       text-decoration: underline; margin-top: 3px;
+    }
+
+    /* ── 수량 컨트롤 ── */
+    .qty-ctrl {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 4px; justify-content: flex-end;
+    }
+    .qty-btn {
+      width: 26px; height: 26px; border-radius: 6px;
+      border: 1.5px solid var(--beige-dark); background: var(--beige);
+      cursor: pointer; font-size: 1rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition); color: var(--text); font-family: inherit;
+      line-height: 1;
+    }
+    .qty-btn:hover { border-color: var(--green); color: var(--green); background: #f0faf4; }
+    .qty-num {
+      min-width: 18px; text-align: center; font-weight: 700;
+      font-size: .88rem; color: var(--brown-dark);
+    }
+
+    /* ── 패키지 선택 ── */
+    .pkg-line-section { margin-bottom: 28px; }
+    .pkg-line-label-sm {
+      font-size: .72rem; font-weight: 700; color: var(--brown);
+      text-transform: uppercase; letter-spacing: .1em;
+      margin-bottom: 10px; padding-left: 2px;
+    }
+    .pkg-select-grid { display: flex; flex-direction: column; gap: 8px; }
+    .pkg-select-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 14px 18px; box-shadow: var(--shadow);
+      cursor: pointer; transition: var(--transition);
+      border: 2px solid transparent; display: flex; align-items: center; gap: 14px;
+    }
+    .pkg-select-card:hover { border-color: var(--beige-dark); transform: translateY(-1px); }
+    .pkg-select-card.active { border-color: var(--green); background: #f4faf6; }
+    .pkg-select-card-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .pkg-select-card-info { flex: 1; min-width: 0; }
+    .pkg-select-card-name { font-weight: 700; color: var(--brown-dark); font-size: .9rem; }
+    .pkg-select-card-tests { font-size: .73rem; color: var(--text-muted); margin-top: 2px; }
+    .pkg-select-card-price { text-align: right; flex-shrink: 0; }
+    .pkg-summary-name {
+      font-weight: 700; font-size: .92rem; color: var(--brown-dark);
+      margin-bottom: 8px;
     }
 
     /* ── 우측 요약 패널 ── */
@@ -172,8 +232,8 @@
     /* ── Review Pledge (SCT 하위 인라인) ── */
     .sct-pledge-wrap {
       display: none;
-      padding-left: 48px; /* 체크박스 + 아이콘 너비만큼 들여쓰기 */
-      margin-top: -2px;   /* SCT 행과 경계 합치기 */
+      padding-left: 48px;
+      margin-top: -2px;
     }
     .sct-pledge-wrap.open { display: block; }
     .review-pledge-inline {
@@ -264,10 +324,24 @@
 <div class="container">
   <div class="cart-layout">
 
-    <!-- 검사 목록 -->
+    <!-- 탭 영역 -->
     <div>
-      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px;">검사를 클릭해서 담으세요.</p>
-      <div class="test-list" id="testList"></div>
+      <div class="cart-tab-bar">
+        <button class="cart-tab active" id="tab-unit" onclick="switchTab('unit')">🛒 단품 구매</button>
+        <button class="cart-tab" id="tab-pkg" onclick="switchTab('package')">📦 패키지 구매</button>
+      </div>
+
+      <!-- 단품 패널 -->
+      <div id="panel-unit">
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px;">검사를 클릭해서 담으세요. 수량도 조정할 수 있어요.</p>
+        <div class="test-list" id="testList"></div>
+      </div>
+
+      <!-- 패키지 패널 -->
+      <div id="panel-pkg" style="display:none;">
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px;">패키지를 선택하면 구성 검사와 할인 가격을 바로 확인할 수 있어요.</p>
+        <div id="pkg-select-container"></div>
+      </div>
     </div>
 
     <!-- 요약 패널 -->
@@ -349,29 +423,30 @@
 <script src="../js/main.js"></script>
 <script>
 const TESTS_CART = [
-  { key:'sct',   icon:'💬', name:'SCT 문장완성검사',          shortName:'SCT 문장완성검사',        desc:'🎁 리뷰 참여 시 무료 증정!',             href:'sct.html',   freeWithReview:true },
-  { key:'tci',   icon:'🧬', name:'TCI 기질 및 성격검사',      shortName:'TCI 기질 및 성격검사',    desc:'타고난 기질 + 성장한 성격 7차원 분석',   href:'tci.html',   best:true },
-  { key:'kocean',icon:'🌊', name:'K-OCEAN 5요인 성격검사',    shortName:'K-OCEAN 5요인 성격검사',  desc:'개방성·성실성·외향성·친화성·신경증',     href:'kocean.html' },
-  { key:'golden',icon:'✨', name:'GOLDEN 골든성격유형검사',    shortName:'GOLDEN 골든성격유형검사', desc:'4가지 성격 유형 선호도 분석',            href:'golden.html', best:true },
-  { key:'rs',    icon:'💚', name:'RS 회복탄력성검사',          shortName:'RS 회복탄력성검사',       desc:'심리적 회복 능력 측정',                  href:'rs.html' },
-  { key:'kiri',  icon:'🤝', name:'KiRi 통합적 대인관계검사',   shortName:'KiRi 대인관계검사',       desc:'대인관계 패턴과 핵심 욕구 분석',         href:'kiri.html' },
-  { key:'pai',   icon:'🔬', name:'PAI / PAI-A 성격평가',      shortName:'PAI 성격평가',            desc:'임상 표준 성격 전반 정밀 측정',          href:'pai.html' },
-  { key:'cst',   icon:'⭐', name:'CST 성격강점검사',           shortName:'CST 성격강점검사',        desc:'VIA 강점 모델 기반 고유 강점 발견',      href:'cst.html' },
-  { key:'mlst',  icon:'📚', name:'MLST-II 학습전략검사',      shortName:'MLST-II 학습전략검사',    desc:'동기·인지·행동·정서 4대 학습 전략 진단', href:'mlst.html' },
-  { key:'kcmii', icon:'🎓', name:'KCMII-2 대학전공선택검사',  shortName:'KCMII-2 전공선택검사',    desc:'활동·직업·전공교과 선호도 진로·전공 탐색', href:'kcmii.html' },
-  { key:'sts',   icon:'🦎', name:'STS 6요인 기질검사',         shortName:'STS 기질검사',            desc:'영아~성인 동물 유형 직관적 기질 이해',   href:'sts.html' },
-  { key:'pat',   icon:'🏠', name:'PAT-2 부모양육태도검사',     shortName:'PAT-2 부모양육태도검사',  desc:'부모 양육 방식 과학적 진단',             href:'pat.html' },
-  { key:'neo',   icon:'🔭', name:'NEO 네오 성격검사',          shortName:'NEO 네오 성격검사',       desc:'5요인 30하위요인 정밀 성격 분석',        href:'neo.html' },
-  { key:'mindfit',icon:'🧩', name:'MindFit 마인드핏 적응역량검사', shortName:'MindFit 마인드핏 적응역량검사', desc:'학교 적응도·심리자원 3개 영역 측정',  href:'mindfit.html' },
-  { key:'cat',   icon:'🏛️', name:'CAT-2 대학적응력검사 2판',  shortName:'CAT-2 대학적응력검사',    desc:'대학 적응력·중도탈락 의도 사전 측정',    href:'cat.html' },
-  { key:'ieej',  icon:'💼', name:'IEEJ 통합직무스트레스검사',  shortName:'IEEJ 통합직무스트레스검사', desc:'감정노동·번아웃 4개 척도 다면 분석',    href:'ieej.html' },
+  { key:'sct',    icon:'💬', name:'SCT 문장완성검사',              shortName:'SCT 문장완성검사',           desc:'🎁 리뷰 참여 시 무료 증정!',               href:'sct.html',     freeWithReview:true },
+  { key:'tci',    icon:'🧬', name:'TCI 기질 및 성격검사',          shortName:'TCI 기질 및 성격검사',       desc:'타고난 기질 + 성장한 성격 7차원 분석',     href:'tci.html',     best:true },
+  { key:'kocean', icon:'🌊', name:'K-OCEAN 5요인 성격검사',        shortName:'K-OCEAN 5요인 성격검사',     desc:'개방성·성실성·외향성·친화성·신경증',       href:'kocean.html' },
+  { key:'golden', icon:'✨', name:'GOLDEN 골든성격유형검사',        shortName:'GOLDEN 골든성격유형검사',    desc:'4가지 성격 유형 선호도 분석',              href:'golden.html',  best:true },
+  { key:'rs',     icon:'💚', name:'RS 회복탄력성검사',              shortName:'RS 회복탄력성검사',          desc:'심리적 회복 능력 측정',                    href:'rs.html' },
+  { key:'kiri',   icon:'🤝', name:'KiRi 통합적 대인관계검사',      shortName:'KiRi 대인관계검사',          desc:'대인관계 패턴과 핵심 욕구 분석',           href:'kiri.html' },
+  { key:'pai',    icon:'🔬', name:'PAI / PAI-A 성격평가',          shortName:'PAI 성격평가',               desc:'임상 표준 성격 전반 정밀 측정',            href:'pai.html' },
+  { key:'cst',    icon:'⭐', name:'CST 성격강점검사',               shortName:'CST 성격강점검사',           desc:'VIA 강점 모델 기반 고유 강점 발견',        href:'cst.html' },
+  { key:'mlst',   icon:'📚', name:'MLST-II 학습전략검사',          shortName:'MLST-II 학습전략검사',       desc:'동기·인지·행동·정서 4대 학습 전략 진단',   href:'mlst.html' },
+  { key:'kcmii',  icon:'🎓', name:'KCMII-2 대학전공선택검사',      shortName:'KCMII-2 전공선택검사',       desc:'활동·직업·전공교과 선호도 진로·전공 탐색', href:'kcmii.html' },
+  { key:'sts',    icon:'🦎', name:'STS 6요인 기질검사',             shortName:'STS 기질검사',               desc:'영아~성인 동물 유형 직관적 기질 이해',     href:'sts.html' },
+  { key:'pat',    icon:'🏠', name:'PAT-2 부모양육태도검사',         shortName:'PAT-2 부모양육태도검사',     desc:'부모 양육 방식 과학적 진단',               href:'pat.html' },
+  { key:'neo',    icon:'🔭', name:'NEO 네오 성격검사',              shortName:'NEO 네오 성격검사',          desc:'5요인 30하위요인 정밀 성격 분석',          href:'neo.html' },
+  { key:'mindfit',icon:'🧩', name:'MindFit 마인드핏 적응역량검사', shortName:'MindFit 마인드핏',           desc:'학교 적응도·심리자원 3개 영역 측정',       href:'mindfit.html' },
+  { key:'cat',    icon:'🏛️', name:'CAT-2 대학적응력검사 2판',      shortName:'CAT-2 대학적응력검사',       desc:'대학 적응력·중도탈락 의도 사전 측정',      href:'cat.html' },
+  { key:'ieej',   icon:'💼', name:'IEEJ 통합직무스트레스검사',      shortName:'IEEJ 통합직무스트레스검사',  desc:'감정노동·번아웃 4개 척도 다면 분석',       href:'ieej.html' },
 ];
 
 const SCT_PRICE = 5000;
 
-const selected = new Set();
+const quantities  = {};   // key -> count (단품 탭)
+let activePkgKey  = null; // 패키지 탭 선택
+let currentTab    = 'unit';
 
-// lsSaved가 price:0 으로 잘못 저장된 경우(비무료 검사) → basePrices 우선 사용
 const lsSaved    = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null');
 const basePrices = typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {};
 const prices     = {};
@@ -380,7 +455,7 @@ _allKeys.forEach(key => {
   const base = basePrices[key];
   const ls   = lsSaved?.[key];
   if (!ls || (ls.price === 0 && !ls.free && (base?.price ?? 0) > 0)) {
-    prices[key] = base; // lsSaved가 비무료를 0으로 잘못 저장 → basePrices 사용
+    prices[key] = base;
   } else {
     prices[key] = ls;
   }
@@ -402,77 +477,122 @@ function discountRate(paidCount, hasTci) {
   return rate;
 }
 
-function buildMessage() {
-  const names = [...selected].map(k => {
+// 단품 탭: 수량 포함 확장 paidKeys (할인 기준)
+function expandedPaidKeys() {
+  const keys = [];
+  Object.entries(quantities).forEach(([k, cnt]) => {
+    if (cnt > 0 && k !== 'sct' && !(prices[k]?.free)) {
+      for (let i = 0; i < cnt; i++) keys.push(k);
+    }
+  });
+  return keys;
+}
+
+// 패키지 탭: SCT 제외 가격 계산
+function computeLocalPkgPrice(testKeys) {
+  const paidKeys = testKeys.filter(k => k !== 'sct' && !(prices[k]?.free));
+  const hasTci   = paidKeys.includes('tci');
+  const total    = paidKeys.reduce((sum, k) => sum + (prices[k]?.price || 0), 0);
+  const rate     = discountRate(paidKeys.length, hasTci);
+  const raw      = Math.round(total * (1 - rate));
+  return { total, discounted: charmPrice(raw), rate };
+}
+
+// ── 단품 탭 ─────────────────────────────────────────────────────
+function handleRowClick(key) {
+  const cur = quantities[key] || 0;
+  quantities[key] = cur === 0 ? 1 : 0;
+  renderUnit();
+}
+
+function setQty(key, delta, e) {
+  e.stopPropagation();
+  quantities[key] = Math.max(0, (quantities[key] || 0) + delta);
+  renderUnit();
+}
+
+function buildUnitMessage() {
+  const entries = Object.entries(quantities).filter(([, cnt]) => cnt > 0);
+  const names = entries.map(([k, cnt]) => {
     const t = TESTS_CART.find(x => x.key === k);
-    return '[' + (t?.shortName || k) + ']';
+    const name = '[' + (t?.shortName || k) + ']';
+    return cnt > 1 ? `${name} × ${cnt}` : name;
   });
   const reviewPledged = document.getElementById('reviewPledge')?.checked ?? false;
   const pledge = reviewPledged ? '\n리뷰 약속드립니다.' : '';
   return '안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n' + names.join(' ') + ' 검사 진행하고 싶습니다.' + pledge;
 }
 
-function render() {
+function renderUnit() {
   const reviewPledged = document.getElementById('reviewPledge')?.checked ?? false;
-  const sctSelected   = selected.has('sct');
+  const sctSelected   = (quantities['sct'] || 0) > 0;
+  const expandedPaid  = expandedPaidKeys();
+  const paidCount     = expandedPaid.length;
+  const hasTci        = expandedPaid.includes('tci');
+  const rate          = discountRate(paidCount, hasTci);
+  const pct           = Math.round(rate * 100);
 
-  // SCT는 항상 paidKeys에서 분리 (다회 할인 적용 안 됨)
-  const paidKeys  = [...selected].filter(k => k !== 'sct' && !(prices[k]?.free));
-  const paidCount = paidKeys.length;
-  const hasTci    = paidKeys.includes('tci');
-  const rate      = discountRate(paidCount, hasTci);
-  const pct       = Math.round(rate * 100);
-  const paidSum   = paidKeys.reduce((s, k) => s + (prices[k]?.price || 0), 0);
-  const discAmt   = Math.round(paidSum * rate);
-
-  // SCT는 항상 5000원으로 표시 (pledged 시 -5000 할인 별도 표시)
-  const sctDisplay = sctSelected ? SCT_PRICE : 0;
-  const reviewDisc = (sctSelected && reviewPledged) ? SCT_PRICE : 0;
+  const paidSum = Object.entries(quantities).reduce((s, [k, cnt]) => {
+    if (cnt > 0 && k !== 'sct' && !(prices[k]?.free)) {
+      return s + (prices[k]?.price || 0) * cnt;
+    }
+    return s;
+  }, 0);
+  const discAmt        = Math.round(paidSum * rate);
+  const sctDisplay     = sctSelected ? SCT_PRICE : 0;
+  const reviewDisc     = (sctSelected && reviewPledged) ? SCT_PRICE : 0;
   const displaySubtotal = paidSum + sctDisplay;
-  const rawFinal = displaySubtotal - discAmt - reviewDisc;
-  const final    = paidCount >= 2 ? charmPrice(rawFinal) : rawFinal;
+  const rawFinal       = displaySubtotal - discAmt - reviewDisc;
+  const final          = paidCount >= 2 ? charmPrice(rawFinal) : rawFinal;
 
-  // 할인 배지
+  // 배지 강조
   document.getElementById('badge2').classList.toggle('active', paidCount === 2);
   document.getElementById('badge3').classList.toggle('active', paidCount === 3);
   document.getElementById('badge4').classList.toggle('active', paidCount >= 4);
 
-  // SCT 리뷰 약속 패널 열기/닫기
+  // SCT 리뷰 약속 패널
   const pledgeWrap = document.getElementById('sct-pledge-wrap');
   if (pledgeWrap) pledgeWrap.classList.toggle('open', sctSelected);
 
-  // 체크 표시
+  // 행 상태 업데이트
   TESTS_CART.forEach(t => {
-    const row = document.getElementById('row-' + t.key);
+    const row   = document.getElementById('row-' + t.key);
     if (!row) return;
-    const on = selected.has(t.key);
+    const qty = quantities[t.key] || 0;
+    const on  = qty > 0;
     row.classList.toggle('selected', on);
     row.querySelector('.test-row-check').textContent = on ? '✓' : '';
+    const qtyEl  = document.getElementById('qty-'  + t.key);
+    const qnumEl = document.getElementById('qnum-' + t.key);
+    if (qtyEl)  qtyEl.style.display = on ? 'flex' : 'none';
+    if (qnumEl) qnumEl.textContent  = qty;
   });
 
   const summaryEl  = document.getElementById('summaryRows');
   const totalArea  = document.getElementById('totalArea');
   const btnInquiry = document.getElementById('btnInquiry');
+  const hasAny     = Object.values(quantities).some(c => c > 0);
 
-  if (selected.size === 0) {
+  if (!hasAny) {
     summaryEl.innerHTML = '<div class="summary-empty">아직 선택한 검사가 없어요</div>';
-    totalArea.style.display  = 'none';
+    totalArea.style.display = 'none';
     btnInquiry.classList.add('disabled');
     return;
   }
 
-  // 목록 (SCT: 항상 5000원으로 표시, pledge 여부는 별도 라인으로)
-  summaryEl.innerHTML = [...selected].map(k => {
-    const t      = TESTS_CART.find(x => x.key === k);
-    const isFree = k !== 'sct' && prices[k]?.free;
-    const price  = k === 'sct' ? SCT_PRICE : (prices[k]?.price || 0);
-    return `<div class="summary-row${isFree ? ' free-row' : ''}">
-      <span class="summary-row-name">${t?.icon || ''} ${t?.shortName || k}</span>
-      <span class="summary-row-price">${isFree ? '무료 🎁' : fmtWon(price)}</span>
-    </div>`;
-  }).join('');
+  summaryEl.innerHTML = Object.entries(quantities)
+    .filter(([, cnt]) => cnt > 0)
+    .map(([k, cnt]) => {
+      const t      = TESTS_CART.find(x => x.key === k);
+      const isFree = k !== 'sct' && prices[k]?.free;
+      const price  = k === 'sct' ? SCT_PRICE : (prices[k]?.price || 0);
+      const label  = `${t?.icon || ''} ${t?.shortName || k}${cnt > 1 ? ` × ${cnt}` : ''}`;
+      return `<div class="summary-row${isFree ? ' free-row' : ''}">
+        <span class="summary-row-name">${label}</span>
+        <span class="summary-row-price">${isFree ? '무료 🎁' : fmtWon(price * cnt)}</span>
+      </div>`;
+    }).join('');
 
-  // 할인 칩 (SCT 제외한 수, 실제 할인율 동적 표시)
   const tiers = [
     { label:'2개', cnt:2, base:0.10, tciBase:0.07 },
     { label:'3개', cnt:3, base:0.15, tciBase:0.12 },
@@ -484,7 +604,6 @@ function render() {
     return `<div class="tier-chip${isActive ? ' current' : ''}">${t.label} ${Math.round(r*100)}% 할인</div>`;
   }).join('');
 
-  // 금액
   document.getElementById('subtotalEl').textContent = fmtWon(displaySubtotal);
   const discRow = document.getElementById('discountRow');
   if (pct > 0) {
@@ -494,22 +613,135 @@ function render() {
   } else {
     discRow.style.display = 'none';
   }
-  const reviewDiscRow = document.getElementById('reviewDiscRow');
-  reviewDiscRow.style.display = reviewDisc > 0 ? 'flex' : 'none';
-
+  document.getElementById('reviewDiscRow').style.display = reviewDisc > 0 ? 'flex' : 'none';
   document.getElementById('finalEl').textContent = fmtWon(final);
   totalArea.style.display = 'block';
 
-  // 문의 메시지
-  document.getElementById('msgText').textContent = buildMessage();
-
+  document.getElementById('msgText').textContent = buildUnitMessage();
   const btn = document.getElementById('btnCopy');
   btn.classList.remove('copied');
   btn.textContent = '📋 문의 내용 복사하기';
-
   btnInquiry.classList.remove('disabled');
 }
 
+// ── 패키지 탭 ────────────────────────────────────────────────────
+const PKG_LINES = [
+  { label: '자기이해',      keys: ['pkg_personality', 'pkg_deepdive', 'pkg_mental'] },
+  { label: '관계',          keys: ['pkg_relation1', 'pkg_couple'] },
+  { label: '성장·양육',    keys: ['pkg_career', 'pkg_parenting_infant', 'pkg_parenting_school'] },
+  { label: '생활 스트레스', keys: ['pkg_burnout', 'pkg_univ'] }
+];
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-unit').classList.toggle('active', tab === 'unit');
+  document.getElementById('tab-pkg').classList.toggle('active', tab === 'package');
+  document.getElementById('panel-unit').style.display = tab === 'unit' ? '' : 'none';
+  document.getElementById('panel-pkg').style.display  = tab === 'package' ? '' : 'none';
+  // 배지는 단품 탭에서만 의미 있음
+  ['badge2','badge3','badge4'].forEach(id => {
+    document.getElementById(id).style.display = tab === 'unit' ? '' : 'none';
+  });
+  if (tab === 'package') {
+    renderPackageTab();
+    renderPackageSummary();
+  } else {
+    renderUnit();
+  }
+}
+
+function renderPackageTab() {
+  const container = document.getElementById('pkg-select-container');
+  if (!container || typeof PKG_INFO === 'undefined') return;
+  container.innerHTML = PKG_LINES.map(line => {
+    const cardsHtml = line.keys.map(key => {
+      const pkg = PKG_INFO[key];
+      if (!pkg) return '';
+      const { discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
+      const pct      = Math.round(rate * 100);
+      const isActive = activePkgKey === key;
+      return `<div class="pkg-select-card${isActive ? ' active' : ''}" onclick="selectPkg('${key}')">
+        <div class="pkg-select-card-icon">${pkg.icon}</div>
+        <div class="pkg-select-card-info">
+          <div class="pkg-select-card-name">${pkg.title}</div>
+          <div class="pkg-select-card-tests">${pkg.tags.join(' · ')}</div>
+        </div>
+        <div class="pkg-select-card-price">
+          <div class="price-main">${fmtWon(discounted)}</div>
+          ${pct > 0 ? `<div style="font-size:.7rem;color:var(--green);font-weight:700;">${pct}% 할인</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="pkg-line-section">
+      <div class="pkg-line-label-sm">${line.label}</div>
+      <div class="pkg-select-grid">${cardsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectPkg(key) {
+  activePkgKey = activePkgKey === key ? null : key;
+  renderPackageTab();
+  renderPackageSummary();
+}
+
+function buildPkgMessage() {
+  const pkg = PKG_INFO[activePkgKey];
+  return `안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n[${pkg.title}] 패키지 진행하고 싶습니다.`;
+}
+
+function renderPackageSummary() {
+  const summaryEl  = document.getElementById('summaryRows');
+  const totalArea  = document.getElementById('totalArea');
+  const btnInquiry = document.getElementById('btnInquiry');
+  const tierStrip  = document.getElementById('tierStrip');
+
+  if (!activePkgKey) {
+    summaryEl.innerHTML = '<div class="summary-empty">패키지를 선택해주세요</div>';
+    totalArea.style.display = 'none';
+    btnInquiry.classList.add('disabled');
+    return;
+  }
+
+  const pkg = PKG_INFO[activePkgKey];
+  const { total, discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
+  const pct = Math.round(rate * 100);
+
+  summaryEl.innerHTML = `<div class="pkg-summary-name">${pkg.icon} ${pkg.title}</div>` +
+    pkg.testKeys.map(k => {
+      const isSct  = k === 'sct';
+      const isFree = !isSct && (prices[k]?.free);
+      const price  = isSct ? 0 : (prices[k]?.price || 0);
+      const t      = TESTS_CART.find(x => x.key === k);
+      const label  = t ? `${t.icon} ${t.shortName}` : k.toUpperCase();
+      return `<div class="summary-row${isFree || isSct ? ' free-row' : ''}">
+        <span class="summary-row-name">${label}</span>
+        <span class="summary-row-price">${isFree || isSct ? '무료 🎁' : fmtWon(price)}</span>
+      </div>`;
+    }).join('');
+
+  if (tierStrip) tierStrip.innerHTML = '';
+  document.getElementById('subtotalEl').textContent = fmtWon(total);
+  const discRow = document.getElementById('discountRow');
+  if (pct > 0) {
+    discRow.style.display = 'flex';
+    document.getElementById('discountLabel').textContent = `패키지 할인 (-${pct}%)`;
+    document.getElementById('discountEl').textContent    = '-' + fmtWon(total - discounted);
+  } else {
+    discRow.style.display = 'none';
+  }
+  document.getElementById('reviewDiscRow').style.display = 'none';
+  document.getElementById('finalEl').textContent = fmtWon(discounted);
+  totalArea.style.display = 'block';
+
+  document.getElementById('msgText').textContent = buildPkgMessage();
+  const btn = document.getElementById('btnCopy');
+  btn.classList.remove('copied');
+  btn.textContent = '📋 문의 내용 복사하기';
+  btnInquiry.classList.remove('disabled');
+}
+
+// ── 공통 ─────────────────────────────────────────────────────────
 async function copyMsg() {
   const text = document.getElementById('msgText').textContent;
   try {
@@ -532,9 +764,9 @@ async function copyMsg() {
 
 function buildList() {
   document.getElementById('testList').innerHTML = TESTS_CART.map(t => {
-    const p        = prices[t.key];
-    const isSct    = t.key === 'sct';
-    const isFree   = !isSct && (p?.free);
+    const p      = prices[t.key];
+    const isSct  = t.key === 'sct';
+    const isFree = !isSct && (p?.free);
     const nameHtml = t.name
       + (t.best ? '<span class="best-badge">BEST</span>' : '')
       + (isSct   ? '<span class="best-badge" style="background:var(--green);">무료</span>' : '');
@@ -546,6 +778,12 @@ function buildList() {
     } else {
       priceHtml = `<span class="price-main">${fmtWon(p?.price || 0)}</span>`;
     }
+    // 수량 컨트롤 (SCT 제외)
+    const qtyHtml = !isSct ? `<div class="qty-ctrl" id="qty-${t.key}" style="display:none;">
+      <button class="qty-btn" onclick="setQty('${t.key}',-1,event)">−</button>
+      <span class="qty-num" id="qnum-${t.key}">1</span>
+      <button class="qty-btn" onclick="setQty('${t.key}',1,event)">+</button>
+    </div>` : '';
     const rowHtml = `<div class="test-row${isFree ? ' free-test' : ''}${isSct ? ' sct-row' : ''}" id="row-${t.key}" data-key="${t.key}">
       <div class="test-row-check"></div>
       <div class="test-row-icon">${t.icon}</div>
@@ -555,16 +793,16 @@ function buildList() {
       </div>
       <div class="test-row-price">
         ${priceHtml}
+        ${qtyHtml}
         <a class="detail-link" href="${t.href}" onclick="event.stopPropagation()">상세보기</a>
       </div>
     </div>`;
-    // SCT 바로 아래에 리뷰 약속 패널 삽입
     if (isSct) {
       return rowHtml + `
     <div class="sct-pledge-wrap" id="sct-pledge-wrap">
       <div class="review-pledge-inline">
         <label>
-          <input type="checkbox" id="reviewPledge" onchange="render()">
+          <input type="checkbox" id="reviewPledge" onchange="renderUnit()">
           <div>
             <div class="review-pledge-title">🎁 리뷰 참여 시 SCT 문장완성검사 무료 증정 (-₩5,000)</div>
             <div class="review-pledge-sub">검사 결과 수령 후 크몽에 정성스러운 리뷰를 남겨 주시면 SCT 문장완성검사를 <strong>완전 무료</strong>로 드립니다. 체크하시면 최종 금액에서 바로 차감됩니다.</div>
@@ -577,17 +815,13 @@ function buildList() {
   }).join('');
 
   document.querySelectorAll('.test-row').forEach(row => {
-    row.addEventListener('click', () => {
-      const k = row.dataset.key;
-      selected.has(k) ? selected.delete(k) : selected.add(k);
-      render();
-    });
+    row.addEventListener('click', () => handleRowClick(row.dataset.key));
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   buildList();
-  render();
+  renderUnit();
   if (typeof applyStoreLinks === 'function') applyStoreLinks();
 });
 </script>

@@ -274,7 +274,7 @@ function getDiscount(paidCount, hasTci) {
 function computePkgPrice(testKeys) {
   const saved  = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null');
   const prices = saved || (typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {});
-  const paidKeys = testKeys.filter(k => !(prices[k]?.free));
+  const paidKeys = testKeys.filter(k => k !== 'sct' && !(prices[k]?.free));
   const hasTci   = paidKeys.includes('tci');
   const total    = paidKeys.reduce((sum, k) => sum + (prices[k]?.price || 0), 0);
   const rate     = getDiscount(paidKeys.length, hasTci);
