@@ -305,6 +305,17 @@
       border: none; border-top: 2px solid var(--beige-dark); margin: 10px 0 8px;
     }
 
+    /* ── 패키지 수량 행 (카드 아래 상시 표시) ── */
+    .pkg-qty-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 14px 6px;
+      background: var(--beige); border-radius: 0 0 var(--radius) var(--radius);
+      border: 1.5px solid var(--beige-dark); border-top: none;
+      margin-bottom: 4px;
+    }
+    .pkg-qty-row .qty-label { font-size: .75rem; color: var(--text-muted); flex: 1; }
+    .pkg-qty-row .qty-num { min-width: 22px; text-align: center; font-weight: 700; color: var(--brown-dark); font-size: .88rem; }
+
     @media (max-width: 800px) {
       .cart-layout { grid-template-columns: 1fr; }
       .cart-summary { position: static; }
@@ -399,7 +410,7 @@
                 <div class="review-pledge-sub">패키지를 1개 이상 선택 후 리뷰 약속 시 SCT를 <strong>무료</strong>로 드립니다.</div>
               </div>
               <label id="pkg-sct-pledge-avail" style="display:none;">
-                <input type="checkbox" id="pkgReviewPledge" onchange="renderPackageSummary()">
+                <input type="checkbox" id="pkgReviewPledge" onchange="toggleReviewPledge(this)">
                 <div>
                   <div class="review-pledge-title">🎁 리뷰 참여 시 SCT 무료 증정 (-₩5,000)</div>
                   <div class="review-pledge-sub">검사 결과 수령 후 크몽에 정성스러운 리뷰를 남겨 주시면 SCT 문장완성검사를 <strong>완전 무료</strong>로 드립니다.</div>
@@ -490,6 +501,7 @@
 <script src="../js/links.js"></script>
 <script src="../js/main.js"></script>
 <script>
+// ── Data ─────────────────────────────────────────────────────────────
 const TESTS_CART = [
   { key:'sct',    icon:'💬', name:'SCT 문장완성검사',              shortName:'SCT 문장완성검사',           desc:'다른 검사 구매 시 리뷰 참여하면 무료 증정!', href:'sct.html',   freeWithReview:true },
   { key:'tci',    icon:'🧬', name:'TCI 기질 및 성격검사',          shortName:'TCI 기질 및 성격검사',       desc:'타고난 기질 + 성장한 성격 7차원 분석',     href:'tci.html',     best:true },
@@ -511,10 +523,13 @@ const TESTS_CART = [
 
 const SCT_PRICE = 5000;
 
-const quantities   = {};         // key -> count (단품 탭)
-const activePkgKeys = new Set(); // 패키지 탭 다중 선택
-let currentTab     = 'unit';
+// ── State ─────────────────────────────────────────────────────────────
+const quantities    = {};  // testKey → count (단품)
+const pkgQuantities = {};  // pkgKey  → count (패키지)
+let   reviewPledged = false;
+let   currentTab    = 'unit';
 
+// ── Price init ────────────────────────────────────────────────────────
 const lsSaved    = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null');
 const basePrices = typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {};
 const prices     = {};
@@ -529,6 +544,7 @@ _allKeys.forEach(key => {
   }
 });
 
+// ── Utility ───────────────────────────────────────────────────────────
 function fmtWon(n) { return '₩' + n.toLocaleString('ko-KR'); }
 
 function charmPrice(n) {
@@ -538,25 +554,14 @@ function charmPrice(n) {
 
 function discountRate(paidCount, hasTci) {
   let rate = 0;
-  if (paidCount >= 4) rate = 0.20;
+  if (paidCount >= 4)      rate = 0.20;
   else if (paidCount === 3) rate = 0.15;
   else if (paidCount === 2) rate = 0.10;
   if (hasTci && rate > 0) rate -= 0.03;
   return rate;
 }
 
-// 단품 탭: 수량 포함 확장 paidKeys (할인 기준)
-function expandedPaidKeys() {
-  const keys = [];
-  Object.entries(quantities).forEach(([k, cnt]) => {
-    if (cnt > 0 && k !== 'sct' && !(prices[k]?.free)) {
-      for (let i = 0; i < cnt; i++) keys.push(k);
-    }
-  });
-  return keys;
-}
-
-// 패키지 탭: SCT 제외 가격 계산
+// 패키지 카드 미리보기 가격 (SCT 제외 단독 계산)
 function computeLocalPkgPrice(testKeys) {
   const paidKeys = testKeys.filter(k => k !== 'sct' && !(prices[k]?.free));
   const hasTci   = paidKeys.includes('tci');
@@ -566,148 +571,68 @@ function computeLocalPkgPrice(testKeys) {
   return { total, discounted: charmPrice(raw), rate };
 }
 
-// ── 단품 탭 ─────────────────────────────────────────────────────
+// 패키지 + 단품 전체를 통합하여 단일 할인율 계산
+function getUnifiedCart() {
+  const allPaidKeys = [];
+  if (typeof PKG_INFO !== 'undefined') {
+    Object.entries(pkgQuantities).forEach(([pkgKey, qty]) => {
+      if (qty > 0 && PKG_INFO[pkgKey]) {
+        const paidTests = PKG_INFO[pkgKey].testKeys.filter(k => k !== 'sct' && !(prices[k]?.free));
+        for (let i = 0; i < qty; i++) allPaidKeys.push(...paidTests);
+      }
+    });
+  }
+  Object.entries(quantities).forEach(([k, cnt]) => {
+    if (cnt > 0 && k !== 'sct' && !(prices[k]?.free)) {
+      for (let i = 0; i < cnt; i++) allPaidKeys.push(k);
+    }
+  });
+  const hasTci  = allPaidKeys.includes('tci');
+  const rate    = discountRate(allPaidKeys.length, hasTci);
+  const paidSum = allPaidKeys.reduce((s, k) => s + (prices[k]?.price || 0), 0);
+  const discAmt = Math.round(paidSum * rate);
+  const sctOn   = (quantities['sct'] || 0) > 0;
+  const sctFree = sctOn && reviewPledged && allPaidKeys.length > 0;
+  const sctCharge = sctOn ? (sctFree ? 0 : SCT_PRICE) : 0;
+  const displaySubtotal = paidSum + (sctOn ? SCT_PRICE : 0);
+  const rawFinal = paidSum - discAmt + sctCharge;
+  const final    = allPaidKeys.length >= 2 ? charmPrice(rawFinal) : rawFinal;
+  return { allPaidKeys, hasTci, rate, pct: Math.round(rate * 100), paidSum, discAmt, sctOn, sctFree, displaySubtotal, final };
+}
+
+function hasOtherPaidItems() {
+  const hasPkgs  = Object.values(pkgQuantities).some(q => q > 0);
+  const hasUnits = Object.entries(quantities).some(([k, cnt]) => cnt > 0 && k !== 'sct' && !(prices[k]?.free));
+  return hasPkgs || hasUnits;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────
 function handleRowClick(key) {
-  const cur = quantities[key] || 0;
-  quantities[key] = cur === 0 ? 1 : 0;
-  renderUnit();
+  quantities[key] = (quantities[key] || 0) === 0 ? 1 : 0;
+  renderAll();
 }
 
 function setQty(key, delta, e) {
   e.stopPropagation();
   quantities[key] = Math.max(0, (quantities[key] || 0) + delta);
-  renderUnit();
+  renderAll();
 }
 
-function buildUnitMessage() {
-  const entries = Object.entries(quantities).filter(([, cnt]) => cnt > 0);
-  const names = entries.map(([k, cnt]) => {
-    const t = TESTS_CART.find(x => x.key === k);
-    const name = '[' + (t?.shortName || k) + ']';
-    return cnt > 1 ? `${name} × ${cnt}` : name;
-  });
-  const reviewPledged = document.getElementById('reviewPledge')?.checked ?? false;
-  const pledge = reviewPledged ? '\n리뷰 약속드립니다.' : '';
-  return '안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n' + names.join(' ') + ' 검사 진행하고 싶습니다.' + pledge;
+function addPkg(key) {
+  pkgQuantities[key] = (pkgQuantities[key] || 0) > 0 ? 0 : 1;
+  renderAll();
 }
 
-function renderUnit() {
-  const reviewPledged = document.getElementById('reviewPledge')?.checked ?? false;
-  const sctSelected   = (quantities['sct'] || 0) > 0;
-  const expandedPaid  = expandedPaidKeys();
-  const paidCount     = expandedPaid.length;
-  const hasTci        = expandedPaid.includes('tci');
-  const rate          = discountRate(paidCount, hasTci);
-  const pct           = Math.round(rate * 100);
-
-  const paidSum = Object.entries(quantities).reduce((s, [k, cnt]) => {
-    if (cnt > 0 && k !== 'sct' && !(prices[k]?.free)) {
-      return s + (prices[k]?.price || 0) * cnt;
-    }
-    return s;
-  }, 0);
-  const discAmt        = Math.round(paidSum * rate);
-  const sctDisplay     = sctSelected ? SCT_PRICE : 0;
-  const reviewDisc     = (sctSelected && reviewPledged && paidCount > 0) ? SCT_PRICE : 0;
-  const displaySubtotal = paidSum + sctDisplay;
-  const rawFinal       = displaySubtotal - discAmt - reviewDisc;
-  const final          = paidCount >= 2 ? charmPrice(rawFinal) : rawFinal;
-
-  // 배지 강조
-  document.getElementById('badge2').classList.toggle('active', paidCount === 2);
-  document.getElementById('badge3').classList.toggle('active', paidCount === 3);
-  document.getElementById('badge4').classList.toggle('active', paidCount >= 4);
-
-  // SCT 리뷰 약속 패널
-  const pledgeWrap    = document.getElementById('sct-pledge-wrap');
-  const pledgeUnavail = document.getElementById('sct-pledge-unavail');
-  const pledgeAvail   = document.getElementById('sct-pledge-avail');
-  const pledgeCb      = document.getElementById('reviewPledge');
-  if (pledgeWrap) pledgeWrap.classList.toggle('open', sctSelected);
-  if (sctSelected) {
-    const hasOtherPaid = paidCount > 0;
-    if (pledgeUnavail) pledgeUnavail.style.display = hasOtherPaid ? 'none' : '';
-    if (pledgeAvail)   pledgeAvail.style.display   = hasOtherPaid ? '' : 'none';
-    if (pledgeCb && !hasOtherPaid) pledgeCb.checked = false;
-  }
-
-  // 행 상태 업데이트
-  TESTS_CART.forEach(t => {
-    const row   = document.getElementById('row-' + t.key);
-    if (!row) return;
-    const qty = quantities[t.key] || 0;
-    const on  = qty > 0;
-    row.classList.toggle('selected', on);
-    row.querySelector('.test-row-check').textContent = on ? '✓' : '';
-    const qtyEl  = document.getElementById('qty-'  + t.key);
-    const qnumEl = document.getElementById('qnum-' + t.key);
-    if (qtyEl)  qtyEl.style.display = on ? 'flex' : 'none';
-    if (qnumEl) qnumEl.textContent  = qty;
-  });
-
-  const summaryEl  = document.getElementById('summaryRows');
-  const totalArea  = document.getElementById('totalArea');
-  const btnInquiry = document.getElementById('btnInquiry');
-  const hasAny     = Object.values(quantities).some(c => c > 0);
-
-  if (!hasAny) {
-    summaryEl.innerHTML = '<div class="summary-empty">아직 선택한 검사가 없어요</div>';
-    totalArea.style.display = 'none';
-    btnInquiry.classList.add('disabled');
-    return;
-  }
-
-  summaryEl.innerHTML = Object.entries(quantities)
-    .filter(([, cnt]) => cnt > 0)
-    .map(([k, cnt]) => {
-      const t      = TESTS_CART.find(x => x.key === k);
-      const isFree = k !== 'sct' && prices[k]?.free;
-      const price  = k === 'sct' ? SCT_PRICE : (prices[k]?.price || 0);
-      const label  = `${t?.icon || ''} ${t?.shortName || k}${cnt > 1 ? ` × ${cnt}` : ''}`;
-      return `<div class="summary-row${isFree ? ' free-row' : ''}">
-        <span class="summary-row-name">${label}</span>
-        <span class="summary-row-price">${isFree ? '무료 🎁' : fmtWon(price * cnt)}</span>
-      </div>`;
-    }).join('');
-
-  const tiers = [
-    { label:'2개', cnt:2, base:0.10, tciBase:0.07 },
-    { label:'3개', cnt:3, base:0.15, tciBase:0.12 },
-    { label:'4개+', cnt:4, base:0.20, tciBase:0.17 }
-  ];
-  document.getElementById('tierStrip').innerHTML = tiers.map(t => {
-    const isActive = t.cnt === 4 ? paidCount >= 4 : paidCount === t.cnt;
-    const r = hasTci ? t.tciBase : t.base;
-    return `<div class="tier-chip${isActive ? ' current' : ''}">${t.label} ${Math.round(r*100)}% 할인</div>`;
-  }).join('');
-
-  document.getElementById('subtotalEl').textContent = fmtWon(displaySubtotal);
-  const discRow = document.getElementById('discountRow');
-  if (pct > 0) {
-    discRow.style.display = 'flex';
-    document.getElementById('discountLabel').textContent = `할인 (-${pct}%)`;
-    document.getElementById('discountEl').textContent    = '-' + fmtWon(discAmt);
-  } else {
-    discRow.style.display = 'none';
-  }
-  document.getElementById('reviewDiscRow').style.display = reviewDisc > 0 ? 'flex' : 'none';
-  document.getElementById('finalEl').textContent = fmtWon(final);
-  totalArea.style.display = 'block';
-
-  document.getElementById('msgText').textContent = buildUnitMessage();
-  const btn = document.getElementById('btnCopy');
-  btn.classList.remove('copied');
-  btn.textContent = '📋 문의 내용 복사하기';
-  btnInquiry.classList.remove('disabled');
+function setPkgQty(key, delta, e) {
+  e.stopPropagation();
+  pkgQuantities[key] = Math.max(0, (pkgQuantities[key] || 0) + delta);
+  renderAll();
 }
 
-// ── 패키지 탭 ────────────────────────────────────────────────────
-const PKG_LINES = [
-  { label: '자기이해',      keys: ['pkg_personality', 'pkg_deepdive', 'pkg_mental'] },
-  { label: '관계',          keys: ['pkg_relation1', 'pkg_couple'] },
-  { label: '성장·양육',    keys: ['pkg_career', 'pkg_parenting_infant', 'pkg_parenting_school'] },
-  { label: '생활 스트레스', keys: ['pkg_burnout', 'pkg_univ'] }
-];
+function toggleReviewPledge(el) {
+  reviewPledged = el.checked;
+  renderAll();
+}
 
 function switchTab(tab) {
   currentTab = tab;
@@ -715,17 +640,42 @@ function switchTab(tab) {
   document.getElementById('tab-pkg').classList.toggle('active', tab === 'package');
   document.getElementById('panel-unit').style.display = tab === 'unit' ? '' : 'none';
   document.getElementById('panel-pkg').style.display  = tab === 'package' ? '' : 'none';
-  // 배지는 단품 탭에서만 의미 있음
-  ['badge2','badge3','badge4'].forEach(id => {
-    document.getElementById(id).style.display = tab === 'unit' ? '' : 'none';
-  });
-  if (tab === 'package') {
-    renderPackageTab();
-    renderPackageSummary();
-  } else {
-    renderUnit();
-  }
+  renderAll();
 }
+
+// ── Render orchestrator ───────────────────────────────────────────────
+function renderAll() {
+  renderUnitRows();
+  renderPackageTab();
+  renderSctRows();
+  renderCombinedSummary();
+}
+
+// ── 단품 탭 행 상태 ───────────────────────────────────────────────────
+function renderUnitRows() {
+  TESTS_CART.forEach(t => {
+    if (t.key === 'sct') return; // renderSctRows 에서 처리
+    const row = document.getElementById('row-' + t.key);
+    if (!row) return;
+    const qty = quantities[t.key] || 0;
+    const on  = qty > 0;
+    row.classList.toggle('selected', on);
+    const checkEl = row.querySelector('.test-row-check');
+    if (checkEl) checkEl.textContent = on ? '✓' : '';
+    const qtyEl  = document.getElementById('qty-'  + t.key);
+    const qnumEl = document.getElementById('qnum-' + t.key);
+    if (qtyEl)  qtyEl.style.display = on ? 'flex' : 'none';
+    if (qnumEl) qnumEl.textContent  = qty;
+  });
+}
+
+// ── 패키지 탭 카드 렌더 ───────────────────────────────────────────────
+const PKG_LINES = [
+  { label: '자기이해',      keys: ['pkg_personality', 'pkg_deepdive', 'pkg_mental'] },
+  { label: '관계',          keys: ['pkg_relation1', 'pkg_couple'] },
+  { label: '성장·양육',    keys: ['pkg_career', 'pkg_parenting_infant', 'pkg_parenting_school'] },
+  { label: '생활 스트레스', keys: ['pkg_burnout', 'pkg_univ'] }
+];
 
 function renderPackageTab() {
   const container = document.getElementById('pkg-select-container');
@@ -734,11 +684,19 @@ function renderPackageTab() {
     const cardsHtml = line.keys.map(key => {
       const pkg = PKG_INFO[key];
       if (!pkg) return '';
+      const qty      = pkgQuantities[key] || 0;
+      const isActive = qty > 0;
       const { total, discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
       const pct      = Math.round(rate * 100);
-      const isActive = activePkgKeys.has(key);
       const hasSct   = pkg.testKeys.includes('sct');
-      return `<div class="pkg-select-card${isActive ? ' active' : ''}" onclick="selectPkg('${key}')">
+      // qty-row 상시 표시 (카드 외부 sibling → 이벤트 충돌 없음)
+      const qtyRow = `<div class="pkg-qty-row">
+        <span class="qty-label">수량</span>
+        <button class="qty-btn" onclick="setPkgQty('${key}',-1,event)">−</button>
+        <span class="qty-num">${qty}</span>
+        <button class="qty-btn" onclick="setPkgQty('${key}',1,event)">+</button>
+      </div>`;
+      const card = `<div class="pkg-select-card${isActive ? ' active' : ''}" onclick="addPkg('${key}')">
         <div class="pkg-select-check">${isActive ? '✓' : ''}</div>
         <div class="pkg-select-card-icon">${pkg.icon}</div>
         <div class="pkg-select-card-info">
@@ -752,6 +710,7 @@ function renderPackageTab() {
           <div class="pkg-final-price">${fmtWon(discounted)}</div>
         </div>
       </div>`;
+      return card + qtyRow;
     }).join('');
     return `<div class="pkg-line-section">
       <div class="pkg-line-label-sm">${line.label}</div>
@@ -760,135 +719,207 @@ function renderPackageTab() {
   }).join('');
 }
 
-function selectPkg(key) {
-  activePkgKeys.has(key) ? activePkgKeys.delete(key) : activePkgKeys.add(key);
-  renderPackageTab();
-  renderPackageSummary();
-}
+// ── SCT 행 + 리뷰 약속 패널 (양쪽 탭 동기화) ─────────────────────────
+function renderSctRows() {
+  const sctOn    = (quantities['sct'] || 0) > 0;
+  const hasOther = hasOtherPaidItems();
+  if (!hasOther) reviewPledged = false;
 
-function buildPkgMessage() {
-  const names = [...activePkgKeys].map(k => `[${PKG_INFO[k]?.title}]`).join(' ');
-  const sctLine = (quantities['sct'] || 0) > 0 ? ' [SCT 문장완성검사]' : '';
-  const pkgReview = document.getElementById('pkgReviewPledge')?.checked ?? false;
-  const pledge = (pkgReview && activePkgKeys.size > 0) ? '\n리뷰 약속드립니다.' : '';
-  return `안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n${names}${sctLine} 패키지 진행하고 싶습니다.${pledge}`;
-}
+  // 체크박스 동기화
+  ['reviewPledge', 'pkgReviewPledge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.checked = reviewPledged;
+  });
 
-function renderPkgSctRow() {
-  const sctQty    = (quantities['sct'] || 0);
-  const sctOn     = sctQty > 0;
-  const hasPkgs   = activePkgKeys.size > 0;
-  const row       = document.getElementById('pkg-sct-row');
-  const check     = document.getElementById('pkg-sct-check');
-  const priceEl   = document.getElementById('pkg-sct-price');
-  const pledgeWrap = document.getElementById('pkg-sct-pledge-wrap');
-  const unavail   = document.getElementById('pkg-sct-pledge-unavail');
-  const avail     = document.getElementById('pkg-sct-pledge-avail');
-  const cb        = document.getElementById('pkgReviewPledge');
-  if (row)   row.classList.toggle('selected', sctOn);
-  if (check) check.textContent = sctOn ? '✓' : '';
+  // 단품 탭 SCT 행
+  const unitRow = document.getElementById('row-sct');
+  if (unitRow) {
+    unitRow.classList.toggle('selected', sctOn);
+    const ch = unitRow.querySelector('.test-row-check');
+    if (ch) ch.textContent = sctOn ? '✓' : '';
+  }
+  const pledgeWrap    = document.getElementById('sct-pledge-wrap');
+  const pledgeUnavail = document.getElementById('sct-pledge-unavail');
+  const pledgeAvail   = document.getElementById('sct-pledge-avail');
   if (pledgeWrap) pledgeWrap.classList.toggle('open', sctOn);
   if (sctOn) {
-    if (unavail) unavail.style.display = hasPkgs ? 'none' : '';
-    if (avail)   avail.style.display   = hasPkgs ? '' : 'none';
-    if (cb && !hasPkgs) cb.checked = false;
+    if (pledgeUnavail) pledgeUnavail.style.display = hasOther ? 'none' : '';
+    if (pledgeAvail)   pledgeAvail.style.display   = hasOther ? '' : 'none';
   }
-  if (priceEl) {
-    const pledged = cb?.checked && hasPkgs;
-    priceEl.style.textDecoration = pledged ? 'line-through' : 'none';
-    priceEl.style.color          = pledged ? 'var(--text-muted)' : 'var(--brown)';
+
+  // 패키지 탭 SCT 행
+  const pkgRow   = document.getElementById('pkg-sct-row');
+  const pkgCheck = document.getElementById('pkg-sct-check');
+  const pkgPrice = document.getElementById('pkg-sct-price');
+  const pkgPWrap = document.getElementById('pkg-sct-pledge-wrap');
+  const pkgUnavl = document.getElementById('pkg-sct-pledge-unavail');
+  const pkgAvl   = document.getElementById('pkg-sct-pledge-avail');
+  if (pkgRow)   pkgRow.classList.toggle('selected', sctOn);
+  if (pkgCheck) pkgCheck.textContent = sctOn ? '✓' : '';
+  if (pkgPWrap) pkgPWrap.classList.toggle('open', sctOn);
+  if (sctOn) {
+    if (pkgUnavl) pkgUnavl.style.display = hasOther ? 'none' : '';
+    if (pkgAvl)   pkgAvl.style.display   = hasOther ? '' : 'none';
+  }
+  if (pkgPrice) {
+    const isFree = reviewPledged && hasOther;
+    pkgPrice.style.textDecoration = isFree ? 'line-through' : 'none';
+    pkgPrice.style.color          = isFree ? 'var(--text-muted)' : 'var(--brown)';
   }
 }
 
-function renderPackageSummary() {
+// ── 통합 요약 패널 (탭 관계없이 전체 표시) ───────────────────────────
+function renderCombinedSummary() {
   const summaryEl  = document.getElementById('summaryRows');
   const totalArea  = document.getElementById('totalArea');
   const btnInquiry = document.getElementById('btnInquiry');
   const tierStrip  = document.getElementById('tierStrip');
 
-  renderPkgSctRow();
+  const { allPaidKeys, hasTci, pct, paidSum, discAmt, sctOn, sctFree, displaySubtotal, final } = getUnifiedCart();
+  const pc = allPaidKeys.length;
 
-  const sctOn       = (quantities['sct'] || 0) > 0;
-  const pkgReview   = document.getElementById('pkgReviewPledge')?.checked ?? false;
-  const sctFree     = sctOn && pkgReview && activePkgKeys.size > 0;
-  const sctCharge   = sctOn ? (sctFree ? 0 : SCT_PRICE) : 0;
+  const hasPkgs  = typeof PKG_INFO !== 'undefined' && Object.values(pkgQuantities).some(q => q > 0);
+  const hasUnits = Object.entries(quantities).some(([k, cnt]) => cnt > 0);
+  const hasAny   = hasPkgs || hasUnits || sctOn;
 
-  if (activePkgKeys.size === 0 && !sctOn) {
-    summaryEl.innerHTML = '<div class="summary-empty">패키지를 선택해주세요</div>';
+  // 배지 강조
+  document.getElementById('badge2').classList.toggle('active', pc === 2);
+  document.getElementById('badge3').classList.toggle('active', pc === 3);
+  document.getElementById('badge4').classList.toggle('active', pc >= 4);
+
+  if (!hasAny) {
+    summaryEl.innerHTML = '<div class="summary-empty">아직 선택한 검사가 없어요</div>';
     totalArea.style.display = 'none';
     btnInquiry.classList.add('disabled');
     return;
   }
 
-  let grandTotal = 0;
-  let grandDiscounted = 0;
-  const pkgArr = [...activePkgKeys];
-  let summaryHtml = '';
+  let summaryHtml  = '';
+  let firstSection = true;
 
-  pkgArr.forEach((key, idx) => {
-    const pkg = PKG_INFO[key];
-    if (!pkg) return;
-    const { total, discounted, rate } = computeLocalPkgPrice(pkg.testKeys);
-    const pct = Math.round(rate * 100);
-    grandTotal += total;
-    grandDiscounted += discounted;
-
-    if (idx > 0) summaryHtml += '<hr class="pkg-section-divider">';
-    summaryHtml += `<div class="pkg-summary-name">${pkg.icon} ${pkg.title}${pct > 0 ? ` <span style="font-size:.7rem;color:var(--green);">-${pct}%</span>` : ''}</div>`;
-    summaryHtml += pkg.testKeys.map(k => {
-      const isSct  = k === 'sct';
-      const isFree = !isSct && (prices[k]?.free);
-      const price  = isSct ? 0 : (prices[k]?.price || 0);
-      const t      = TESTS_CART.find(x => x.key === k);
-      const label  = t ? `${t.icon} ${t.shortName}` : k.toUpperCase();
-      return `<div class="summary-row${isFree || isSct ? ' free-row' : ''}">
-        <span class="summary-row-name">${label}</span>
-        <span class="summary-row-price">${isFree || isSct ? '무료 🎁' : fmtWon(price)}</span>
-      </div>`;
-    }).join('');
-
-    if (pkgArr.length > 1) {
-      summaryHtml += `<div class="pkg-subtotal-row"><span>소계</span><span>${fmtWon(discounted)}</span></div>`;
-    }
-  });
-
-  // SCT 단품 추가된 경우 요약에 반영
-  if (sctOn) {
-    if (summaryHtml) summaryHtml += '<hr class="pkg-section-divider">';
-    const sctLabel = sctFree ? '무료 🎁' : fmtWon(SCT_PRICE);
-    summaryHtml += `<div class="summary-row${sctFree ? ' free-row' : ''}">
-      <span class="summary-row-name">💬 SCT 문장완성검사</span>
-      <span class="summary-row-price">${sctLabel}</span>
-    </div>`;
-    grandTotal      += SCT_PRICE;
-    grandDiscounted += sctFree ? 0 : SCT_PRICE;
+  // 패키지 섹션
+  if (hasPkgs) {
+    Object.entries(pkgQuantities).forEach(([pkgKey, qty]) => {
+      if (qty <= 0 || !PKG_INFO[pkgKey]) return;
+      const pkg      = PKG_INFO[pkgKey];
+      const qtyLabel = qty > 1 ? ` × ${qty}` : '';
+      if (!firstSection) summaryHtml += '<hr class="pkg-section-divider">';
+      summaryHtml += `<div class="pkg-summary-name">${pkg.icon} ${pkg.title}${qtyLabel}</div>`;
+      summaryHtml += pkg.testKeys.map(k => {
+        const isSct  = k === 'sct';
+        const isFree = !isSct && prices[k]?.free;
+        const t      = TESTS_CART.find(x => x.key === k);
+        const label  = t ? `${t.icon} ${t.shortName}` : k.toUpperCase();
+        return `<div class="summary-row${(isFree || isSct) ? ' free-row' : ''}">
+          <span class="summary-row-name">${label}</span>
+          <span class="summary-row-price">${(isFree || isSct) ? '무료 🎁' : fmtWon(prices[k]?.price || 0)}</span>
+        </div>`;
+      }).join('');
+      firstSection = false;
+    });
   }
 
-  summaryEl.innerHTML = summaryHtml || '<div class="summary-empty">패키지를 선택해주세요</div>';
+  // 단품 섹션 (SCT 제외)
+  const unitEntries = Object.entries(quantities).filter(([k, cnt]) => cnt > 0 && k !== 'sct');
+  if (unitEntries.length > 0) {
+    if (!firstSection) summaryHtml += '<hr class="pkg-section-divider">';
+    if (hasPkgs) summaryHtml += '<div class="pkg-line-label-sm" style="margin-top:6px;">단품 추가</div>';
+    summaryHtml += unitEntries.map(([k, cnt]) => {
+      const t      = TESTS_CART.find(x => x.key === k);
+      const isFree = prices[k]?.free;
+      const label  = `${t?.icon || ''} ${t?.shortName || k}${cnt > 1 ? ` × ${cnt}` : ''}`;
+      return `<div class="summary-row${isFree ? ' free-row' : ''}">
+        <span class="summary-row-name">${label}</span>
+        <span class="summary-row-price">${isFree ? '무료 🎁' : fmtWon((prices[k]?.price || 0) * cnt)}</span>
+      </div>`;
+    }).join('');
+    firstSection = false;
+  }
 
-  if (tierStrip) tierStrip.innerHTML = '';
-  document.getElementById('subtotalEl').textContent = fmtWon(grandTotal);
-  const totalDiscAmt = grandTotal - grandDiscounted;
+  // SCT 섹션
+  if (sctOn) {
+    if (!firstSection) summaryHtml += '<hr class="pkg-section-divider">';
+    const pkgMentalQty = pkgQuantities['pkg_mental'] || 0;
+    const mentalHasSct = pkgMentalQty > 0 && typeof PKG_INFO !== 'undefined' && PKG_INFO['pkg_mental']?.testKeys?.includes('sct');
+    const doubleNote   = (mentalHasSct && sctFree)
+      ? `<br><span style="font-size:.72rem;color:var(--text-muted);">${PKG_INFO['pkg_mental']?.title || '마음회복'} 패키지 SCT 포함 + 리뷰 증정 → SCT 2부 발송</span>`
+      : '';
+    summaryHtml += `<div class="summary-row${sctFree ? ' free-row' : ''}">
+      <span class="summary-row-name">💬 SCT 문장완성검사${doubleNote}</span>
+      <span class="summary-row-price">${sctFree ? '무료 🎁' : fmtWon(SCT_PRICE)}</span>
+    </div>`;
+  }
+
+  summaryEl.innerHTML = summaryHtml;
+
+  // 할인 단계 칩
+  if (tierStrip) {
+    const tiers = [
+      { label:'2개', cnt:2, base:0.10, tciBase:0.07 },
+      { label:'3개', cnt:3, base:0.15, tciBase:0.12 },
+      { label:'4개+', cnt:4, base:0.20, tciBase:0.17 }
+    ];
+    tierStrip.innerHTML = tiers.map(t => {
+      const isActive = t.cnt === 4 ? pc >= 4 : pc === t.cnt;
+      const r = hasTci ? t.tciBase : t.base;
+      return `<div class="tier-chip${isActive ? ' current' : ''}">${t.label} ${Math.round(r*100)}% 할인</div>`;
+    }).join('');
+  }
+
+  // 합계
+  document.getElementById('subtotalEl').textContent = fmtWon(displaySubtotal);
   const discRow = document.getElementById('discountRow');
-  if (totalDiscAmt > 0) {
+  if (pct > 0) {
     discRow.style.display = 'flex';
-    document.getElementById('discountLabel').textContent = '패키지 할인';
-    document.getElementById('discountEl').textContent    = '-' + fmtWon(totalDiscAmt);
+    document.getElementById('discountLabel').textContent = `할인 (-${pct}%)`;
+    document.getElementById('discountEl').textContent    = '-' + fmtWon(discAmt);
   } else {
     discRow.style.display = 'none';
   }
-  document.getElementById('reviewDiscRow').style.display = 'none';
-  document.getElementById('finalEl').textContent = fmtWon(grandDiscounted);
+  document.getElementById('reviewDiscRow').style.display = sctFree ? 'flex' : 'none';
+  document.getElementById('finalEl').textContent = fmtWon(final);
   totalArea.style.display = 'block';
 
-  document.getElementById('msgText').textContent = buildPkgMessage();
+  document.getElementById('msgText').textContent = buildCombinedMessage();
   const btn = document.getElementById('btnCopy');
   btn.classList.remove('copied');
   btn.textContent = '📋 문의 내용 복사하기';
   btnInquiry.classList.remove('disabled');
 }
 
-// ── 공통 ─────────────────────────────────────────────────────────
+// ── 문의 메시지 ───────────────────────────────────────────────────────
+function buildCombinedMessage() {
+  const parts = [];
+  if (typeof PKG_INFO !== 'undefined') {
+    Object.entries(pkgQuantities).forEach(([key, qty]) => {
+      if (qty > 0 && PKG_INFO[key]) {
+        parts.push(`[${PKG_INFO[key].title}]${qty > 1 ? ` × ${qty}` : ''}`);
+      }
+    });
+  }
+  Object.entries(quantities).forEach(([k, cnt]) => {
+    if (cnt > 0 && k !== 'sct') {
+      const t = TESTS_CART.find(x => x.key === k);
+      parts.push(`[${t?.shortName || k}]${cnt > 1 ? ` × ${cnt}` : ''}`);
+    }
+  });
+  if ((quantities['sct'] || 0) > 0) parts.push('[SCT 문장완성검사]');
+
+  let msg = `안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n${parts.join(' ')} 검사 진행하고 싶습니다.`;
+
+  if (reviewPledged) {
+    msg += '\n리뷰 약속드립니다.';
+    const pkgMentalQty = pkgQuantities['pkg_mental'] || 0;
+    const mentalHasSct = pkgMentalQty > 0 && typeof PKG_INFO !== 'undefined' && PKG_INFO['pkg_mental']?.testKeys?.includes('sct');
+    if (mentalHasSct && (quantities['sct'] || 0) > 0) {
+      const title = PKG_INFO['pkg_mental']?.title || '마음회복';
+      msg += `\n(${title} 패키지 SCT 포함 + 리뷰 증정으로 SCT 2부 발송 예정입니다.)`;
+    }
+  }
+  return msg;
+}
+
+// ── 복사 ─────────────────────────────────────────────────────────────
 async function copyMsg() {
   const text = document.getElementById('msgText').textContent;
   try {
@@ -909,14 +940,15 @@ async function copyMsg() {
   }, 2500);
 }
 
+// ── 단품 목록 초기 빌드 ───────────────────────────────────────────────
 function buildList() {
   document.getElementById('testList').innerHTML = TESTS_CART.map(t => {
     const p      = prices[t.key];
     const isSct  = t.key === 'sct';
-    const isFree = !isSct && (p?.free);
+    const isFree = !isSct && p?.free;
     const nameHtml = t.name
       + (t.best ? '<span class="best-badge">BEST</span>' : '')
-      + (isSct   ? '<span class="best-badge" style="background:var(--green);">🎁 증정</span>' : '');
+      + (isSct ? '<span class="best-badge" style="background:var(--green);">🎁 증정</span>' : '');
     let priceHtml;
     if (isFree) {
       priceHtml = `<span class="free-badge">무료 🎁</span>`;
@@ -925,7 +957,6 @@ function buildList() {
     } else {
       priceHtml = `<span class="price-main">${fmtWon(p?.price || 0)}</span>`;
     }
-    // 수량 컨트롤 (SCT 제외)
     const qtyHtml = !isSct ? `<div class="qty-ctrl" id="qty-${t.key}" style="display:none;">
       <button class="qty-btn" onclick="setQty('${t.key}',-1,event)">−</button>
       <span class="qty-num" id="qnum-${t.key}">1</span>
@@ -953,7 +984,7 @@ function buildList() {
           <div class="review-pledge-sub">다른 검사를 1개 이상 담은 후 리뷰 약속 시 SCT를 <strong>무료</strong>로 드립니다.</div>
         </div>
         <label id="sct-pledge-avail" style="display:none;">
-          <input type="checkbox" id="reviewPledge" onchange="renderUnit()">
+          <input type="checkbox" id="reviewPledge" onchange="toggleReviewPledge(this)">
           <div>
             <div class="review-pledge-title">🎁 리뷰 참여 시 SCT 무료 증정 (-₩5,000)</div>
             <div class="review-pledge-sub">검사 결과 수령 후 크몽에 정성스러운 리뷰를 남겨 주시면 SCT 문장완성검사를 <strong>완전 무료</strong>로 드립니다. 체크하시면 최종 금액에서 바로 차감됩니다.</div>
@@ -965,14 +996,15 @@ function buildList() {
     return rowHtml;
   }).join('');
 
-  document.querySelectorAll('.test-row').forEach(row => {
+  // #testList 내 행에만 클릭 이벤트 (pkg-sct-row는 inline onclick으로 별도 처리)
+  document.querySelectorAll('#testList .test-row').forEach(row => {
     row.addEventListener('click', () => handleRowClick(row.dataset.key));
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   buildList();
-  renderUnit();
+  renderAll();
   if (typeof applyStoreLinks === 'function') applyStoreLinks();
 });
 </script>
