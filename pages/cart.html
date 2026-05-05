@@ -376,6 +376,38 @@
       <!-- 패키지 패널 -->
       <div id="panel-pkg" style="display:none;">
         <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px;">패키지를 선택하면 구성 검사와 할인 가격을 바로 확인할 수 있어요.</p>
+        <!-- SCT 단품 (패키지 탭 상단 고정) -->
+        <div style="margin-bottom:20px;">
+          <div class="pkg-line-label-sm">🎁 추가 증정</div>
+          <div id="pkg-sct-row" class="test-row sct-row" data-key="sct" onclick="handleRowClick('sct')" style="margin-top:8px;">
+            <div class="test-row-check" id="pkg-sct-check"></div>
+            <div class="test-row-icon">💬</div>
+            <div class="test-row-info">
+              <div class="test-row-name">SCT 문장완성검사 <span class="best-badge" style="background:var(--green);">🎁 증정</span></div>
+              <div class="test-row-desc">다른 검사 구매 시 리뷰 참여하면 무료 증정!</div>
+            </div>
+            <div class="test-row-price">
+              <span class="price-main" id="pkg-sct-price">₩5,000</span>
+              <a class="detail-link" href="sct.html" onclick="event.stopPropagation()">상세보기</a>
+            </div>
+          </div>
+          <!-- SCT 리뷰 약속 패널 (패키지 탭용) -->
+          <div class="sct-pledge-wrap" id="pkg-sct-pledge-wrap">
+            <div class="review-pledge-inline">
+              <div id="pkg-sct-pledge-unavail">
+                <div class="review-pledge-title" style="color:var(--text-muted);">🎁 패키지를 함께 담으면 무료 증정</div>
+                <div class="review-pledge-sub">패키지를 1개 이상 선택 후 리뷰 약속 시 SCT를 <strong>무료</strong>로 드립니다.</div>
+              </div>
+              <label id="pkg-sct-pledge-avail" style="display:none;">
+                <input type="checkbox" id="pkgReviewPledge" onchange="renderPackageSummary()">
+                <div>
+                  <div class="review-pledge-title">🎁 리뷰 참여 시 SCT 무료 증정 (-₩5,000)</div>
+                  <div class="review-pledge-sub">검사 결과 수령 후 크몽에 정성스러운 리뷰를 남겨 주시면 SCT 문장완성검사를 <strong>완전 무료</strong>로 드립니다.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
         <div id="pkg-select-container"></div>
       </div>
     </div>
@@ -459,7 +491,7 @@
 <script src="../js/main.js"></script>
 <script>
 const TESTS_CART = [
-  { key:'sct',    icon:'💬', name:'SCT 문장완성검사',              shortName:'SCT 문장완성검사',           desc:'🎁 리뷰 참여 시 무료 증정!',               href:'sct.html',     freeWithReview:true },
+  { key:'sct',    icon:'💬', name:'SCT 문장완성검사',              shortName:'SCT 문장완성검사',           desc:'다른 검사 구매 시 리뷰 참여하면 무료 증정!', href:'sct.html',   freeWithReview:true },
   { key:'tci',    icon:'🧬', name:'TCI 기질 및 성격검사',          shortName:'TCI 기질 및 성격검사',       desc:'타고난 기질 + 성장한 성격 7차원 분석',     href:'tci.html',     best:true },
   { key:'kocean', icon:'🌊', name:'K-OCEAN 5요인 성격검사',        shortName:'K-OCEAN 5요인 성격검사',     desc:'개방성·성실성·외향성·친화성·신경증',       href:'kocean.html' },
   { key:'golden', icon:'✨', name:'GOLDEN 골든성격유형검사',        shortName:'GOLDEN 골든성격유형검사',    desc:'4가지 성격 유형 선호도 분석',              href:'golden.html',  best:true },
@@ -576,7 +608,7 @@ function renderUnit() {
   }, 0);
   const discAmt        = Math.round(paidSum * rate);
   const sctDisplay     = sctSelected ? SCT_PRICE : 0;
-  const reviewDisc     = (sctSelected && reviewPledged) ? SCT_PRICE : 0;
+  const reviewDisc     = (sctSelected && reviewPledged && paidCount > 0) ? SCT_PRICE : 0;
   const displaySubtotal = paidSum + sctDisplay;
   const rawFinal       = displaySubtotal - discAmt - reviewDisc;
   const final          = paidCount >= 2 ? charmPrice(rawFinal) : rawFinal;
@@ -587,8 +619,17 @@ function renderUnit() {
   document.getElementById('badge4').classList.toggle('active', paidCount >= 4);
 
   // SCT 리뷰 약속 패널
-  const pledgeWrap = document.getElementById('sct-pledge-wrap');
+  const pledgeWrap    = document.getElementById('sct-pledge-wrap');
+  const pledgeUnavail = document.getElementById('sct-pledge-unavail');
+  const pledgeAvail   = document.getElementById('sct-pledge-avail');
+  const pledgeCb      = document.getElementById('reviewPledge');
   if (pledgeWrap) pledgeWrap.classList.toggle('open', sctSelected);
+  if (sctSelected) {
+    const hasOtherPaid = paidCount > 0;
+    if (pledgeUnavail) pledgeUnavail.style.display = hasOtherPaid ? 'none' : '';
+    if (pledgeAvail)   pledgeAvail.style.display   = hasOtherPaid ? '' : 'none';
+    if (pledgeCb && !hasOtherPaid) pledgeCb.checked = false;
+  }
 
   // 행 상태 업데이트
   TESTS_CART.forEach(t => {
@@ -727,7 +768,36 @@ function selectPkg(key) {
 
 function buildPkgMessage() {
   const names = [...activePkgKeys].map(k => `[${PKG_INFO[k]?.title}]`).join(' ');
-  return `안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n${names} 패키지 진행하고 싶습니다.`;
+  const sctLine = (quantities['sct'] || 0) > 0 ? ' [SCT 문장완성검사]' : '';
+  const pkgReview = document.getElementById('pkgReviewPledge')?.checked ?? false;
+  const pledge = (pkgReview && activePkgKeys.size > 0) ? '\n리뷰 약속드립니다.' : '';
+  return `안녕하세요 전문가님.\n사이트에서 금액 확인하고 연락드립니다.\n${names}${sctLine} 패키지 진행하고 싶습니다.${pledge}`;
+}
+
+function renderPkgSctRow() {
+  const sctQty    = (quantities['sct'] || 0);
+  const sctOn     = sctQty > 0;
+  const hasPkgs   = activePkgKeys.size > 0;
+  const row       = document.getElementById('pkg-sct-row');
+  const check     = document.getElementById('pkg-sct-check');
+  const priceEl   = document.getElementById('pkg-sct-price');
+  const pledgeWrap = document.getElementById('pkg-sct-pledge-wrap');
+  const unavail   = document.getElementById('pkg-sct-pledge-unavail');
+  const avail     = document.getElementById('pkg-sct-pledge-avail');
+  const cb        = document.getElementById('pkgReviewPledge');
+  if (row)   row.classList.toggle('selected', sctOn);
+  if (check) check.textContent = sctOn ? '✓' : '';
+  if (pledgeWrap) pledgeWrap.classList.toggle('open', sctOn);
+  if (sctOn) {
+    if (unavail) unavail.style.display = hasPkgs ? 'none' : '';
+    if (avail)   avail.style.display   = hasPkgs ? '' : 'none';
+    if (cb && !hasPkgs) cb.checked = false;
+  }
+  if (priceEl) {
+    const pledged = cb?.checked && hasPkgs;
+    priceEl.style.textDecoration = pledged ? 'line-through' : 'none';
+    priceEl.style.color          = pledged ? 'var(--text-muted)' : 'var(--brown)';
+  }
 }
 
 function renderPackageSummary() {
@@ -736,7 +806,14 @@ function renderPackageSummary() {
   const btnInquiry = document.getElementById('btnInquiry');
   const tierStrip  = document.getElementById('tierStrip');
 
-  if (activePkgKeys.size === 0) {
+  renderPkgSctRow();
+
+  const sctOn       = (quantities['sct'] || 0) > 0;
+  const pkgReview   = document.getElementById('pkgReviewPledge')?.checked ?? false;
+  const sctFree     = sctOn && pkgReview && activePkgKeys.size > 0;
+  const sctCharge   = sctOn ? (sctFree ? 0 : SCT_PRICE) : 0;
+
+  if (activePkgKeys.size === 0 && !sctOn) {
     summaryEl.innerHTML = '<div class="summary-empty">패키지를 선택해주세요</div>';
     totalArea.style.display = 'none';
     btnInquiry.classList.add('disabled');
@@ -775,7 +852,19 @@ function renderPackageSummary() {
     }
   });
 
-  summaryEl.innerHTML = summaryHtml;
+  // SCT 단품 추가된 경우 요약에 반영
+  if (sctOn) {
+    if (summaryHtml) summaryHtml += '<hr class="pkg-section-divider">';
+    const sctLabel = sctFree ? '무료 🎁' : fmtWon(SCT_PRICE);
+    summaryHtml += `<div class="summary-row${sctFree ? ' free-row' : ''}">
+      <span class="summary-row-name">💬 SCT 문장완성검사</span>
+      <span class="summary-row-price">${sctLabel}</span>
+    </div>`;
+    grandTotal      += SCT_PRICE;
+    grandDiscounted += sctFree ? 0 : SCT_PRICE;
+  }
+
+  summaryEl.innerHTML = summaryHtml || '<div class="summary-empty">패키지를 선택해주세요</div>';
 
   if (tierStrip) tierStrip.innerHTML = '';
   document.getElementById('subtotalEl').textContent = fmtWon(grandTotal);
@@ -827,12 +916,12 @@ function buildList() {
     const isFree = !isSct && (p?.free);
     const nameHtml = t.name
       + (t.best ? '<span class="best-badge">BEST</span>' : '')
-      + (isSct   ? '<span class="best-badge" style="background:var(--green);">무료</span>' : '');
+      + (isSct   ? '<span class="best-badge" style="background:var(--green);">🎁 증정</span>' : '');
     let priceHtml;
     if (isFree) {
       priceHtml = `<span class="free-badge">무료 🎁</span>`;
     } else if (isSct) {
-      priceHtml = `<span class="review-free-badge">🎁 리뷰시 무료</span>`;
+      priceHtml = `<span class="price-main">${fmtWon(SCT_PRICE)}</span>`;
     } else {
       priceHtml = `<span class="price-main">${fmtWon(p?.price || 0)}</span>`;
     }
@@ -859,10 +948,14 @@ function buildList() {
       return rowHtml + `
     <div class="sct-pledge-wrap" id="sct-pledge-wrap">
       <div class="review-pledge-inline">
-        <label>
+        <div id="sct-pledge-unavail">
+          <div class="review-pledge-title" style="color:var(--text-muted);">🎁 다른 검사를 함께 담으면 무료 증정</div>
+          <div class="review-pledge-sub">다른 검사를 1개 이상 담은 후 리뷰 약속 시 SCT를 <strong>무료</strong>로 드립니다.</div>
+        </div>
+        <label id="sct-pledge-avail" style="display:none;">
           <input type="checkbox" id="reviewPledge" onchange="renderUnit()">
           <div>
-            <div class="review-pledge-title">🎁 리뷰 참여 시 SCT 문장완성검사 무료 증정 (-₩5,000)</div>
+            <div class="review-pledge-title">🎁 리뷰 참여 시 SCT 무료 증정 (-₩5,000)</div>
             <div class="review-pledge-sub">검사 결과 수령 후 크몽에 정성스러운 리뷰를 남겨 주시면 SCT 문장완성검사를 <strong>완전 무료</strong>로 드립니다. 체크하시면 최종 금액에서 바로 차감됩니다.</div>
           </div>
         </label>
