@@ -303,6 +303,12 @@
           <input type="text" id="job" placeholder="예: 직장인, 대학생">
         </div>
       </div>
+      <div class="field-row single" style="margin-top:8px;">
+        <div class="field-group">
+          <label>MBTI 유형 · 자기 이해 (선택)</label>
+          <textarea id="mbti-desc" placeholder="예: INFP입니다. 공감 능력이 높고 감정에 민감한 편인데, 갈등 상황에서 회피하는 경향이 있어서 그 부분이 잘 맞는다고 느낍니다. MBTI를 모르시면 비워두세요." style="min-height:60px;"></textarea>
+        </div>
+      </div>
     </div>
 
     <!-- 현재 고민 -->
@@ -771,12 +777,13 @@
     const lines = [];
     lines.push(`당신은 30년 임상 경험을 가진 수석 상담심리전문가입니다.\n\n저는 제 심리검사 결과지를 바탕으로 저 자신을 깊이 이해하고 싶습니다.\n아래 원칙과 구조에 따라 통합 심리 분석을 제공해 주세요.\n\n[분석 원칙]\n1. 숫자를 단순 나열하지 않고, "내가 왜 이런 감정을 느끼고, 왜 이런 행동을 반복하는지" 이유를 밝혀주세요.\n2. 병리 중심이 아닌 강점과 성장 가능성을 함께 이야기해 주세요.\n3. 검사 간 결과가 서로 다를 경우, 이를 모순이 아닌 더 깊은 이해의 단서로 활용해 주세요.\n4. 어렵고 전문적인 용어 대신 일상적인 언어로 설명해 주세요.\n5. 마지막에 반드시: "※ 이 분석은 AI 해석이며, 정확한 임상 진단은 전문 상담사와 상담하시기 바랍니다."\n\n[출력 구조]\n1. 지금 나의 심리 상태 요약\n2. 타고난 나 — 기질 분석\n3. 내가 만들어온 나 — 성격 및 대처 방식\n4. 내 마음속 반복 이야기 — 핵심 신념과 무의식 주제\n5. 관계 속의 나 — 대인관계 패턴\n6. 지금 이 고민의 심층 의미\n7. 성장을 위한 구체적인 제언\n8. 한 줄 핵심 요약: "당신은 이런 사람입니다"\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
 
-    const al=v('alias'), g=v('gender'), a=v('age'), j=v('job');
+    const al=v('alias'), g=v('gender'), a=v('age'), j=v('job'), mbtiDesc=v('mbti-desc');
     lines.push(`\n📋 기본 정보`);
     if(al) lines.push(`이름(가명): ${al}`);
     if(g) lines.push(`성별: ${g}`);
     if(a) lines.push(`나이: 만 ${a}세`);
     if(j) lines.push(`직업/학업: ${j}`);
+    if(mbtiDesc) lines.push(`MBTI 유형 · 자기 이해: ${mbtiDesc}`);
 
     const c1=v('concern-1'),c2=v('concern-2'),c3=v('concern-3'),c4=v('concern-4'),c5=v('concern-5');
     lines.push(`\n🔴 현재 고민 상황`);
