@@ -876,7 +876,7 @@ function renderCombinedSummary() {
   const discRow = document.getElementById('discountRow');
   if (pct > 0) {
     discRow.style.display = 'flex';
-    document.getElementById('discountLabel').textContent = `할인 (-${pct}%)`;
+    document.getElementById('discountLabel').textContent = `묶음 구매 할인 (-${pct}%)`;
     document.getElementById('discountEl').textContent    = '-' + fmtWon(discAmt);
   } else {
     discRow.style.display = 'none';
