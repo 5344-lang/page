@@ -336,7 +336,6 @@
       <a href="../index.html">🔍 맞춤 검사 찾기</a>
       <a href="packages.html">📦 추천 패키지</a>
       <a href="tests.html">📋 전체 검사</a>
-      <a href="../ai.html">🤖 AI 분석</a>
       <a href="cart.html">🛒 검사 담기</a>
       <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">💬 문의하기</a>
     </div>
@@ -347,7 +346,6 @@
   <a href="../index.html">🔍 맞춤 검사 찾기</a>
   <a href="packages.html">📦 추천 패키지</a>
   <a href="tests.html">📋 전체 검사</a>
-  <a href="../ai.html">🤖 AI 심리분석</a>
   <a href="cart.html">🛒 검사 담기</a>
   <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">💬 문의하기</a>
 </div>
@@ -533,6 +531,17 @@ const pkgQuantities = {};  // pkgKey  → count (패키지)
 let   reviewPledged = false;
 let   currentTab    = 'unit';
 
+// 다른 페이지에서 '담기' 버튼으로 추가된 항목을 로드
+(function loadQuickCart() {
+  const qc    = JSON.parse(localStorage.getItem('ttok_quick_cart')     || '{}');
+  const qcPkg = JSON.parse(localStorage.getItem('ttok_quick_cart_pkg') || '{}');
+  Object.entries(qc).forEach(([k, v])    => { quantities[k]    = v; });
+  Object.entries(qcPkg).forEach(([k, v]) => { pkgQuantities[k] = v; });
+  localStorage.removeItem('ttok_quick_cart');
+  localStorage.removeItem('ttok_quick_cart_pkg');
+  if (Object.keys(qcPkg).length > 0) currentTab = 'package';
+})();
+
 // ── Price init ────────────────────────────────────────────────────────
 const lsSaved    = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null');
 const basePrices = typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {};
@@ -552,8 +561,7 @@ _allKeys.forEach(key => {
 function fmtWon(n) { return '₩' + n.toLocaleString('ko-KR'); }
 
 function charmPrice(n) {
-  const base = Math.floor(n / 1000) * 1000;
-  return base >= 1000 ? base - 100 : n;
+  return Math.round(n / 1000) * 1000;
 }
 
 function discountRate(paidCount, hasTci) {

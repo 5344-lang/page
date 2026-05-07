@@ -258,8 +258,7 @@ const QUIZ = {
 
 /* ─── Package Price Calculator ─── */
 function charmPrice(n) {
-  const base = Math.floor(n / 1000) * 1000;
-  return base >= 1000 ? base - 100 : n;
+  return Math.round(n / 1000) * 1000;
 }
 
 function getDiscount(paidCount, hasTci) {
@@ -352,10 +351,10 @@ const PKG_INFO = {
     icon: '🍼', title: '영유아 자녀 이해 패키지',
     tags: ['STS', 'PAT-2'],
     testKeys: ['sts', 'pat'],
-    why: '0~7세 미취학 자녀의 타고난 기질을 STS로 파악하고, PAT-2로 부모의 양육 방식을 진단합니다. 아이의 기질에 맞는 양육법을 찾고, 부모-자녀 관계를 더 깊이 이해할 수 있습니다.',
+    why: '0~7세 미취학 자녀를 위한 패키지입니다. STS 6요인 기질검사는 영아·유아의 타고난 기질을 6가지 요인과 직관적인 동물 유형으로 분석해, 아이의 행동·정서 반응의 뿌리를 이해하도록 돕습니다. 여기에 PAT-2 부모양육태도검사를 더하면 아이의 기질과 부모의 양육 방식이 서로 잘 맞는지, 어디에서 기질 불일치가 생기는지를 과학적으로 확인하고 맞춤 양육법을 찾을 수 있습니다.',
     steps: [
-      { icon: '🦎', name: 'STS 6요인 기질검사', desc: '0~7세 자녀의 타고난 기질을 6요인과 동물 유형으로 직관적으로 파악합니다.' },
-      { icon: '🏠', name: 'PAT-2 부모양육태도검사', desc: '부모의 양육 방식을 점검하고 아이의 기질에 맞는 방향을 찾습니다.' }
+      { icon: '🦎', name: 'STS 6요인 기질검사 (미취학 아동용)', desc: '0~7세 자녀의 타고난 기질을 6요인(활동성·규칙성·접근성·적응성·반응강도·기분)과 동물 유형으로 직관적으로 파악합니다.' },
+      { icon: '🏠', name: 'PAT-2 부모양육태도검사', desc: '부모의 양육 방식(온정·자율·성취압력·거부·과보호·일관성)을 점검하고 아이의 기질에 맞는 양육 방향을 찾습니다.' }
     ]
   },
   pkg_parenting_school: {
@@ -466,7 +465,43 @@ function openPkgModal(key) {
     </div>`).join('');
 
   const ctaEl = document.getElementById('pkgMCta');
-  if (ctaEl) ctaEl.href = (typeof CONTACT_URL !== 'undefined') ? CONTACT_URL : STORE_URL;
+  const pkgUrl = (typeof STORE_LINKS !== 'undefined' && STORE_LINKS[key])
+    ? STORE_LINKS[key]
+    : (typeof CONTACT_URL !== 'undefined' ? CONTACT_URL : STORE_URL);
+  if (ctaEl) ctaEl.href = pkgUrl;
+
+  // 복사+문의 버튼 (기존 버튼 제거 후 재삽입)
+  const existingCopyBtn = document.getElementById('pkgMCopyBtn');
+  if (existingCopyBtn) existingCopyBtn.remove();
+  if (ctaEl) {
+    const copyBtn = document.createElement('button');
+    copyBtn.id = 'pkgMCopyBtn';
+    copyBtn.className = 'btn-copy-inquiry';
+    copyBtn.innerHTML = '📋 문의 내용 복사 후 크몽 가기';
+    copyBtn.onclick = () => {
+      const msg = `${d.title} 문의드립니다.`;
+      const openStore = () => window.open(pkgUrl, '_blank');
+      const afterCopy = () => {
+        copyBtn.textContent = '✅ 복사 완료! 크몽으로 이동합니다…';
+        copyBtn.classList.add('copied');
+        setTimeout(openStore, 800);
+      };
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(msg).then(afterCopy).catch(() => {
+          const ta = document.createElement('textarea');
+          ta.value = msg; document.body.appendChild(ta);
+          ta.select(); document.execCommand('copy'); ta.remove();
+          afterCopy();
+        });
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = msg; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); ta.remove();
+        afterCopy();
+      }
+    };
+    ctaEl.before(copyBtn);
+  }
 
   const priceEl = document.getElementById('pkgMPrice');
   if (priceEl && d.testKeys) {
@@ -490,6 +525,60 @@ function closePkgModal() {
   document.body.style.overflow = '';
 }
 
+/* ─── Quick Cart Add ─── */
+function quickAddCart(key, type) {
+  const storageKey = type === 'pkg' ? 'ttok_quick_cart_pkg' : 'ttok_quick_cart';
+  const cart = JSON.parse(localStorage.getItem(storageKey) || '{}');
+  cart[key] = (cart[key] || 0) + 1;
+  localStorage.setItem(storageKey, JSON.stringify(cart));
+
+  // Toast
+  let toast = document.getElementById('cart-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'cart-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = '🛒 장바구니에 담겼어요!';
+  toast.style.opacity = '1';
+  toast.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2000);
+}
+
+/* ─── Inject Quick-Cart Buttons into test/package cards ─── */
+function injectCartButtons() {
+  // 검사 카드 (tests.html의 .test-card)
+  document.querySelectorAll('.test-card').forEach(card => {
+    if (card.querySelector('.btn-quick-cart')) return;
+    const link = card.querySelector('a.btn');
+    if (!link) return;
+    const href = link.getAttribute('href') || '';
+    const key = href.replace(/^.*\//, '').replace('.html', '');
+    if (!key) return;
+    const btn = document.createElement('button');
+    btn.className = 'btn-quick-cart';
+    btn.innerHTML = '🛒 담기';
+    btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); quickAddCart(key, 'test'); });
+    card.appendChild(btn);
+  });
+
+  // 패키지 카드 (packages.html의 .pkg-hero-card, .pkg-small-card)
+  document.querySelectorAll('.pkg-hero-card[data-pkg], .pkg-small-card[data-pkg], .package-card[data-pkg]').forEach(card => {
+    if (card.querySelector('.btn-quick-cart')) return;
+    const key = card.dataset.pkg;
+    if (!key) return;
+    const btn = document.createElement('button');
+    btn.className = 'btn-quick-cart btn-quick-cart-pkg';
+    btn.innerHTML = '🛒 담기';
+    btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); quickAddCart(key, 'pkg'); });
+    card.appendChild(btn);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   QUIZ.init();
   applyStoreLinks();
@@ -504,16 +593,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const pkgClose = document.getElementById('pkgModalClose');
   if (pkgClose)   pkgClose.addEventListener('click', closePkgModal);
   if (pkgOverlay) pkgOverlay.addEventListener('click', e => { if (e.target === pkgOverlay) closePkgModal(); });
+
+  injectCartButtons();
 });
 
 /* ─── Store / Contact Link Injector ─── */
 function applyStoreLinks() {
   if (typeof STORE_LINKS === 'undefined') return;
 
+  // 특정 키의 URL — 없거나 비어 있으면 CONTACT_URL(기본 페이지)로 fallback
+  function resolveUrl(key) {
+    const url = STORE_LINKS[key];
+    return (url && url.trim()) ? url : (CONTACT_URL || STORE_LINKS.store);
+  }
+
   // 1. [data-store] 속성 링크 일괄 적용
   document.querySelectorAll('[data-store]').forEach(el => {
-    const key = el.dataset.store;
-    const url = STORE_LINKS[key] || STORE_LINKS.store;
+    const url = resolveUrl(el.dataset.store);
     if (el.tagName === 'A') {
       el.href = url;
     } else {
@@ -524,8 +620,7 @@ function applyStoreLinks() {
 
   // 2. .btn-store → 현재 파일명으로 자동 감지하여 링크 적용
   const page = location.pathname.split('/').pop().replace('.html', '') || 'index';
-  const pageUrl = STORE_LINKS[page] || STORE_LINKS.store;
-  document.querySelectorAll('.btn-store').forEach(el => { el.href = pageUrl; });
+  document.querySelectorAll('.btn-store').forEach(el => { el.href = resolveUrl(page); });
 }
 
 /* ─── Price Injector ─── */

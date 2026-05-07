@@ -19,7 +19,6 @@
       <a href="../index.html">🔍 맞춤 검사 찾기</a>
       <a href="packages.html">📦 추천 패키지</a>
       <a href="tests.html">📋 전체 검사</a>
-      <a href="../ai.html">🤖 AI 분석</a>
       <a href="cart.html">🛒 검사 담기</a>
       <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">💬 문의하기</a>
     </div>
@@ -30,7 +29,6 @@
   <a href="../index.html">🔍 맞춤 검사 찾기</a>
   <a href="packages.html">📦 추천 패키지</a>
   <a href="tests.html">📋 전체 검사</a>
-  <a href="../ai.html">🤖 AI 심리분석</a>
   <a href="cart.html">🛒 검사 담기</a>
   <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">💬 문의하기</a>
 </div>
@@ -50,12 +48,27 @@
 <!-- TEST GRID -->
 <section style="padding: 0 0 64px;">
   <div class="container">
-    <div class="test-grid">
 
-      <div class="test-card reveal">
+    <!-- Filter Bar -->
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-chip active" data-filter="all">전체</button>
+      <button class="filter-chip" data-filter="infant">🍼 영유아</button>
+      <button class="filter-chip" data-filter="child">🧒 아동·초등</button>
+      <button class="filter-chip" data-filter="teen">📖 청소년</button>
+      <button class="filter-chip" data-filter="univ">🎓 대학생</button>
+      <button class="filter-chip" data-filter="work">💼 직장인</button>
+      <button class="filter-chip" data-filter="couple">💑 연인·커플</button>
+      <button class="filter-chip" data-filter="self">🙋 자기분석</button>
+      <button class="filter-chip" data-filter="parenting">🏠 부모·양육</button>
+    </div>
+
+    <div class="test-grid" id="testGrid">
+
+      <div class="test-card reveal" data-target="self child teen couple infant parenting">
         <div class="test-card-icon">🧬</div>
-        <h3>TCI 기질 및 성격검사</h3>
-        <p>타고난 기질과 성장한 성격을 7차원으로 분석. 전 생애 연령별 JTCI 3-6 / 7-11 / 12-18 / TCI-RS.</p>
+        <div class="test-card-plain">기질과 성격 검사</div>
+        <div class="test-card-academic">TCI 기질 및 성격검사 (JTCI 3세~성인)</div>
+        <p>타고난 기질과 성장한 성격을 7차원으로 분석. 유아부터 성인까지 연령별 버전 제공.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">만 3세~성인</span>
           <span class="tag tag-green">대표 검사</span>
@@ -63,9 +76,10 @@
         <a href="tci.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="self teen couple">
         <div class="test-card-icon">🌊</div>
-        <h3>K·OCEAN 5요인 성격검사</h3>
+        <div class="test-card-plain">성격 5요인 검사</div>
+        <div class="test-card-academic">K-OCEAN 5요인 성격검사</div>
         <p>창의성·충실성·외향성·적응성·안정욕구 5요인 25하위요인으로 현재 나의 행동 특성을 측정.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">청소년~성인</span>
@@ -74,9 +88,10 @@
         <a href="kocean.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="self teen child">
         <div class="test-card-icon">✨</div>
-        <h3>GOLDEN 골든성격유형검사</h3>
+        <div class="test-card-plain">성격 유형 검사</div>
+        <div class="test-card-academic">GOLDEN 골든성격유형검사</div>
         <p>4가지 성격 유형 선호도로 나의 심리 에너지·의사결정 방식·생활 태도를 파악.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">아동~성인</span>
@@ -85,10 +100,11 @@
         <a href="golden.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="self work teen child">
         <div class="test-card-icon">💚</div>
-        <h3>RS 회복탄력성검사</h3>
-        <p>스트레스 상황을 극복하고 회복하는 힘을 7가지 요인으로 측정. 37문항으로 짧고 부담 없이 시작 가능.</p>
+        <div class="test-card-plain">회복탄력성 검사</div>
+        <div class="test-card-academic">RS 회복탄력성검사</div>
+        <p>스트레스 상황을 극복하고 회복하는 힘을 7가지 요인으로 측정. 37문항으로 빠르게 완성.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">아동~성인</span>
           <span class="tag tag-green">소요 10~15분</span>
@@ -96,20 +112,22 @@
         <a href="rs.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="self couple work univ">
         <div class="test-card-icon">🤝</div>
-        <h3>KiRi 통합적 대인관계검사</h3>
+        <div class="test-card-plain">대인관계 패턴 검사</div>
+        <div class="test-card-academic">KiRi 통합적 대인관계검사</div>
         <p>나의 대인관계 패턴과 욕구를 통합적으로 분석. 13개 척도로 관계 문제의 핵심을 짚어냅니다.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">대학생·성인</span>
-          <span class="tag tag-green">30~40분</span>
+          <span class="tag tag-green">커플·관계 필수</span>
         </div>
         <a href="kiri.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="self teen">
         <div class="test-card-icon">🔬</div>
-        <h3>PAI / PAI-A 성격평가 질문지</h3>
+        <div class="test-card-plain">심층 성격 평가</div>
+        <div class="test-card-academic">PAI / PAI-A 성격평가 질문지</div>
         <p>임상·상담 장면의 표준 도구. 성인용(PAI)과 청소년용(PAI-A)으로 성격 전반을 정밀 측정.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">청소년~성인</span>
@@ -118,9 +136,10 @@
         <a href="pai.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="self work teen univ">
         <div class="test-card-icon">⭐</div>
-        <h3>CST 성격강점검사</h3>
+        <div class="test-card-plain">강점 발견 검사</div>
+        <div class="test-card-academic">CST 성격강점검사</div>
         <p>VIA 강점 모델 기반. 나만의 고유한 강점을 발견하고 삶에서 더 많이 활용하세요.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">청소년~성인</span>
@@ -129,10 +148,11 @@
         <a href="cst.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="self child teen">
         <div class="test-card-icon">💬</div>
-        <h3>SCT 문장완성검사</h3>
-        <p>미완성 문장을 완성하며 지각·태도·성격 특성을 탐색하는 투사 검사. 아동·청소년·성인 3가지 버전. 리뷰 약속 시 무료 증정!</p>
+        <div class="test-card-plain">무의식 탐색 검사</div>
+        <div class="test-card-academic">SCT 문장완성검사</div>
+        <p>미완성 문장을 완성하며 지각·태도·성격 특성을 탐색하는 투사 검사. 리뷰 약속 시 무료 증정!</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">아동~성인</span>
           <span class="tag tag-green">🎁 리뷰 증정</span>
@@ -140,9 +160,10 @@
         <a href="sct.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="child teen">
         <div class="test-card-icon">📚</div>
-        <h3>MLST-II 학습전략검사</h3>
+        <div class="test-card-plain">학습 전략 검사</div>
+        <div class="test-card-academic">MLST-II 학습전략검사</div>
         <p>왜 공부해도 성적이 안 오를까? 동기·인지·행동·정서 4대 전략을 과학적으로 진단합니다.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">초등~대학생</span>
@@ -151,9 +172,10 @@
         <a href="mlst.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="teen univ">
         <div class="test-card-icon">🎓</div>
-        <h3>KCMII-2 대학전공선택검사</h3>
+        <div class="test-card-plain">전공·진로 탐색 검사</div>
+        <div class="test-card-academic">KCMII-2 대학전공선택검사</div>
         <p>국내 최초 전공 안내 검사. 활동·직업·전공교과 3가지 하위검사로 흥미·적성에 맞는 전공을 과학적으로 탐색합니다.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">고등학생</span>
@@ -162,9 +184,10 @@
         <a href="kcmii.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="infant child parenting">
         <div class="test-card-icon">🦎</div>
-        <h3>STS 6요인 기질검사</h3>
+        <div class="test-card-plain">아이 기질 검사</div>
+        <div class="test-card-academic">STS 6요인 기질검사</div>
         <p>영아부터 성인까지, 타고난 기질을 6가지 요인과 동물 유형으로 직관적으로 이해합니다.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">영아~성인</span>
@@ -173,9 +196,10 @@
         <a href="sts.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="parenting">
         <div class="test-card-icon">🏠</div>
-        <h3>PAT-2 부모양육태도검사</h3>
+        <div class="test-card-plain">부모 양육 방식 검사</div>
+        <div class="test-card-academic">PAT-2 부모양육태도검사</div>
         <p>부모의 양육 방식과 태도를 과학적으로 진단. 자녀와의 관계 패턴을 이해하고 건강한 양육을 돕습니다.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">부모 대상</span>
@@ -184,9 +208,10 @@
         <a href="pat.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="self work univ">
         <div class="test-card-icon">🔭</div>
-        <h3>NEO 네오 성격검사</h3>
+        <div class="test-card-plain">Big Five 정밀 성격 검사</div>
+        <div class="test-card-academic">NEO 네오 성격검사</div>
         <p>신경질·외향성·개방성·우호성·성실성 5요인을 각 6개 하위요인으로 세분화해 총 30개 지표로 성격을 정밀 분석.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">초등~성인</span>
@@ -195,9 +220,10 @@
         <a href="neo.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="child teen univ">
         <div class="test-card-icon">🧩</div>
-        <h3>MindFit 마인드핏 적응역량검사</h3>
+        <div class="test-card-plain">학교 적응 역량 검사</div>
+        <div class="test-card-academic">MindFit 마인드핏 적응역량검사</div>
         <p>학교 적응도와 심리적 자원을 측정. 적응지수·적응역량·스트레스 3개 영역으로 개입 우선순위를 제시.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">초등~대학생</span>
@@ -206,9 +232,10 @@
         <a href="mindfit.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="univ">
         <div class="test-card-icon">🏛️</div>
-        <h3>CAT-2 대학적응력검사 2판</h3>
+        <div class="test-card-plain">대학생 적응력 검사</div>
+        <div class="test-card-academic">CAT-2 대학적응력검사 2판</div>
         <p>대학생의 대학적응력과 대학적응경향성 진단. 중도탈락 의도 사전 측정. 신입생·재학생 별도 버전으로 15분 완성.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">대학생</span>
@@ -217,9 +244,10 @@
         <a href="cat.html" class="btn btn-primary">자세히 보기</a>
       </div>
 
-      <div class="test-card reveal">
+      <div class="test-card reveal" data-target="work">
         <div class="test-card-icon">💼</div>
-        <h3>IEEJ 통합직무스트레스검사</h3>
+        <div class="test-card-plain">직장 스트레스·번아웃 검사</div>
+        <div class="test-card-academic">IEEJ 통합직무스트레스검사</div>
         <p>감정노동·번아웃·일의 의미 소실·업무 능력 저하를 4개 상위 척도로 다면 분석. 기업 상담 장면에 특화.</p>
         <div class="test-card-meta">
           <span class="tag tag-brown">성인 근로자</span>
@@ -248,5 +276,23 @@
 
 <script src="../js/links.js"></script>
 <script src="../js/main.js"></script>
+<script>
+// Filter functionality
+document.getElementById('filterBar').addEventListener('click', function(e) {
+  const chip = e.target.closest('.filter-chip');
+  if (!chip) return;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  const filter = chip.dataset.filter;
+  document.querySelectorAll('#testGrid .test-card').forEach(card => {
+    if (filter === 'all') {
+      card.classList.remove('hidden');
+    } else {
+      const targets = card.dataset.target || '';
+      card.classList.toggle('hidden', !targets.includes(filter));
+    }
+  });
+});
+</script>
 </body>
 </html>
