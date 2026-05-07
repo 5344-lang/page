@@ -50,25 +50,41 @@
   <div class="container">
     <div class="pkg-hero-grid">
 
-      <!-- ① 성장·양육 (메인 Featured) -->
-      <div class="pkg-hero-card featured reveal" data-pkg="pkg_parenting_school">
+      <!-- ① 성장·양육 (메인 Featured) — 연령별 분리 표시 -->
+      <div class="pkg-hero-card featured reveal" style="cursor:default;">
         <div class="pkg-hero-badge">🏆 가장 인기</div>
         <div class="pkg-hero-icon">👨‍👩‍👧</div>
         <div class="pkg-hero-title">성장·양육 패키지</div>
         <div class="pkg-hero-subtitle">자녀를 더 깊이 이해하고 싶다면</div>
-        <p class="pkg-hero-desc">아이의 타고난 기질을 파악하고 부모의 양육 방식까지 함께 진단합니다. 연령별(영유아/학령기) 맞춤 조합 제공.</p>
+        <p class="pkg-hero-desc">아이의 타고난 기질을 파악하고 부모의 양육 방식을 함께 진단합니다. 자녀 연령에 따라 기질검사 종류와 가격이 달라집니다.</p>
         <div class="pkg-hero-who">
           <strong>이런 분들께 추천합니다 👍</strong>
           ・ 아이 등원 거부·정서 조절이 어려운 부모<br>
           ・ 아이와 대화가 잘 안 되는 느낌인 부모<br>
           ・ 내 양육 방식을 객관적으로 점검하고 싶은 분
         </div>
-        <div class="pkg-hero-tests">
-          <span class="tag tag-brown">STS / JTCI</span>
-          <span class="tag tag-green">PAT-2</span>
-          <span class="tag tag-brown">영유아·학령기 선택</span>
+        <!-- 연령별 분리 옵션 -->
+        <div class="pkg-age-options">
+          <div class="pkg-age-option">
+            <div class="pkg-age-label">🍼 영유아 (0~7세)</div>
+            <div class="pkg-age-tests">
+              <span class="tag tag-brown">STS 기질검사</span>
+              <span class="tag tag-green">PAT-2</span>
+            </div>
+            <div class="pkg-age-price" id="priceInfant">—</div>
+            <button class="pkg-age-cta" data-pkg="pkg_parenting_infant">상세 보기 →</button>
+          </div>
+          <div class="pkg-age-option">
+            <div class="pkg-age-label">📚 학령기 (8~18세)</div>
+            <div class="pkg-age-tests">
+              <span class="tag tag-brown">JTCI</span>
+              <span class="tag tag-green">PAI-A</span>
+              <span class="tag tag-brown">PAT-2</span>
+            </div>
+            <div class="pkg-age-price" id="priceSchool">—</div>
+            <button class="pkg-age-cta" data-pkg="pkg_parenting_school">상세 보기 →</button>
+          </div>
         </div>
-        <span class="pkg-hero-cta">패키지 상세 보기 →</span>
       </div>
 
       <!-- ② 커플 핏 -->
@@ -252,5 +268,23 @@
 
 <script src="../js/links.js"></script>
 <script src="../js/main.js"></script>
+<script>
+/* 성장·양육 연령별 패키지 가격 렌더링 */
+document.addEventListener('DOMContentLoaded', () => {
+  function renderAgePkgPrice(elId, testKeys) {
+    const el = document.getElementById(elId);
+    if (!el || typeof computePkgPrice === 'undefined') return;
+    const { total, discounted, rate } = computePkgPrice(testKeys);
+    const pct = Math.round(rate * 100);
+    el.innerHTML = pct > 0
+      ? `<span class="pkg-age-orig">₩${total.toLocaleString('ko-KR')}</span>`
+        + `<span class="pkg-age-disc">₩${discounted.toLocaleString('ko-KR')}</span>`
+        + `<span class="pkg-age-pct">${pct}% 할인</span>`
+      : `<span class="pkg-age-disc">₩${total.toLocaleString('ko-KR')}</span>`;
+  }
+  renderAgePkgPrice('priceInfant', ['sts', 'pat']);
+  renderAgePkgPrice('priceSchool', ['tci', 'pai', 'pat']);
+});
+</script>
 </body>
 </html>

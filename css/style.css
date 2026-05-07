@@ -894,3 +894,48 @@ section { padding: 80px 0; }
 @media (max-width: 768px) {
   .hero-ctas .btn { width: 100%; justify-content: center; }
 }
+
+/* ─── 성장·양육 패키지 연령별 분리 옵션 ─── */
+.pkg-age-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.pkg-age-option {
+  background: var(--beige);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  border: 1.5px solid var(--beige-dark);
+  transition: var(--transition);
+}
+.pkg-age-option:hover { border-color: var(--brown-light); }
+.pkg-age-label { font-weight: 700; font-size: .88rem; color: var(--brown-dark); }
+.pkg-age-tests { display: flex; flex-wrap: wrap; gap: 4px; }
+.pkg-age-tests .tag { font-size: .7rem; }
+.pkg-age-price {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+  min-height: 1.5em;
+}
+.pkg-age-orig { font-size: .78rem; color: var(--text-muted); text-decoration: line-through; }
+.pkg-age-disc { font-size: 1.05rem; font-weight: 900; color: var(--brown); }
+.pkg-age-pct {
+  font-size: .7rem; font-weight: 700;
+  background: var(--green); color: #fff;
+  padding: 2px 7px; border-radius: 20px;
+}
+.pkg-age-cta {
+  margin-top: 4px; padding: 9px;
+  border-radius: 50px; border: none;
+  background: var(--brown); color: #fff;
+  font-size: .82rem; font-weight: 700;
+  cursor: pointer; transition: var(--transition);
+  font-family: inherit; text-align: center;
+  width: 100%;
+}
+.pkg-age-cta:hover { background: var(--brown-dark); }
+
+@media (max-width: 480px) {
+  .pkg-age-options { grid-template-columns: 1fr; }
+}
