@@ -51,7 +51,10 @@
     .notice-privacy strong { color: #991b1b; }
     .notice-ok       { background: #f0fdf4; border: 1px solid #bbf7d0; }
     .notice-ok strong { color: #166534; }
-
+.notice-crisis { background: #eff6ff; border: 1px solid #bfdbfe; }
+.notice-crisis strong { color: #1e40af; }
+.notice-tool   { background: var(--beige); border: 1px solid var(--brown-light); }
+.notice-tool strong { color: var(--brown-dark); }
     /* ── Section Cards ── */
     .ac {
       background: var(--white); border-radius: var(--radius);
@@ -253,7 +256,17 @@
 </section>
 
 <div class="gen-wrap">
-
+<div class="notice-box notice-tool">
+  <strong>ℹ️ 이 도구는 참고용입니다</strong><br>
+  고객님이 스스로 활용하는 AI 자기이해 도구이며, 똑심마인드 전문가의 해석이나 진단이 아닙니다.
+  AI는 틀릴 수 있으니 결과는 가설로 읽어주세요.
+</div>
+<div class="notice-box notice-crisis">
+  <strong>💙 많이 힘드시다면</strong><br>
+  죽고 싶다는 생각이 들거나 혼자 견디기 어려운 상태라면, 분석보다 먼저 도움을 받아주세요.
+  자살예방 상담전화 <strong style="display:inline">109</strong> (24시간) ·
+  정신건강 상담전화 <strong style="display:inline">1577-0199</strong>
+</div>
   <!-- Mode Selector -->
   <div class="mode-selector">
     <div class="mode-card active" id="mode-input" onclick="setMode('input')">
@@ -761,7 +774,41 @@
   });
 
   function v(id) { const el=document.getElementById(id); return el ? el.value.trim() : ''; }
+// ── 공통 프롬프트 (수치 입력 / PDF 모드 공용) ──
+function buildHead(mode) {
+  const intro = mode === 'pdf'
+    ? '당신은 심리검사 결과를 쉬운 말로 풀어 설명하는 상담심리 해석 도우미입니다.\n\n첨부된 심리검사 결과지 PDF를 바탕으로, 제가 저 자신을 이해할 수 있도록 통합 분석을 제공해 주세요.'
+    : '당신은 심리검사 결과를 쉬운 말로 풀어 설명하는 상담심리 해석 도우미입니다.\n\n아래 검사 결과를 바탕으로, 제가 저 자신을 이해할 수 있도록 통합 분석을 제공해 주세요.';
 
+  return intro + `
+
+[분석 원칙]
+1. 숫자를 나열하지 말고, "내가 왜 이런 감정을 느끼고 이런 행동을 반복하는지" 이유를 설명해 주세요.
+2. 병리 중심이 아니라 강점과 성장 가능성을 함께 이야기해 주세요. 낮은 점수도 결함이 아니라 하나의 특성으로 설명해 주세요.
+3. 검사 간 결과가 서로 다르면 모순이 아니라 더 깊은 이해의 단서로 활용해 주세요.
+4. 전문 용어는 풀어서, 일상적인 말로 설명해 주세요.
+5. 모든 해석에는 근거가 되는 수치나 결과지 내용을 괄호로 함께 적어주세요. (예: 위험회피 상위 90%)
+6. 결과지나 입력에서 근거를 찾을 수 없는 내용은 "추측입니다"라고 표시하고, 모든 해석은 단정하지 말고 가능성(가설)으로 말해 주세요. 진단명을 붙이지 마세요.
+7. MMPI-2 같은 임상 척도는 진단이 아니라 현재 심리 상태의 경향으로만 설명하고, 타당도 척도를 먼저 고려해 주세요.
+8. SCT(문장완성검사)는 단독으로 해석하지 말고, 다른 검사 결과를 보완하는 참고 자료로만 사용해 주세요.
+9. 각 항목은 3~5문장 안팎으로 간결하게 써주세요. (마지막 한 줄 요약 제외)
+10. 입력 내용에 자해·자살 생각이나 극심한 절망감이 드러나면, 분석보다 먼저 그 마음을 따뜻하게 다루고 자살예방 상담전화 109, 정신건강 상담전화 1577-0199, 가까운 전문가 상담을 안내해 주세요.
+11. 마지막에 반드시 다음 문구를 적어주세요: "※ 이 분석은 AI 해석이며, 정확한 임상 진단은 전문 상담사와 상담하시기 바랍니다."
+
+[출력 구조]
+1. 지금 나의 심리 상태 요약
+2. 타고난 나 — 기질 분석
+3. 내가 만들어온 나 — 성격 및 대처 방식
+4. 내 마음속 반복 패턴 — 결과에서 근거가 보이는 범위의 마음 습관 (가능성으로만 제시)
+5. 관계 속의 나 — 대인관계 패턴
+6. 지금 이 고민의 의미 (고민이 없다면 "이 결과가 일상에서 갖는 의미"로 대체)
+7. 성장을 위한 구체적인 제언
+8. 한 줄 핵심 요약: "당신은 이런 사람입니다"`;
+}
+
+// PDF 모드 화면에 보이는 프롬프트도 같은 문구로 채우기
+document.getElementById('pdf-prompt-box').textContent =
+  buildHead('pdf') + '\n\n[현재 고민 상황]\n(입력한 내용이 여기에 반영됩니다)';
   // ── TCI Sub-scale Toggle ──
   function toggleTciSub() {
     const body = document.getElementById('tci-sub-body');
@@ -775,8 +822,7 @@
   // ── Generate Prompt ──
   function generatePrompt() {
     const lines = [];
-    lines.push(`당신은 30년 임상 경험을 가진 수석 상담심리전문가입니다.\n\n저는 제 심리검사 결과지를 바탕으로 저 자신을 깊이 이해하고 싶습니다.\n아래 원칙과 구조에 따라 통합 심리 분석을 제공해 주세요.\n\n[분석 원칙]\n1. 숫자를 단순 나열하지 않고, "내가 왜 이런 감정을 느끼고, 왜 이런 행동을 반복하는지" 이유를 밝혀주세요.\n2. 병리 중심이 아닌 강점과 성장 가능성을 함께 이야기해 주세요.\n3. 검사 간 결과가 서로 다를 경우, 이를 모순이 아닌 더 깊은 이해의 단서로 활용해 주세요.\n4. 어렵고 전문적인 용어 대신 일상적인 언어로 설명해 주세요.\n5. 마지막에 반드시: "※ 이 분석은 AI 해석이며, 정확한 임상 진단은 전문 상담사와 상담하시기 바랍니다."\n\n[출력 구조]\n1. 지금 나의 심리 상태 요약\n2. 타고난 나 — 기질 분석\n3. 내가 만들어온 나 — 성격 및 대처 방식\n4. 내 마음속 반복 이야기 — 핵심 신념과 무의식 주제\n5. 관계 속의 나 — 대인관계 패턴\n6. 지금 이 고민의 심층 의미\n7. 성장을 위한 구체적인 제언\n8. 한 줄 핵심 요약: "당신은 이런 사람입니다"\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-
+lines.push(buildHead('input') + '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     const al=v('alias'), g=v('gender'), a=v('age'), j=v('job'), mbtiDesc=v('mbti-desc');
     lines.push(`\n📋 기본 정보`);
     if(al) lines.push(`이름(가명): ${al}`);
@@ -869,29 +915,7 @@
     if(c4) concernLines.push(`나에게 필요한 것: ${c4}`);
     if(c5) concernLines.push(`상담자에게 하고 싶은 말: ${c5}`);
     const concernText = concernLines.length ? concernLines.join('\n') : '(별도 고민 없음)';
-    const base = `당신은 30년 임상 경험을 가진 수석 상담심리전문가입니다.
-
-첨부된 심리검사 결과지 PDF를 바탕으로 저를 깊이 이해할 수 있도록 통합 심리 분석을 제공해 주세요.
-
-[분석 원칙]
-1. 숫자를 단순 나열하지 않고, "내가 왜 이런 감정을 느끼고, 왜 이런 행동을 반복하는지" 이유를 밝혀주세요.
-2. 병리 중심이 아닌 강점과 성장 가능성을 함께 이야기해 주세요.
-3. 검사 간 결과가 서로 다를 경우, 이를 모순이 아닌 더 깊은 이해의 단서로 활용해 주세요.
-4. 어렵고 전문적인 용어 대신 일상적인 언어로 설명해 주세요.
-5. 마지막에 반드시: "※ 이 분석은 AI 해석이며, 정확한 임상 진단은 전문 상담사와 상담하시기 바랍니다."
-
-[출력 구조]
-1. 지금 나의 심리 상태 요약
-2. 타고난 나 — 기질 분석
-3. 내가 만들어온 나 — 성격 및 대처 방식
-4. 내 마음속 반복 이야기 — 핵심 신념과 무의식 주제
-5. 관계 속의 나 — 대인관계 패턴
-6. 지금 이 고민의 심층 의미
-7. 성장을 위한 구체적인 제언
-8. 한 줄 핵심 요약: "당신은 이런 사람입니다"
-
-[현재 고민 상황]
-${concernText}`;
+const base = buildHead('pdf') + '\n\n[현재 고민 상황]\n' + concernText;
     navigator.clipboard.writeText(base).then(()=>{
       const n=document.getElementById('pdf-copy-notice'); n.style.display='block';
       setTimeout(()=>n.style.display='none', 2500);
