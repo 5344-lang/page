@@ -128,7 +128,7 @@ section { padding: 80px 0; }
 
 /* ─── Hero Section ─── */
 .hero {
-  background: linear-gradient(135deg, var(--beige) 0%, var(--beige-dark) 100%);
+  background: var(--beige);
   padding: 80px 0 60px;
   overflow: hidden;
 }
@@ -163,7 +163,7 @@ section { padding: 80px 0; }
 
 /* ─── Quiz Banner ─── */
 .quiz-banner {
-  background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
+  background: var(--brown);
   border-radius: var(--radius); padding: 40px;
   display: flex; align-items: center; justify-content: space-between;
   gap: 24px; flex-wrap: wrap; margin-bottom: 60px;
@@ -186,7 +186,7 @@ section { padding: 80px 0; }
 }
 .test-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, var(--brown), var(--green));
+  background: var(--brown);
 }
 .test-card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(107,76,53,.18); }
 .test-card-icon { font-size: 2.5rem; margin-bottom: 14px; }
@@ -354,7 +354,7 @@ section { padding: 80px 0; }
   to   { opacity: 1; transform: translateY(0); }
 }
 .modal-header {
-  background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+  background: var(--brown);
   padding: 28px 32px; color: #fff;
 }
 .modal-header h3 { font-size: 1.3rem; margin-bottom: 6px; }
@@ -382,7 +382,7 @@ section { padding: 80px 0; }
   color: var(--brown);
 }
 .quiz-result {
-  background: linear-gradient(135deg, var(--beige) 0%, var(--beige-dark) 100%);
+  background: var(--beige);
   border-radius: var(--radius-sm); padding: 20px;
   text-align: center; display: none;
 }
@@ -435,7 +435,7 @@ section { padding: 80px 0; }
 
 /* ─── Individual Test Page ─── */
 .test-hero {
-  background: linear-gradient(135deg, var(--beige) 0%, var(--beige-dark) 100%);
+  background: var(--beige);
   padding: 64px 0 48px;
 }
 .test-hero-inner {
@@ -482,7 +482,7 @@ section { padding: 80px 0; }
 .combo-card h4 { color: var(--brown-dark); margin-bottom: 8px; }
 .combo-card p { font-size: .85rem; margin-bottom: 16px; }
 .cta-section {
-  background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
+  background: var(--brown);
   padding: 64px 0; text-align: center;
 }
 .cta-section h2 { color: #fff; margin-bottom: 14px; }
@@ -492,7 +492,7 @@ section { padding: 80px 0; }
 .price-hero-badge {
   display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap;
   margin-top: 20px;
-  background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
+  background: var(--brown);
   border-radius: 50px;
   padding: 12px 24px;
   box-shadow: 0 4px 16px rgba(107,76,53,.25);
@@ -546,7 +546,7 @@ section { padding: 80px 0; }
 }
 .pkg-modal-close:hover { background: rgba(255,255,255,.35); }
 .pkg-modal-head {
-  background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
+  background: var(--brown);
   padding: 40px 32px 28px; text-align: center;
 }
 .pkg-modal-icon { font-size: 3.6rem; margin-bottom: 14px; }
@@ -555,7 +555,7 @@ section { padding: 80px 0; }
 .pkg-modal-head-tags .tag { background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.3); }
 .pkg-modal-body { padding: 28px 32px 32px; }
 .pkg-why-box {
-  background: linear-gradient(135deg, var(--beige), var(--beige-dark));
+  background: var(--beige);
   border-radius: var(--radius-sm);
   border-left: 4px solid var(--brown);
   padding: 22px 24px;
@@ -681,7 +681,7 @@ section { padding: 80px 0; }
 /* ─── Highlight Trust Card ─── */
 .trust-card-highlight {
   border: 2px solid var(--green);
-  background: linear-gradient(135deg, #FBF3C2 0%, #F2E15C 100%);
+  background: #FBF3C2;
   position: relative;
 }
 .trust-card-highlight::after {
@@ -771,7 +771,7 @@ section { padding: 80px 0; }
 }
 .pkg-hero-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
-  background: linear-gradient(90deg, var(--brown), var(--green));
+  background: var(--brown);
 }
 .pkg-hero-card:hover {
   border-color: var(--brown-light);
@@ -779,7 +779,7 @@ section { padding: 80px 0; }
   box-shadow: 0 16px 48px rgba(107,76,53,.22);
 }
 .pkg-hero-card.featured {
-  background: linear-gradient(160deg, #FBF7EE 0%, #ECE2CC 100%);
+  background: #FBF7EE;
   border-color: var(--brown-light);
 }
 .pkg-hero-badge {
@@ -870,7 +870,7 @@ section { padding: 80px 0; }
   display: flex; align-items: center; justify-content: center; gap: 8px;
   width: 100%; margin-top: 10px; padding: 13px;
   border-radius: 50px; border: none;
-  background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%);
+  background: var(--brown);
   color: #fff; font-size: .95rem; font-weight: 700;
   cursor: pointer; transition: var(--transition); font-family: inherit;
 }
@@ -943,7 +943,7 @@ section { padding: 80px 0; }
 /* ─── 브랜드 개편 (2026-11) ─── */
 body{background-color:var(--beige);background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .3 0 0 0 .07 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>")}
 h1,h2{font-family:'Gowun Batang',serif;letter-spacing:-.5px;color:var(--brown)}
-.gnb-logo .bear-mini,.brand-name .bear-mini{width:36px;height:36px;display:inline-block;vertical-align:middle;border-radius:50%}
+.bear-mini{max-width:36px;max-height:36px;width:36px;height:36px;display:inline-block;vertical-align:middle;border-radius:50%}
 .btn{border-radius:6px}
 .btn-primary:hover{background:var(--brown-dark)}
 ::selection{background:var(--green-light);color:var(--brown)}
