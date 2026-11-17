@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>검사 담기 — 똑심마인드</title>
-  <meta name="description" content="원하는 심리검사를 선택하고 할인 가격을 바로 확인하세요. 2개 5% · 3개 10% · 4개 이상 15% 할인.">
+  <meta name="description" content="원하는 심리검사를 선택하고 할인 가격을 바로 확인하세요. 2개 2~5% · 3개 7~10% · 4개 이상 12~15% 할인 (TCI 포함 시 낮은 쪽).">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="stylesheet" href="../css/style.css">
   <style>
@@ -362,11 +362,11 @@
       <a href="../index.html" style="color:var(--brown);">홈</a>&nbsp;›&nbsp;검사 담기
     </div>
     <h1>검사 담기</h1>
-    <p>원하는 검사를 선택 → 가격 확인 → 문의 내용 복사 → 크몽에서 결제 문의<br><small style="color:var(--text-muted);">2개 이상 구매 시 5~15% 할인 적용</small></p>
+    <p>원하는 검사를 선택 → 가격 확인 → 문의 내용 복사 → 크몽에서 결제 문의<br><small style="color:var(--text-muted);">2개 이상 구매 시 2~15% 할인 적용 (TCI 포함 시 3%p 낮게 적용)</small></p>
     <div class="discount-badges">
-      <div class="disc-badge" id="badge2">2개 &nbsp;5% 할인</div>
-      <div class="disc-badge" id="badge3">3개 &nbsp;10% 할인</div>
-      <div class="disc-badge" id="badge4">4개 이상 &nbsp;15% 할인</div>
+      <div class="disc-badge" id="badge2">2개 &nbsp;2~5% 할인</div>
+      <div class="disc-badge" id="badge3">3개 &nbsp;7~10% 할인</div>
+      <div class="disc-badge" id="badge4">4개 이상 &nbsp;12~15% 할인</div>
     </div>
   </div>
 </section>
@@ -572,6 +572,7 @@ function discountRate(paidCount, hasTci) {
   if (paidCount >= 4)      rate = 0.15;
   else if (paidCount === 3) rate = 0.10;
   else if (paidCount === 2) rate = 0.05;
+  if (hasTci && rate > 0) rate -= 0.03; // TCI 포함 시 3%p 덜 할인 (원가 부담)
   return rate;
 }
 
@@ -879,9 +880,9 @@ function renderCombinedSummary() {
   // 할인 단계 칩
   if (tierStrip) {
     const tiers = [
-      { label:'2개', cnt:2, base:0.05, tciBase:0.05 },
-      { label:'3개', cnt:3, base:0.10, tciBase:0.10 },
-      { label:'4개+', cnt:4, base:0.15, tciBase:0.15 }
+      { label:'2개', cnt:2, base:0.05, tciBase:0.02 },
+      { label:'3개', cnt:3, base:0.10, tciBase:0.07 },
+      { label:'4개+', cnt:4, base:0.15, tciBase:0.12 }
     ];
     tierStrip.innerHTML = tiers.map(t => {
       const isActive = t.cnt === 4 ? pc >= 4 : pc === t.cnt;

@@ -266,6 +266,7 @@ function getDiscount(paidCount, hasTci) {
   if (paidCount >= 4) rate = 0.15;
   else if (paidCount === 3) rate = 0.10;
   else if (paidCount === 2) rate = 0.05;
+  if (hasTci && rate > 0) rate -= 0.03; // TCI 포함 시 3%p 덜 할인 (원가 부담)
   return rate;
 }
 
