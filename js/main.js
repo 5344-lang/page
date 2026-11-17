@@ -59,23 +59,24 @@ const QUIZ = {
       { v:'mental', label:'시험 때마다 멘탈이 흔들려요' },
     ]},
   },
-  // 경로별 [가볍게(단품), 기본, 깊게]
+  // 경로별 [가볍게, 기본, 깊게] — 문자열: 패키지 키(pkg_) 또는 단품 키, 객체: 맞춤 조합(단품 여러 개로 담김)
+  // 깊이가 올라갈수록 같은 고민 안에서 검사가 더해지도록(가격도 올라가도록) 구성
   MAP: {
     'self+personality': ['kocean', 'pkg_personality', 'pkg_neo'],
-    'self+mind':        ['rs', 'pkg_mental', 'pkg_deepdive'],
-    'self+relation':    ['kiri', 'pkg_relation1', 'pkg_relation'],
-    'self+work':        ['ieej', 'pkg_burnout', 'pkg_work'],
-    'self+career':      ['kcmii', 'pkg_career', null],
-    'self+univ':        ['cat', 'pkg_univ', null],
-    'couple+fight':     [null, 'pkg_couple', null],
-    'couple+marry':     [null, 'pkg_couple', null],
-    'couple+check':     [null, 'pkg_couple', null],
-    'child+infant':     ['sts', 'pkg_parenting_infant', null],
-    'child+school':     ['tci', 'pkg_parenting_school', null],
-    'child+teen':       ['tci', 'pkg_teen', 'pkg_parenting_school'],
-    'student+career':   ['kcmii', 'pkg_career', 'pkg_exam'],
-    'student+study':    ['mlst', 'pkg_exam', null],
-    'student+mental':   ['rs', 'pkg_exam', null],
+    'self+mind':        ['rs', 'pkg_mental', { title:'마음 회복 심층 패키지', tests:['tci','rs','pai','sct'], why:'기질(TCI)과 회복탄력성(RS)에 PAI 성격평가를 더해 지금의 정서 상태까지 함께 살핍니다. SCT는 무료로 포함돼요.' }],
+    'self+relation':    ['kiri', 'pkg_relation1', { title:'관계 패턴 심층 패키지', tests:['tci','kiri','pai','sct'], why:'타고난 기질(TCI)과 관계 패턴(KiRi)에 PAI를 더해, 관계에서 반복되는 반응의 뿌리까지 봅니다. SCT는 무료로 포함돼요.' }],
+    'self+work':        ['ieej', { title:'번아웃 기본 케어', tests:['ieej','rs'], why:'직무 스트레스(IEEJ)가 얼마나 쌓였는지와 버틸 힘(RS 회복탄력성)이 얼마나 남았는지를 함께 봅니다.' }, 'pkg_burnout'],
+    'self+career':      ['kcmii', { title:'진로 기본 패키지', tests:['kcmii','cst'], why:'흥미에 맞는 전공·직무 방향(KCMII-2)과 나의 성격 강점(CST)을 함께 봅니다.' }, 'pkg_career'],
+    'self+univ':        ['cat', 'pkg_univ', { title:'대학생 적응 심층 패키지', tests:['cat','mindfit','rs','tci'], why:'대학 적응력, 적응 역량, 회복탄력성에 타고난 기질(TCI)까지 더해 어려움의 원인을 함께 봅니다.' }],
+    'couple+fight':     [{ title:'커플 기질 비교', tests:['tci','tci'], why:'두 사람이 각자 TCI를 받아 타고난 기질 차이와 부딪히는 지점을 비교합니다.' }, 'pkg_couple', null],
+    'couple+marry':     [{ title:'커플 기질 비교', tests:['tci','tci'], why:'두 사람이 각자 TCI를 받아 타고난 기질 차이와 부딪히는 지점을 비교합니다.' }, 'pkg_couple', null],
+    'couple+check':     [{ title:'커플 기질 비교', tests:['tci','tci'], why:'두 사람이 각자 TCI를 받아 타고난 기질 차이와 부딪히는 지점을 비교합니다.' }, 'pkg_couple', null],
+    'child+infant':     ['sts', 'pkg_parenting_infant', { title:'영유아 가족 기질 패키지', tests:['sts','pat','tci'], why:'아이 기질(STS)과 양육태도(PAT-2)에 부모의 타고난 기질(TCI)까지 더해 아이와 부모의 기질 조합을 봅니다.' }],
+    'child+school':     ['tci', 'pkg_parenting_school', { title:'학령기 가족 기질 패키지', tests:['tci','pai','pat','tci'], why:'자녀 검사에 부모의 TCI까지 더해 아이와 부모의 기질이 어떻게 맞물리는지 봅니다.' }],
+    'child+teen':       ['tci', 'pkg_teen', { title:'청소년 + 부모 양육 패키지', tests:['tci','golden','cst','pat'], why:'청소년 성장 패키지에 부모 양육태도(PAT-2)를 더해 아이와 부모 양쪽을 함께 봅니다.' }],
+    'student+career':   ['kcmii', 'pkg_career', { title:'진로·멘탈 풀케어', tests:['kcmii','tci','cst','rs','sct'], why:'전공 방향, 기질, 강점에 회복탄력성까지 더해 진로와 멘탈을 함께 봅니다. SCT는 무료로 포함돼요.' }],
+    'student+study':    ['mlst', { title:'학습 기본 패키지', tests:['mlst','tci'], why:'공부 습관과 전략(MLST-II)에 타고난 기질(TCI)을 더해 나에게 맞는 공부 방식을 찾습니다.' }, 'pkg_exam'],
+    'student+mental':   ['rs', { title:'시험 멘탈 기본 패키지', tests:['rs','tci'], why:'회복탄력성(RS)과 기질(TCI)로 시험 때 흔들리는 이유와 버틸 힘을 함께 봅니다.' }, 'pkg_exam'],
   },
   LEVELS: [
     { label:'가볍게', sub:'검사 1개로 핵심만' },
@@ -123,10 +124,14 @@ const QUIZ = {
 
   item(key) {
     const prices = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null') || (typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {});
+    const uniq = keys => [...new Set(keys)].map(k => this.NAMES[k] + (keys.filter(x => x === k).length > 1 ? ' ×' + keys.filter(x => x === k).length : '') + (k === 'sct' ? ' (무료)' : ''));
+    if (typeof key === 'object') {
+      const { total, discounted, rate } = computePkgPrice(key.tests);
+      return { type:'combo', key, title:key.title, tests:uniq(key.tests), why:key.why, total, price:discounted, rate };
+    }
     if (key.startsWith('pkg_')) {
       const p = PKG_INFO[key]; const { total, discounted, rate } = computePkgPrice(p.testKeys);
-      const tests = [...new Set(p.testKeys)].map(k => this.NAMES[k] || k);
-      return { type:'pkg', key, title:p.title.replace(/^[^가-힣A-Za-z]+/, ''), tests, why:p.why || '', total, price:discounted, rate };
+      return { type:'pkg', key, title:p.title.replace(/^[^가-힣A-Za-z]+/, ''), tests:uniq(p.testKeys), why:p.why || '', total, price:discounted, rate };
     }
     const price = prices[key]?.price || 0;
     return { type:'unit', key, title:this.NAMES[key] + ' 검사', tests:[this.NAMES[key]], why:'', total:price, price, rate:0 };
@@ -135,17 +140,19 @@ const QUIZ = {
 
   result() {
     const map = this.MAP[`${this.q1}+${this.q2}`];
+    const av = this.avail();
     const r = this.item(map[this.level]);
-    const others = this.avail().filter(i => i !== this.level);
+    const tabs = av.length > 1 ? `<div class="qr-tabs">${av.map(i => { const it = this.item(map[i]); return `<button type="button" class="qr-tab${i === this.level ? ' on' : ''}" data-lv="${i}"><b>${this.LEVELS[i].label}</b><span>${this.won(it.price)}</span></button>`; }).join('')}</div>` : '';
     const priceHtml = r.rate > 0
       ? `<span class="qr-old">${this.won(r.total)}</span> <b class="qr-price">${this.won(r.price)}</b> <span class="qr-badge">${Math.round(r.rate * 100)}% 할인</span>`
       : `<b class="qr-price">${this.won(r.price)}</b>`;
     const detail = r.type === 'pkg'
       ? `<button type="button" class="btn btn-outline qr-btn" id="qrDetail">구성 자세히</button>`
-      : `<a class="btn btn-outline qr-btn" href="pages/${this.HREF[r.key]}.html">검사 자세히</a>`;
+      : r.type === 'unit' ? `<a class="btn btn-outline qr-btn" href="pages/${this.HREF[r.key]}.html">검사 자세히</a>` : '';
     this.render(this.progress(3) + `
       <div class="quiz-result show">
-        <p class="qr-kicker">${this.LEVELS[this.level].label} 보기 · 이렇게 받아 보세요</p>
+        ${tabs}
+        <p class="qr-kicker">${this.LEVELS[this.level].label} · ${this.LEVELS[this.level].sub}</p>
         <div class="qr-card">
           <h4 class="qr-title">${r.title}</h4>
           <div class="qr-tests">${r.tests.map(t => `<span>${t}</span>`).join('')}</div>
@@ -153,20 +160,21 @@ const QUIZ = {
           <div class="qr-pricebox">${priceHtml}</div>
           <p class="qr-note">결과지 + 종합 해석 보고서 + AI 해석 프롬프트 포함</p>
         </div>
-        <div class="qr-actions">
+        <div class="qr-actions" style="${detail ? '' : 'grid-template-columns:1fr'}">
           <button type="button" class="btn btn-primary qr-btn" id="qrAdd">장바구니에 담기</button>
           ${detail}
         </div>
-        ${others.length ? `<div class="qr-others">${others.map(i => `<button type="button" class="qr-alt" data-lv="${i}">${this.LEVELS[i].label} 보기로 바꾸기</button>`).join('')}</div>` : ''}
         ${this.back('step2')}
       </div>`, () => {});
     const body = document.getElementById('quizBody');
     body.querySelector('#qrAdd').addEventListener('click', () => {
-      quickAddCart(r.key, r.type === 'pkg' ? 'pkg' : 'unit');
+      if (r.type === 'pkg') quickAddCart(r.key, 'pkg');
+      else if (r.type === 'unit') quickAddCart(r.key, 'unit');
+      else r.key.tests.forEach(k => quickAddCart(k, 'unit'));
       setTimeout(() => { location.href = 'pages/cart.html'; }, 500);
     });
     body.querySelector('#qrDetail')?.addEventListener('click', () => { this.close(); setTimeout(() => openPkgModal(r.key), 120); });
-    body.querySelectorAll('.qr-alt').forEach(b => b.addEventListener('click', () => { this.level = +b.dataset.lv; this.result(); }));
+    body.querySelectorAll('.qr-tab').forEach(b => b.addEventListener('click', () => { this.level = +b.dataset.lv; this.result(); }));
   }
 };
 
@@ -365,7 +373,7 @@ function openPkgModal(key) {
   const d = PKG_INFO[key];
   if (!d || !pkgOverlay) return;
 
-  document.getElementById('pkgMIcon').textContent  = d.icon;
+  const _ic = document.getElementById('pkgMIcon'); if (_ic) _ic.textContent = d.icon;
   document.getElementById('pkgMTitle').textContent = d.title;
   document.getElementById('pkgMTags').innerHTML    = d.tags.map(t => `<span class="tag">${t}</span>`).join('');
   document.getElementById('pkgMWhy').textContent   = d.why;

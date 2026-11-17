@@ -966,3 +966,7 @@ h1,h2{font-family:'Gowun Batang',serif;letter-spacing:-.5px;color:var(--brown)}
 .qr-others{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
 .qr-alt{background:none;border:1px solid var(--beige-dark);border-radius:30px;padding:6px 12px;font-size:.8rem;color:var(--text);cursor:pointer;font-family:inherit}
 .qr-alt:hover{border-color:var(--brown)}
+.qr-tabs{display:flex;gap:6px;margin-bottom:14px}
+.qr-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border:1.5px solid var(--beige-dark);border-radius:var(--radius);background:var(--white);cursor:pointer;font-family:inherit;color:var(--text)}
+.qr-tab b{font-size:.95rem}.qr-tab span{font-size:.8rem;color:var(--text-muted)}
+.qr-tab.on{background:var(--brown);border-color:var(--brown);color:#fff}.qr-tab.on span{color:var(--green-light)}
