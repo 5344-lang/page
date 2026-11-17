@@ -258,15 +258,14 @@ const QUIZ = {
 
 /* ─── Package Price Calculator ─── */
 function charmPrice(n) {
-  return Math.round(n / 1000) * 1000;
+  return Math.floor(n / 1000) * 1000; // 천원 미만 절삭
 }
 
 function getDiscount(paidCount, hasTci) {
   let rate = 0;
-  if (paidCount >= 4) rate = 0.20;
-  else if (paidCount === 3) rate = 0.15;
-  else if (paidCount === 2) rate = 0.10;
-  if (hasTci && rate > 0) rate -= 0.03;
+  if (paidCount >= 4) rate = 0.15;
+  else if (paidCount === 3) rate = 0.10;
+  else if (paidCount === 2) rate = 0.05;
   return rate;
 }
 

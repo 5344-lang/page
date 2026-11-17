@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>검사 담기 — 똑심마인드</title>
-  <meta name="description" content="원하는 심리검사를 선택하고 할인 가격을 바로 확인하세요. 2개 10% · 3개 15% · 4개 이상 20% 할인.">
+  <meta name="description" content="원하는 심리검사를 선택하고 할인 가격을 바로 확인하세요. 2개 5% · 3개 10% · 4개 이상 15% 할인.">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="stylesheet" href="../css/style.css">
   <style>
@@ -152,6 +152,11 @@
     .summary-row-name { font-weight: 600; color: var(--text); }
     .summary-row-price { font-weight: 700; color: var(--brown); white-space: nowrap; }
     .summary-row.free-row .summary-row-price { color: var(--green); }
+    .pkg-summary-name { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .summary-row { align-items:center; }
+    .summary-row-name { flex:1; }
+    .rm-x { flex:none; width:24px; height:24px; margin-left:8px; border:none; border-radius:50%; background:var(--beige-dark); color:var(--text-muted); font-size:1rem; line-height:24px; text-align:center; cursor:pointer; padding:0; font-family:inherit; transition:var(--transition); }
+    .rm-x:hover { background:var(--green); color:#fff; }
     .summary-empty { color: var(--text-muted); font-size: .85rem; padding: 12px 0; }
 
     .summary-total-area {
@@ -331,7 +336,7 @@
 
 <nav class="gnb">
   <div class="gnb-inner">
-    <a href="../index.html" class="gnb-logo">🐻 똑심마인드</a>
+    <a href="../index.html" class="gnb-logo"><img src="../assets/logo.png" alt="" class="bear-mini"> 똑심마인드</a>
     <div class="gnb-menu">
       <a href="../index.html">🔍 맞춤 검사 찾기</a>
       <a href="packages.html">📦 추천 패키지</a>
@@ -357,11 +362,11 @@
       <a href="../index.html" style="color:var(--brown);">홈</a>&nbsp;›&nbsp;검사 담기
     </div>
     <h1>🛒 검사 담기</h1>
-    <p>원하는 검사를 선택 → 가격 확인 → 문의 내용 복사 → 크몽에서 결제 문의<br><small style="color:var(--text-muted);">2개 이상 구매 시 7~20% 할인 적용</small></p>
+    <p>원하는 검사를 선택 → 가격 확인 → 문의 내용 복사 → 크몽에서 결제 문의<br><small style="color:var(--text-muted);">2개 이상 구매 시 5~15% 할인 적용</small></p>
     <div class="discount-badges">
-      <div class="disc-badge" id="badge2">2개 이상 &nbsp;7~10% 할인</div>
-      <div class="disc-badge" id="badge3">3개 &nbsp;12~15% 할인</div>
-      <div class="disc-badge" id="badge4">4개 이상 &nbsp;17~20% 할인</div>
+      <div class="disc-badge" id="badge2">2개 &nbsp;5% 할인</div>
+      <div class="disc-badge" id="badge3">3개 &nbsp;10% 할인</div>
+      <div class="disc-badge" id="badge4">4개 이상 &nbsp;15% 할인</div>
     </div>
   </div>
 </section>
@@ -489,7 +494,7 @@
 <footer class="footer">
   <div class="container">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
-      <span style="color:#fff;font-weight:700;">🐻 똑심마인드</span>
+      <span style="color:#fff;font-weight:700;"><img src="../assets/logo.png" alt="" class="bear-mini"> 똑심마인드</span>
       <div style="display:flex;gap:20px;flex-wrap:wrap;">
         <a href="../index.html" style="color:rgba(255,255,255,.7);font-size:.85rem;">홈으로</a>
         <a href="packages.html" style="color:rgba(255,255,255,.7);font-size:.85rem;">추천 패키지</a>
@@ -561,15 +566,14 @@ _allKeys.forEach(key => {
 function fmtWon(n) { return '₩' + n.toLocaleString('ko-KR'); }
 
 function charmPrice(n) {
-  return Math.round(n / 1000) * 1000;
+  return Math.floor(n / 1000) * 1000; // 천원 미만 절삭
 }
 
 function discountRate(paidCount, hasTci) {
   let rate = 0;
-  if (paidCount >= 4)      rate = 0.20;
-  else if (paidCount === 3) rate = 0.15;
-  else if (paidCount === 2) rate = 0.10;
-  if (hasTci && rate > 0) rate -= 0.03;
+  if (paidCount >= 4)      rate = 0.15;
+  else if (paidCount === 3) rate = 0.10;
+  else if (paidCount === 2) rate = 0.05;
   return rate;
 }
 
@@ -639,6 +643,13 @@ function addPkg(key) {
 function setPkgQty(key, delta, e) {
   e.stopPropagation();
   pkgQuantities[key] = Math.max(0, (pkgQuantities[key] || 0) + delta);
+  renderAll();
+}
+
+// 담은 검사에서 × 눌러 빼기 → 남은 항목으로 금액 다시 계산
+function removeItem(type, key) {
+  if (type === 'pkg') pkgQuantities[key] = 0;
+  else quantities[key] = 0;
   renderAll();
 }
 
@@ -817,7 +828,7 @@ function renderCombinedSummary() {
       const pkg      = PKG_INFO[pkgKey];
       const qtyLabel = qty > 1 ? ` × ${qty}` : '';
       if (!firstSection) summaryHtml += '<hr class="pkg-section-divider">';
-      summaryHtml += `<div class="pkg-summary-name">${pkg.icon} ${pkg.title}${qtyLabel}</div>`;
+      summaryHtml += `<div class="pkg-summary-name"><span>${pkg.icon} ${pkg.title}${qtyLabel}</span><button type="button" class="rm-x" aria-label="패키지 빼기" onclick="removeItem('pkg','${pkgKey}')">×</button></div>`;
       summaryHtml += pkg.testKeys.map(k => {
         const isSct  = k === 'sct';
         const isFree = !isSct && prices[k]?.free;
@@ -844,6 +855,7 @@ function renderCombinedSummary() {
       return `<div class="summary-row${isFree ? ' free-row' : ''}">
         <span class="summary-row-name">${label}</span>
         <span class="summary-row-price">${isFree ? '무료 🎁' : fmtWon((prices[k]?.price || 0) * cnt)}</span>
+        <button type="button" class="rm-x" aria-label="검사 빼기" onclick="removeItem('unit','${k}')">×</button>
       </div>`;
     }).join('');
     firstSection = false;
@@ -860,6 +872,7 @@ function renderCombinedSummary() {
     summaryHtml += `<div class="summary-row${sctFree ? ' free-row' : ''}">
       <span class="summary-row-name">💬 SCT 문장완성검사${doubleNote}</span>
       <span class="summary-row-price">${sctFree ? '무료 🎁' : fmtWon(SCT_PRICE)}</span>
+      <button type="button" class="rm-x" aria-label="검사 빼기" onclick="removeItem('unit','sct')">×</button>
     </div>`;
   }
 
@@ -868,9 +881,9 @@ function renderCombinedSummary() {
   // 할인 단계 칩
   if (tierStrip) {
     const tiers = [
-      { label:'2개', cnt:2, base:0.10, tciBase:0.07 },
-      { label:'3개', cnt:3, base:0.15, tciBase:0.12 },
-      { label:'4개+', cnt:4, base:0.20, tciBase:0.17 }
+      { label:'2개', cnt:2, base:0.05, tciBase:0.05 },
+      { label:'3개', cnt:3, base:0.10, tciBase:0.10 },
+      { label:'4개+', cnt:4, base:0.15, tciBase:0.15 }
     ];
     tierStrip.innerHTML = tiers.map(t => {
       const isActive = t.cnt === 4 ? pc >= 4 : pc === t.cnt;

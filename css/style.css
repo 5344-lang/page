@@ -3,23 +3,24 @@
    Design: Warm Earth Tones (Beige × Brown × Forest Green)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Gowun+Batang:wght@700&family=Nanum+Pen+Script&display=swap');
 
 /* ─── CSS Variables ─── */
 :root {
-  --brown:      #6B4C35;
-  --brown-dark: #4A3020;
-  --brown-light:#C4A882;
-  --green:      #4A7C59;
-  --green-light:#7AAE8A;
-  --beige:      #FBF7F0;
-  --beige-dark: #F0E8DC;
-  --white:      #FFFDF9;
-  --text:       #2D2D2D;
-  --text-muted: #7A6A5A;
-  --shadow:     0 4px 20px rgba(107,76,53,.12);
-  --radius:     16px;
-  --radius-sm:  8px;
+  /* 똑심마인드 브랜드 (유튜브 브랜딩과 통일) */
+  --brown:      #1E2A44;   /* 남색 — 주 색 */
+  --brown-dark: #141C30;
+  --brown-light:#C9BFA8;
+  --green:      #C83A32;   /* 빨강 — 포인트 */
+  --green-light:#F2E15C;   /* 노랑 — 하이라이트 */
+  --beige:      #F4ECD8;   /* 미색 종이 */
+  --beige-dark: #ECE2CC;
+  --white:      #FBF7EE;
+  --text:       #1E2A44;
+  --text-muted: #6A6E7E;
+  --shadow:     0 2px 0 rgba(0,0,0,.06), 0 10px 18px rgba(20,25,45,.14);
+  --radius:     6px;
+  --radius-sm:  4px;
   --transition: .25s ease;
 }
 
@@ -65,7 +66,7 @@ section { padding: 80px 0; }
   background: var(--green); color: #fff;
   box-shadow: 0 4px 12px rgba(74,124,89,.3);
 }
-.btn-green:hover { background: #3a6647; transform: translateY(-2px); }
+.btn-green:hover { background: #1E2A44; transform: translateY(-2px); }
 .btn-outline {
   background: transparent; color: var(--brown);
   border: 2px solid var(--brown);
@@ -76,7 +77,7 @@ section { padding: 80px 0; }
   font-size: 1rem; padding: 16px 32px;
   box-shadow: 0 4px 16px rgba(74,124,89,.4);
 }
-.btn-store:hover { background: #3a6647; transform: translateY(-2px); }
+.btn-store:hover { background: #1E2A44; transform: translateY(-2px); }
 
 /* ─── Tags / Badges ─── */
 .tag {
@@ -111,7 +112,7 @@ section { padding: 80px 0; }
   transition: var(--transition);
 }
 .gnb-store-btn:hover,
-.gnb-menu a.gnb-store-btn:hover { background: #3a6647; color: #fff !important; }
+.gnb-menu a.gnb-store-btn:hover { background: #1E2A44; color: #fff !important; }
 .gnb-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
 .gnb-hamburger span { display: block; width: 24px; height: 2px; background: var(--brown); border-radius: 2px; transition: var(--transition); }
 
@@ -501,7 +502,7 @@ section { padding: 80px 0; }
   letter-spacing: 1px; text-transform: uppercase;
 }
 .ph-amount {
-  font-size: 1.55rem; font-weight: 900; color: #FFCB2F; line-height: 1;
+  font-size: 1.55rem; font-weight: 900; color: #F2E15C; line-height: 1;
 }
 .ph-note {
   font-size: .78rem; color: rgba(255,255,255,.6);
@@ -680,7 +681,7 @@ section { padding: 80px 0; }
 /* ─── Highlight Trust Card ─── */
 .trust-card-highlight {
   border: 2px solid var(--green);
-  background: linear-gradient(135deg, #f0faf4 0%, #e0f0e6 100%);
+  background: linear-gradient(135deg, #FBF3C2 0%, #F2E15C 100%);
   position: relative;
 }
 .trust-card-highlight::after {
@@ -778,7 +779,7 @@ section { padding: 80px 0; }
   box-shadow: 0 16px 48px rgba(107,76,53,.22);
 }
 .pkg-hero-card.featured {
-  background: linear-gradient(160deg, #fdf9f4 0%, #f5ede0 100%);
+  background: linear-gradient(160deg, #FBF7EE 0%, #ECE2CC 100%);
   border-color: var(--brown-light);
 }
 .pkg-hero-badge {
@@ -939,3 +940,10 @@ section { padding: 80px 0; }
 @media (max-width: 480px) {
   .pkg-age-options { grid-template-columns: 1fr; }
 }
+/* ─── 브랜드 개편 (2026-11) ─── */
+body{background-color:var(--beige);background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .3 0 0 0 .07 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>")}
+h1,h2{font-family:'Gowun Batang',serif;letter-spacing:-.5px;color:var(--brown)}
+.gnb-logo .bear-mini,.brand-name .bear-mini{width:36px;height:36px;display:inline-block;vertical-align:middle;border-radius:50%}
+.btn{border-radius:6px}
+.btn-primary:hover{background:var(--brown-dark)}
+::selection{background:var(--green-light);color:var(--brown)}
