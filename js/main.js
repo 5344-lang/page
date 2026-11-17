@@ -118,7 +118,7 @@ const QUIZ = {
     const av = this.avail();
     if (av.length === 1) { this.level = av[0]; return this.result(); }
     const opts = av.map(i => ({ v: i, label: this.LEVELS[i].label, sub: this.LEVELS[i].sub }));
-    this.render(this.progress(2) + `<div class="quiz-step active"><h4>얼마나 자세히 보고 싶으세요?</h4>${this.options(opts)}${this.back('step2')}</div>`,
+    this.render(this.progress(2) + `<div class="quiz-step active"><h4>얼마나 자세히 보고 싶으세요?</h4>${this.options(opts).replace('class="quiz-options"', `class="quiz-options qo-row" style="grid-template-columns:repeat(${opts.length},1fr)"`)}${this.back('step2')}</div>`,
       v => { this.level = +v; this.result(); });
   },
 
