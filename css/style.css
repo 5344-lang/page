@@ -947,3 +947,22 @@ h1,h2{font-family:'Gowun Batang',serif;letter-spacing:-.5px;color:var(--brown)}
 .btn{border-radius:6px}
 .btn-primary:hover{background:var(--brown-dark)}
 ::selection{background:var(--green-light);color:var(--brown)}
+
+/* ─── 맞춤 검사 찾기 결과 ─── */
+.quiz-back{display:block;margin:16px auto 0;background:none;border:none;color:var(--text-muted);font-size:.85rem;cursor:pointer;font-family:inherit}
+.qr-kicker{font-size:.85rem;color:var(--green);font-weight:700;margin-bottom:10px;text-align:center}
+.qr-card{background:var(--white);border:1px solid var(--beige-dark);border-radius:var(--radius);padding:20px;text-align:left;box-shadow:var(--shadow)}
+.qr-title{font-family:'Gowun Batang',serif;font-size:1.3rem;color:var(--brown);margin-bottom:10px}
+.qr-tests{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.qr-tests span{font-size:.8rem;font-weight:700;padding:4px 10px;border:1.5px solid var(--brown);border-radius:30px;color:var(--brown)}
+.qr-why{font-size:.85rem;line-height:1.6;margin-bottom:12px}
+.qr-pricebox{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1px dashed var(--beige-dark)}
+.qr-old{text-decoration:line-through;color:var(--text-muted);font-size:.9rem}
+.qr-price{font-size:1.5rem;color:var(--brown)}
+.qr-badge{background:var(--green-light);color:var(--brown);font-size:.75rem;font-weight:800;padding:3px 8px;border-radius:4px}
+.qr-note{font-size:.78rem;margin-top:8px}
+.qr-actions{display:grid;grid-template-columns:1.4fr 1fr;gap:8px;margin-top:14px}
+.qr-btn{justify-content:center;width:100%;white-space:nowrap;padding-left:12px;padding-right:12px}
+.qr-others{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.qr-alt{background:none;border:1px solid var(--beige-dark);border-radius:30px;padding:6px 12px;font-size:.8rem;color:var(--text);cursor:pointer;font-family:inherit}
+.qr-alt:hover{border-color:var(--brown)}

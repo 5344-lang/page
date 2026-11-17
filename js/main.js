@@ -25,235 +25,149 @@ revealEls.forEach(el => observer.observe(el));
 
 /* ─── Quiz Modal ─── */
 const QUIZ = {
-  Q2_OPTIONS: {
-    self: [
-      { value: 'emotion',      label: '😤 감정 조절이 어렵고 힘들어요' },
-      { value: 'personality',  label: '🤔 내 성격·기질이 궁금해요' },
-      { value: 'stress',       label: '😮‍💨 번아웃·스트레스가 심해요' },
-      { value: 'strength',     label: '⭐ 나만의 강점을 찾고 싶어요' }
-    ],
-    relation: [
-      { value: 'pattern',  label: '🔁 반복되는 관계 패턴이 있어요' },
-      { value: 'conflict', label: '💥 성격 차이로 갈등이 잦아요' },
-      { value: 'fear',     label: '💔 친밀한 관계가 두렵거나 힘들어요' },
-      { value: 'couple',   label: '💑 파트너·커플 관계가 어려워요' }
-    ],
-    learn: [
-      { value: 'focus',   label: '😴 집중력·동기가 부족해요' },
-      { value: 'method',  label: '📖 내게 맞는 공부법을 모르겠어요' },
-      { value: 'anxiety', label: '😰 시험 불안·긴장이 심해요' },
-      { value: 'career',  label: '🧭 진로·전공 방향이 막막해요' },
-      { value: 'adapt',   label: '🏛️ 학교·대학 생활 적응이 어려워요' }
-    ],
-    child: [
-      { value: 'infant',     label: '🍼 영아·유아 자녀 (0 ~ 7세)' },
-      { value: 'child_age',  label: '👧 아동 자녀 (8 ~ 12세)' },
-      { value: 'teen_child', label: '🎒 청소년 자녀 (13 ~ 18세)' }
-    ]
-  },
+  NAMES: { tci:'TCI 기질·성격', kocean:'K-OCEAN 5요인 성격', golden:'GOLDEN 성격유형', rs:'RS 회복탄력성', kiri:'KiRi 대인관계', pai:'PAI 성격평가', cst:'CST 성격강점', sct:'SCT 문장완성', mlst:'MLST-II 학습전략', kcmii:'KCMII-2 전공선택', sts:'STS 6요인 기질', pat:'PAT-2 부모양육태도', neo:'NEO 성격', mindfit:'MindFit 적응역량', cat:'CAT-2 대학적응력', ieej:'IEEJ 직무스트레스' },
+  HREF: { tci:'tci', kocean:'kocean', golden:'golden', rs:'rs', kiri:'kiri', pai:'pai', cst:'cst', sct:'sct', mlst:'mlst', kcmii:'kcmii', sts:'sts', pat:'pat', neo:'neo', mindfit:'mindfit', cat:'cat', ieej:'ieej' },
 
-  TESTS: {
-    tci: {
-      young:   { emoji:'🧬', title:'JTCI 유아·아동 기질검사',  desc:'아이의 타고난 기질을 7차원으로 분석해 행동과 감정의 뿌리를 이해합니다.',  href:'pages/tci.html' },
-      teen:    { emoji:'🧬', title:'JTCI 12-18 기질검사',      desc:'청소년기 기질과 성격을 7차원으로 분석해 반복 패턴의 원인을 파악합니다.', href:'pages/tci.html' },
-      college: { emoji:'🧬', title:'TCI 기질 및 성격검사',     desc:'타고난 기질과 성장한 성격을 7차원으로 입체 분석합니다.',                  href:'pages/tci.html' },
-      adult:   { emoji:'🧬', title:'TCI 기질 및 성격검사',     desc:'타고난 기질과 성장한 성격을 7차원으로 입체 분석합니다.',                  href:'pages/tci.html' }
-    },
-    kocean: { _: { emoji:'🌊', title:'K-OCEAN 5요인 성격검사',   desc:'현재 드러나는 성격을 개방성·성실성·외향성·친화성·신경증 5차원으로 측정합니다.', href:'pages/kocean.html' } },
-    golden: { _: { emoji:'✨', title:'GOLDEN 골든성격유형검사',   desc:'4가지 성격 유형 선호로 나의 심리 에너지와 의사결정 방식을 파악합니다.',      href:'pages/golden.html' } },
-    rs:     { _: { emoji:'💚', title:'RS 회복탄력성검사',         desc:'역경을 이겨내는 심리적 회복 능력을 측정하고 강화 방법을 찾습니다.',          href:'pages/rs.html' } },
-    kiri:   { _: { emoji:'🤝', title:'KiRi 통합적 대인관계검사',  desc:'나의 대인관계 패턴과 핵심 욕구를 통합적으로 분석합니다.',                   href:'pages/kiri.html' } },
-    pai: {
-      young:   { emoji:'🔬', title:'PAI-A 청소년 성격평가', desc:'청소년 성격 전반과 임상적 특성을 정밀 측정합니다.', href:'pages/pai.html' },
-      teen:    { emoji:'🔬', title:'PAI-A 청소년 성격평가', desc:'청소년 성격 전반과 임상적 특성을 정밀 측정합니다.', href:'pages/pai.html' },
-      college: { emoji:'🔬', title:'PAI 성격평가 질문지',   desc:'성인 성격 전반과 임상적 특성을 정밀 측정합니다.',   href:'pages/pai.html' },
-      adult:   { emoji:'🔬', title:'PAI 성격평가 질문지',   desc:'성인 성격 전반과 임상적 특성을 정밀 측정합니다.',   href:'pages/pai.html' }
-    },
-    cst:   { _: { emoji:'⭐', title:'CST 성격강점검사',      desc:'VIA 강점 모델로 나만의 고유한 강점을 발견하고 활용 방법을 찾습니다.',      href:'pages/cst.html' } },
-    sct:   { _: { emoji:'💬', title:'SCT 문장완성검사',       desc:'미완성 문장을 완성하며 무의식적 욕구와 감정을 탐색합니다.',                href:'pages/sct.html' } },
-    mlst:  { _: { emoji:'📚', title:'MLST-II 학습전략검사',  desc:'동기·인지·행동·정서 4대 학습 전략을 과학적으로 진단합니다.',             href:'pages/mlst.html' } },
-    kcmii: { _: { emoji:'🎓', title:'KCMII-2 전공선택검사', desc:'활동·직업·전공교과 3가지 선호도로 흥미·적성에 맞는 전공과 직업 방향을 탐색합니다.',  href:'pages/kcmii.html' } },
-    sts: {
-      young: { emoji:'🦎', title:'STS 6요인 기질검사 (영아·유아)', desc:'0~7세 자녀의 타고난 기질을 6요인·동물 유형으로 직관적으로 이해합니다.',  href:'pages/sts.html' },
-      _:     { emoji:'🦎', title:'STS 6요인 기질검사',             desc:'타고난 기질을 6가지 요인과 동물 유형으로 직관적으로 이해합니다.',          href:'pages/sts.html' }
-    },
-    neo:     { _: { emoji:'🔭', title:'NEO 네오 성격검사',             desc:'신경질·외향성·개방성·우호성·성실성 5요인 30하위요인으로 성격을 정밀 분석합니다.',           href:'pages/neo.html'     } },
-    mindfit: { _: { emoji:'🧩', title:'MindFit 마인드핏 적응역량검사', desc:'학교 적응도와 심리적 자원을 3개 영역으로 측정하고 개입 방향을 제시합니다.',              href:'pages/mindfit.html' } },
-    cat:     { _: { emoji:'🏛️', title:'CAT-2 대학적응력검사',          desc:'대학 적응력과 중도탈락 위험도를 진단하고 학생지원의 구체적 방향을 제시합니다.',          href:'pages/cat.html'     } },
-    ieej:    { _: { emoji:'💼', title:'IEEJ 통합직무스트레스검사',      desc:'감정노동·번아웃을 4개 척도로 다면 분석하여 심리적 개입 우선순위를 제시합니다.',         href:'pages/ieej.html'    } },
-    pat:     { _: { emoji:'🏠', title:'PAT-2 부모양육태도검사',         desc:'부모의 양육 방식과 태도를 과학적으로 진단하고 건강한 양육 방향을 찾습니다.',             href:'pages/pat.html'     } }
+  Q1: [
+    { v:'self',    label:'나 자신' },
+    { v:'couple',  label:'커플 · 부부' },
+    { v:'child',   label:'우리 아이' },
+    { v:'student', label:'학생 (진로·학업)' },
+  ],
+  Q2: {
+    self: { q:'지금 가장 큰 고민은 무엇인가요?', opts:[
+      { v:'personality', label:'내 성격과 타고난 기질이 궁금해요' },
+      { v:'mind',        label:'마음이 지치고 감정 조절이 힘들어요' },
+      { v:'relation',    label:'사람 관계가 자꾸 비슷하게 꼬여요' },
+      { v:'work',        label:'직장 스트레스·번아웃이 심해요' },
+      { v:'career',      label:'진로·이직 방향을 다시 잡고 싶어요' },
+      { v:'univ',        label:'대학 생활 적응이 어려워요' },
+    ]},
+    couple: { q:'어떤 상황인가요?', opts:[
+      { v:'fight',   label:'같은 일로 자주 다퉈요' },
+      { v:'marry',   label:'결혼 전에 서로를 알고 싶어요' },
+      { v:'check',   label:'지금 관계를 점검하고 싶어요' },
+    ]},
+    child: { q:'아이가 몇 살인가요?', opts:[
+      { v:'infant', label:'0~7세 (영유아)' },
+      { v:'school', label:'8~12세 (초등)' },
+      { v:'teen',   label:'13~18세 (청소년)' },
+    ]},
+    student: { q:'무엇이 가장 고민인가요?', opts:[
+      { v:'career', label:'전공·진로를 못 정하겠어요' },
+      { v:'study',  label:'공부법·집중력이 고민이에요' },
+      { v:'mental', label:'시험 때마다 멘탈이 흔들려요' },
+    ]},
   },
-
-  PRIMARY: {
-    'self+emotion':'tci',   'self+personality':'tci',  'self+stress':'rs',    'self+strength':'cst',
-    'relation+pattern':'kiri','relation+conflict':'tci','relation+fear':'kiri','relation+couple':'tci',
-    'learn+focus':'mlst',   'learn+method':'mlst',     'learn+anxiety':'rs',  'learn+career':'kcmii',
-    'learn+adapt':'cat',
-    'child+behavior':'tci', 'child+comm':'tci',        'child+school':'tci',  'child+emotion_child':'tci'
+  // 경로별 [가볍게(단품), 기본, 깊게]
+  MAP: {
+    'self+personality': ['kocean', 'pkg_personality', 'pkg_neo'],
+    'self+mind':        ['rs', 'pkg_mental', 'pkg_deepdive'],
+    'self+relation':    ['kiri', 'pkg_relation1', 'pkg_relation'],
+    'self+work':        ['ieej', 'pkg_burnout', 'pkg_work'],
+    'self+career':      ['kcmii', 'pkg_career', null],
+    'self+univ':        ['cat', 'pkg_univ', null],
+    'couple+fight':     [null, 'pkg_couple', null],
+    'couple+marry':     [null, 'pkg_couple', null],
+    'couple+check':     [null, 'pkg_couple', null],
+    'child+infant':     ['sts', 'pkg_parenting_infant', null],
+    'child+school':     ['tci', 'pkg_parenting_school', null],
+    'child+teen':       ['tci', 'pkg_teen', 'pkg_parenting_school'],
+    'student+career':   ['kcmii', 'pkg_career', 'pkg_exam'],
+    'student+study':    ['mlst', 'pkg_exam', null],
+    'student+mental':   ['rs', 'pkg_exam', null],
   },
-
-  SECONDARY: {
-    tci:     { deep:'kocean',  action:'cst',    precise:'pai',    strength:'cst'    },
-    rs:      { deep:'tci',     action:'mlst',   precise:'pai',    strength:'cst'    },
-    cst:     { deep:'tci',     action:'golden', precise:'tci',    strength:'golden' },
-    kiri:    { deep:'tci',     action:'golden', precise:'pai',    strength:'cst'    },
-    mlst:    { deep:'tci',     action:'cst',    precise:'kocean', strength:'cst'    },
-    kcmii:   { deep:'tci',     action:'cst',    precise:'kocean', strength:'cst'    },
-    cat:     { deep:'mindfit', action:'rs',     precise:'mlst',   strength:'cst'    },
-    neo:     { deep:'tci',     action:'kocean', precise:'golden', strength:'cst'    },
-    mindfit: { deep:'cat',     action:'rs',     precise:'mlst',   strength:'cst'    },
-    ieej:    { deep:'tci',     action:'rs',     precise:'pai',    strength:'cst'    }
-  },
-
-  SEC_OVERRIDE: {
-    'self+emotion':       { deep:'pai',     action:'rs',      precise:'pai',    strength:'cst'    },
-    'self+personality':   { deep:'neo',     action:'kocean',  precise:'golden', strength:'cst'    },
-    'self+stress':        { deep:'tci',     action:'ieej',    precise:'pai',    strength:'rs'     },
-    'relation+fear':      { deep:'pai',     action:'tci',     precise:'pai',    strength:'rs'     },
-    'relation+couple':    { deep:'kiri',    action:'golden',  precise:'kiri',   strength:'cst'    },
-    'learn+focus':        { deep:'mindfit', action:'mlst',    precise:'tci',    strength:'cst'    },
-    'learn+anxiety':      { deep:'tci',     action:'mlst',    precise:'pai',    strength:'cst'    },
-    'learn+career':       { deep:'tci',     action:'kcmii',   precise:'cat',    strength:'cst'    },
-    'learn+adapt':        { deep:'mindfit', action:'rs',      precise:'mlst',   strength:'cst'    },
-    'child+behavior':     { deep:'pai',     action:'kiri',    precise:'pai',    strength:'cst'    },
-    'child+comm':         { deep:'kiri',    action:'kiri',    precise:'pai',    strength:'golden' },
-    'child+school':       { deep:'mlst',    action:'mlst',    precise:'pai',    strength:'cst'    },
-    'child+emotion_child':{ deep:'pai',     action:'rs',      precise:'pai',    strength:'cst'    }
-  },
-
-  PACKAGE: {
-    'self+emotion':'pkg_mental',        'self+personality':'pkg_neo',
-    'self+stress':'pkg_burnout',        'self+strength':'pkg_personality',
-    'relation+pattern':'pkg_relation1',  'relation+conflict':'pkg_relation1',
-    'relation+fear':'pkg_relation1',    'relation+couple':'pkg_couple',
-    'learn+focus':'pkg_exam',           'learn+method':'pkg_exam',
-    'learn+anxiety':'pkg_exam',         'learn+career':'pkg_career',
-    'learn+adapt':'pkg_univ',
-    'child+behavior':'pkg_parenting',   'child+comm':'pkg_parenting',
-    'child+school':'pkg_parenting',     'child+emotion_child':'pkg_parenting'
-  },
-
-  q1:null, q2:null, q3:null, _lastPkgKey:null,
-
-  getTest(key) {
-    const t = this.TESTS[key]; if (!t) return null;
-    const age = this.q1 === 'child' ? 'young' : 'adult';
-    return t[age] || t._ || null;
-  },
-
-  lookup() {
-    // 자녀 이해: q2 = 자녀 나이 → 나이별 검사 직접 매핑
-    if (this.q1 === 'child') {
-      const age = this.q2;
-      let t1, t2;
-      if (age === 'infant') {
-        t1 = this.TESTS.sts.young;
-        t2 = this.TESTS.pat._;
-        return { t1, t2, pkgKey: 'pkg_parenting_infant' };
-      } else if (age === 'child_age') {
-        t1 = this.TESTS.tci.young;
-        t2 = this.TESTS.pai.young;
-      } else { // teen_child
-        t1 = this.TESTS.tci.teen;
-        t2 = this.TESTS.pai.teen;
-      }
-      return { t1, t2, pkgKey: 'pkg_parenting_school' };
-    }
-    const path = `${this.q1}+${this.q2}`;
-    const pKey = this.PRIMARY[path]; if (!pKey) return null;
-    const ov   = this.SEC_OVERRIDE[path] || {};
-    const sKey = ov[this.q3] || (this.SECONDARY[pKey] || {})[this.q3];
-    const pkgKey = this.PACKAGE[path];
-    return { t1: this.getTest(pKey), t2: this.getTest(sKey), pkgKey };
-  },
+  LEVELS: [
+    { label:'가볍게', sub:'검사 1개로 핵심만' },
+    { label:'기본',   sub:'2~3개 묶음으로 원인까지' },
+    { label:'깊게',   sub:'더 넓게, 더 깊이' },
+  ],
 
   init() {
-    document.querySelectorAll('[data-quiz-open]').forEach(b => b.addEventListener('click', () => this.open()));
+    document.querySelectorAll('[data-quiz-open]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); this.open(); }));
     const ov = document.getElementById('quizOverlay');
     document.getElementById('quizClose')?.addEventListener('click', () => this.close());
     ov?.addEventListener('click', e => { if (e.target === ov) this.close(); });
-
-    document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected'); this.q1 = btn.dataset.value;
-        setTimeout(() => { this.renderQ2(); this.goStep(1); }, 280);
-      });
-    });
-    document.querySelectorAll('.quiz-step[data-step="2"] .quiz-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.quiz-step[data-step="2"] .quiz-option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected'); this.q3 = btn.dataset.value;
-        setTimeout(() => this.showResult(), 280);
-      });
-    });
-    document.getElementById('quizRetry')?.addEventListener('click', () => this.reset());
-    document.getElementById('result1Link')?.addEventListener('click', () => this.close());
-    document.getElementById('result2Link')?.addEventListener('click', () => this.close());
-    document.getElementById('resultPkgBtn')?.addEventListener('click', () => {
-      this.close();
-      if (this._lastPkgKey) setTimeout(() => openPkgModal(this._lastPkgKey), 120);
-    });
   },
-
-  open()  { this.reset(); document.getElementById('quizOverlay').classList.add('open'); },
+  open()  { this.q1 = this.q2 = null; this.level = 1; this.step1(); document.getElementById('quizOverlay').classList.add('open'); },
   close() { document.getElementById('quizOverlay').classList.remove('open'); },
 
-  reset() {
-    this.q1 = this.q2 = this.q3 = this._lastPkgKey = null;
-    document.querySelectorAll('.quiz-step[data-step="0"] .quiz-option, .quiz-step[data-step="2"] .quiz-option').forEach(b => b.classList.remove('selected'));
-    const q2c = document.getElementById('q2Options'); if (q2c) q2c.innerHTML = '';
-    document.getElementById('quizResult').classList.remove('show');
-    this.goStep(0);
+  progress(n) { return `<div class="quiz-progress">${[0,1,2].map(i => `<span class="${i < n ? 'done' : ''}"></span>`).join('')}</div>`; },
+  options(list, fn) {
+    return `<div class="quiz-options">${list.map(o => `<button class="quiz-option" data-v="${o.v}">${o.label}${o.sub ? `<small style="display:block;font-weight:400;opacity:.7">${o.sub}</small>` : ''}</button>`).join('')}</div>`;
+  },
+  render(html, onPick) {
+    const body = document.getElementById('quizBody'); body.innerHTML = html;
+    body.querySelectorAll('.quiz-option').forEach(b => b.addEventListener('click', () => { b.classList.add('selected'); setTimeout(() => onPick(b.dataset.v), 180); }));
+    body.querySelector('[data-back]')?.addEventListener('click', () => this[body.querySelector('[data-back]').dataset.back]());
+  },
+  back(to) { return `<button type="button" class="quiz-back" data-back="${to}">← 이전</button>`; },
+
+  step1() {
+    this.render(this.progress(0) + `<div class="quiz-step active"><h4>누구를 위한 검사인가요?</h4>${this.options(this.Q1)}</div>`,
+      v => { this.q1 = v; this.step2(); });
+  },
+  step2() {
+    const q = this.Q2[this.q1];
+    this.render(this.progress(1) + `<div class="quiz-step active"><h4>${q.q}</h4>${this.options(q.opts)}${this.back('step1')}</div>`,
+      v => { this.q2 = v; this.step3(); });
+  },
+  avail() { return (this.MAP[`${this.q1}+${this.q2}`] || []).map((k, i) => k ? i : -1).filter(i => i >= 0); },
+  step3() {
+    const av = this.avail();
+    if (av.length === 1) { this.level = av[0]; return this.result(); }
+    const opts = av.map(i => ({ v: i, label: this.LEVELS[i].label, sub: this.LEVELS[i].sub }));
+    this.render(this.progress(2) + `<div class="quiz-step active"><h4>얼마나 자세히 보고 싶으세요?</h4>${this.options(opts)}${this.back('step2')}</div>`,
+      v => { this.level = +v; this.result(); });
   },
 
-  goStep(idx) {
-    document.querySelectorAll('.quiz-step').forEach((s,i) => s.classList.toggle('active', i === idx));
-    document.querySelectorAll('.quiz-progress span').forEach((b,i) => b.classList.toggle('done', i < idx));
-  },
-
-  renderQ2() {
-    const opts = this.Q2_OPTIONS[this.q1] || [];
-    const c = document.getElementById('q2Options'); if (!c) return;
-    c.innerHTML = opts.map(o => `<button class="quiz-option" data-value="${o.value}">${o.label}</button>`).join('');
-    c.querySelectorAll('.quiz-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        c.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected'); this.q2 = btn.dataset.value;
-        if (this.q1 === 'child') {
-          // 자녀 나이만으로 바로 결과 표시 (q3 생략)
-          this.q3 = 'deep';
-          setTimeout(() => this.showResult(), 280);
-        } else {
-          setTimeout(() => this.goStep(2), 280);
-        }
-      });
-    });
-  },
-
-  showResult() {
-    const r = this.lookup();
-    if (!r || !r.t1 || !r.t2) return;
-    this._lastPkgKey = r.pkgKey;
-    document.getElementById('result1Emoji').textContent = r.t1.emoji;
-    document.getElementById('result1Title').textContent = r.t1.title;
-    document.getElementById('result1Desc').textContent  = r.t1.desc;
-    document.getElementById('result1Link').href = r.t1.href;
-    document.getElementById('result2Emoji').textContent = r.t2.emoji;
-    document.getElementById('result2Title').textContent = r.t2.title;
-    document.getElementById('result2Desc').textContent  = r.t2.desc;
-    document.getElementById('result2Link').href = r.t2.href;
-    const pkg = PKG_INFO[r.pkgKey];
-    if (pkg) {
-      document.getElementById('resultPkgEmoji').textContent = pkg.icon;
-      document.getElementById('resultPkgTitle').textContent = pkg.title;
-      document.getElementById('resultPkgDesc').textContent  = (pkg.why || '').slice(0, 55) + '…';
+  item(key) {
+    const prices = JSON.parse(localStorage.getItem('ttok_live_prices') || 'null') || (typeof TEST_PRICES !== 'undefined' ? TEST_PRICES : {});
+    if (key.startsWith('pkg_')) {
+      const p = PKG_INFO[key]; const { total, discounted, rate } = computePkgPrice(p.testKeys);
+      const tests = [...new Set(p.testKeys)].map(k => this.NAMES[k] || k);
+      return { type:'pkg', key, title:p.title.replace(/^[^가-힣A-Za-z]+/, ''), tests, why:p.why || '', total, price:discounted, rate };
     }
-    document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
-    document.getElementById('quizResult').classList.add('show');
-    document.querySelectorAll('.quiz-progress span').forEach(b => b.classList.add('done'));
-  }
+    const price = prices[key]?.price || 0;
+    return { type:'unit', key, title:this.NAMES[key] + ' 검사', tests:[this.NAMES[key]], why:'', total:price, price, rate:0 };
+  },
+  won(n) { return '₩' + n.toLocaleString('ko-KR'); },
 
+  result() {
+    const map = this.MAP[`${this.q1}+${this.q2}`];
+    const r = this.item(map[this.level]);
+    const others = this.avail().filter(i => i !== this.level);
+    const priceHtml = r.rate > 0
+      ? `<span class="qr-old">${this.won(r.total)}</span> <b class="qr-price">${this.won(r.price)}</b> <span class="qr-badge">${Math.round(r.rate * 100)}% 할인</span>`
+      : `<b class="qr-price">${this.won(r.price)}</b>`;
+    const detail = r.type === 'pkg'
+      ? `<button type="button" class="btn btn-outline qr-btn" id="qrDetail">구성 자세히</button>`
+      : `<a class="btn btn-outline qr-btn" href="pages/${this.HREF[r.key]}.html">검사 자세히</a>`;
+    this.render(this.progress(3) + `
+      <div class="quiz-result show">
+        <p class="qr-kicker">${this.LEVELS[this.level].label} 보기 · 이렇게 받아 보세요</p>
+        <div class="qr-card">
+          <h4 class="qr-title">${r.title}</h4>
+          <div class="qr-tests">${r.tests.map(t => `<span>${t}</span>`).join('')}</div>
+          ${r.why ? `<p class="qr-why">${r.why.length > 90 ? r.why.slice(0, 90) + '…' : r.why}</p>` : ''}
+          <div class="qr-pricebox">${priceHtml}</div>
+          <p class="qr-note">결과지 + 종합 해석 보고서 + AI 해석 프롬프트 포함</p>
+        </div>
+        <div class="qr-actions">
+          <button type="button" class="btn btn-primary qr-btn" id="qrAdd">장바구니에 담기</button>
+          ${detail}
+        </div>
+        ${others.length ? `<div class="qr-others">${others.map(i => `<button type="button" class="qr-alt" data-lv="${i}">${this.LEVELS[i].label} 보기로 바꾸기</button>`).join('')}</div>` : ''}
+        ${this.back('step2')}
+      </div>`, () => {});
+    const body = document.getElementById('quizBody');
+    body.querySelector('#qrAdd').addEventListener('click', () => {
+      quickAddCart(r.key, r.type === 'pkg' ? 'pkg' : 'unit');
+      setTimeout(() => { location.href = 'pages/cart.html'; }, 500);
+    });
+    body.querySelector('#qrDetail')?.addEventListener('click', () => { this.close(); setTimeout(() => openPkgModal(r.key), 120); });
+    body.querySelectorAll('.qr-alt').forEach(b => b.addEventListener('click', () => { this.level = +b.dataset.lv; this.result(); }));
+  }
 };
 
 /* ─── Package Price Calculator ─── */
