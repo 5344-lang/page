@@ -75,7 +75,17 @@
             <button class="pkg-age-cta" data-pkg="pkg_parenting_infant">상세 보기 →</button>
           </div>
           <div class="pkg-age-option">
-            <div class="pkg-age-label">📚 학령기 (8~18세)</div>
+            <div class="pkg-age-label">🎒 초등 (8~12세)</div>
+            <div class="pkg-age-tests">
+              <span class="tag tag-brown">JTCI</span>
+              <span class="tag tag-green">RS</span>
+              <span class="tag tag-brown">PAT-2</span>
+            </div>
+            <div class="pkg-age-price" id="priceElem">—</div>
+            <button class="pkg-age-cta" data-pkg="pkg_parenting_elem">상세 보기 →</button>
+          </div>
+          <div class="pkg-age-option">
+            <div class="pkg-age-label">📚 중·고등 (13~18세)</div>
             <div class="pkg-age-tests">
               <span class="tag tag-brown">JTCI</span>
               <span class="tag tag-green">PAI-A</span>
@@ -282,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
       : `<span class="pkg-age-disc">₩${total.toLocaleString('ko-KR')}</span>`;
   }
   renderAgePkgPrice('priceInfant', ['sts', 'pat']);
+  renderAgePkgPrice('priceElem', ['tci', 'rs', 'pat']);
   renderAgePkgPrice('priceSchool', ['tci', 'pai', 'pat']);
 });
 </script>

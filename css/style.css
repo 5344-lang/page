@@ -899,7 +899,7 @@ section { padding: 80px 0; }
 /* ─── 성장·양육 패키지 연령별 분리 옵션 ─── */
 .pkg-age-options {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
   margin-top: 16px;
 }

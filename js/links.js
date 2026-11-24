@@ -32,6 +32,7 @@ const STORE_LINKS = {
   pkg_exam:        CONTACT_URL,
   pkg_parenting:         CONTACT_URL,
   pkg_parenting_infant:  CONTACT_URL,
+  pkg_parenting_elem:    CONTACT_URL,
   pkg_parenting_school:  CONTACT_URL,
   pkg_career:            CONTACT_URL,
   pkg_univ:        CONTACT_URL,
