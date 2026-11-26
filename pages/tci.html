@@ -2,7 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TCI 기질 및 성격검사 — 똑심마인드</title>
   <meta name="description" content="Cloninger 박사의 심리생물학적 모델 기반. 타고난 기질 4차원 + 성장한 성격 3차원. 전 생애 연령별 JTCI/TCI-RS 8P 정밀 리포트 제공.">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -17,20 +19,23 @@
     <a href="../index.html" class="gnb-logo"><img src="../assets/logo.png" alt="" class="bear-mini"> 똑심마인드</a>
     <div class="gnb-menu">
       <a href="../index.html">맞춤 검사 찾기</a>
-      <a href="packages.html">추천 패키지</a>
+      <a href="packages.html">패키지</a>
       <a href="tests.html">전체 검사</a>
-      <a href="cart.html">검사 담기</a>
-      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">문의하기</a>
+      <a href="cart.html">장바구니</a>
+      <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="gnb-store-btn">문의하기</a>
     </div>
+    <button type="button" class="gnb-mobile-cta" data-quiz-open>맞춤 추천</button>
     <button class="gnb-hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
   <a href="../index.html">맞춤 검사 찾기</a>
-  <a href="packages.html">추천 패키지</a>
+  <a href="packages.html">패키지</a>
   <a href="tests.html">전체 검사</a>
-  <a href="cart.html">검사 담기</a>
-  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">문의하기</a>
+  <a href="cart.html">장바구니</a>
+  <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer">문의하기</a>
 </div>
 
 <!-- TEST HERO -->
@@ -94,14 +99,14 @@
     </div>
     <p class="sample-sub">구매 전 샘플을 확인하고 결정하세요. 유아용·아동용·청소년용·성인용 모두 제공됩니다.</p>
     <div class="sample-btns">
-      <a href="../samples/JTCI_young_result.pdf" target="_blank" class="btn-sample">JTCI 유아용 결과지</a>
-      <a href="../samples/JTCI_child_result.pdf" target="_blank" class="btn-sample">JTCI 아동용 결과지</a>
-      <a href="../samples/JTCI_teen_result.pdf" target="_blank" class="btn-sample">JTCI 청소년용 결과지</a>
-      <a href="../samples/TCI_adult_result.pdf" target="_blank" class="btn-sample">TCI 성인용 결과지</a>
-      <a href="../samples/TCI_young_report.pdf" target="_blank" class="btn-sample">해석상담보고서 유아용</a>
-      <a href="../samples/TCI_child_report.pdf" target="_blank" class="btn-sample">해석상담보고서 아동용</a>
-      <a href="../samples/TCI_teen_report.pdf" target="_blank" class="btn-sample">해석상담보고서 청소년용</a>
-      <a href="../samples/TCI_adult_report.pdf" target="_blank" class="btn-sample">해석상담보고서 성인용</a>
+      <a href="../samples/JTCI_young_result.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">JTCI 유아용 결과지</a>
+      <a href="../samples/JTCI_child_result.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">JTCI 아동용 결과지</a>
+      <a href="../samples/JTCI_teen_result.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">JTCI 청소년용 결과지</a>
+      <a href="../samples/TCI_adult_result.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">TCI 성인용 결과지</a>
+      <a href="../samples/TCI_young_report.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">해석상담보고서 유아용</a>
+      <a href="../samples/TCI_child_report.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">해석상담보고서 아동용</a>
+      <a href="../samples/TCI_teen_report.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">해석상담보고서 청소년용</a>
+      <a href="../samples/TCI_adult_report.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">해석상담보고서 성인용</a>
     </div>
     <div style="margin-top:20px; background:#EEF7F2; border-left:4px solid var(--green); border-radius:0 10px 10px 0; padding:16px 20px; font-size:.87rem; color:var(--text-muted); line-height:1.8;">
       <strong style="color:var(--green); display:block; margin-bottom:6px;">📋 결과 제공 방식</strong>
@@ -203,7 +208,7 @@
         <div class="test-card-meta">
           <span class="tag tag-brown">부모 보고형</span><span class="tag tag-green">양육 가이드 포함</span>
         </div>
-        <a href="https://kmong.com/gig/766983" target="_blank" class="btn btn-store">문의하기</a>
+        <a href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-store">문의하기</a>
       </div>
       <div class="test-card">
         <div class="test-card-icon">🧒</div>
@@ -212,7 +217,7 @@
         <div class="test-card-meta">
           <span class="tag tag-brown">자기 보고형</span><span class="tag tag-green">학습·사회성 지도</span>
         </div>
-        <a href="https://kmong.com/gig/766983" target="_blank" class="btn btn-store">문의하기</a>
+        <a href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-store">문의하기</a>
       </div>
       <div class="test-card">
         <div class="test-card-icon">🎒</div>
@@ -221,7 +226,7 @@
         <div class="test-card-meta">
           <span class="tag tag-brown">자기 보고형</span><span class="tag tag-green">진로 탐색</span>
         </div>
-        <a href="https://kmong.com/gig/766983" target="_blank" class="btn btn-store">문의하기</a>
+        <a href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-store">문의하기</a>
       </div>
       <div class="test-card">
         <div class="test-card-icon">🧑</div>
@@ -230,7 +235,7 @@
         <div class="test-card-meta">
           <span class="tag tag-brown">자기 보고형</span><span class="tag tag-green">자기 성장</span>
         </div>
-        <a href="https://kmong.com/gig/766983" target="_blank" class="btn btn-store">문의하기</a>
+        <a href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-store">문의하기</a>
       </div>
     </div>
   </div>
@@ -266,12 +271,25 @@
   </div>
 </section>
 
+<!-- 키즈 안내 -->
+<section style="padding:32px 0 0;">
+  <div class="container">
+    <div class="quiz-banner reveal">
+      <div class="quiz-banner-text">
+        <h3>아이의 공부 습관·학습 방법이 궁금하다면</h3>
+        <p>JTCI로 아이의 기질을 봤다면, 학년별 학습검사와 공부법 해석지는 똑심마인드 키즈에서 이어서 볼 수 있어요.</p>
+      </div>
+      <a href="https://5344-lang.github.io/kids/" class="btn btn-primary" style="background:#fff; color:var(--brown); white-space:nowrap;">똑심마인드 키즈 보기 →</a>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-section">
   <div class="container">
     <h2>나의 하드웨어를 먼저 이해하세요 🧬</h2>
     <p>TCI 정밀 리포트 + 해석상담보고서 + AI 해석 프롬프트 + 리뷰 약속 시 SCT 무료 증정</p>
-    <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="btn btn-store">문의하기</a>
+    <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-store">문의하기</a>
   </div>
 </section>
 
@@ -282,10 +300,10 @@
       <div style="display:flex; gap:20px; flex-wrap:wrap;">
         <a href="../index.html" style="color:rgba(255,255,255,.7); font-size:.85rem;">홈으로</a>
         <a href="packages.html" style="color:rgba(255,255,255,.7); font-size:.85rem;">추천 패키지</a>
-        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" style="color:rgba(255,255,255,.7); font-size:.85rem;">문의하기</a>
+        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.7); font-size:.85rem;">문의하기</a>
       </div>
     </div>
-    <div class="footer-bottom"><p>© 2025 똑심마인드. All rights reserved.</p></div>
+    <div class="footer-bottom"><p>© 2026 똑심마인드. All rights reserved.</p></div>
   </div>
 </footer>
 

@@ -2,7 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>똑심마인드 — 나를 이해하는 과학적인 심리검사</title>
   <meta name="description" content="TCI 기질 및 성격검사, K-OCEAN, GOLDEN 등 검증된 심리검사를 통해 진짜 나를 만나보세요. 개인 맞춤 정밀 리포트 + AI 해석 프롬프트 제공.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -20,14 +22,17 @@
     </a>
 
     <div class="gnb-menu">
-      <a href="#" data-quiz-open>맞춤 검사 찾기</a>
-      <a href="pages/packages.html">추천 패키지</a>
+      <a href="#" data-quiz-open>맞춤 추천</a>
+      <a href="pages/packages.html">패키지</a>
       <a href="pages/tests.html">전체 검사</a>
-      <a href="pages/cart.html">검사 담기</a>
-      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">
+      <a href="pages/cart.html">장바구니</a>
+      <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="gnb-store-btn">
         문의하기
       </a>
     </div>
+
+    <button type="button" class="gnb-mobile-cta" data-quiz-open>맞춤 추천</button>
 
     <button class="gnb-hamburger" id="hamburger" aria-label="메뉴 열기">
       <span></span><span></span><span></span>
@@ -36,11 +41,12 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#" data-quiz-open>맞춤 검사 찾기</a>
-  <a href="pages/packages.html">추천 패키지</a>
+  <a href="#" data-quiz-open>맞춤 추천</a>
+  <a href="pages/packages.html">패키지</a>
   <a href="pages/tests.html">전체 검사</a>
-  <a href="pages/cart.html">검사 담기</a>
-  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">문의하기</a>
+  <a href="pages/cart.html">장바구니</a>
+  <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer">문의하기</a>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -66,7 +72,7 @@
         <div class="hero-ctas">
           <button class="btn btn-primary btn-lg-cta" data-quiz-open>나에게 맞는 검사 찾기
           </button>
-          <a href="https://kmong.com/gig/766983" target="_blank" class="btn btn-outline btn-lg-cta" style="border-color:var(--brown-light); color:var(--brown);">먼저 문의하기
+          <a href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg-cta" style="border-color:var(--brown-light); color:var(--brown);">먼저 문의하기
           </a>
         </div>
         <div class="hero-stats">
@@ -88,6 +94,43 @@
       <div class="hero-visual">
         <img src="assets/logo-lg.png" alt="똑심마인드" style="width:clamp(160px,40vw,300px);margin:0 auto;filter:drop-shadow(0 12px 24px rgba(0,0,0,.25));">
       </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══════════════════════════════════════
+     SHORTCUT CARDS
+══════════════════════════════════════ -->
+<section class="home-entry" id="start">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom:28px;">
+      <div class="pre-label">시작하기</div>
+      <h2>누구를 위한 검사인가요?</h2>
+      <p>고르면 맞는 검사와 패키지를 바로 추천해 드려요.</p>
+    </div>
+    <div class="audience-grid">
+      <button type="button" class="audience-card reveal" data-audience="self"><span class="aud-ic">🙋</span><b>나 자신</b><small>성격·마음·관계·진로</small></button>
+      <button type="button" class="audience-card reveal" data-audience="couple"><span class="aud-ic">💑</span><b>커플 · 부부</b><small>서로의 기질 차이 이해</small></button>
+      <button type="button" class="audience-card reveal" data-audience="child"><span class="aud-ic">🧸</span><b>우리 아이</b><small>기질과 양육태도 이해</small></button>
+      <button type="button" class="audience-card reveal" data-audience="student"><span class="aud-ic">🎓</span><b>학생 본인</b><small>진로·공부·멘탈</small></button>
+    </div>
+    <p class="entry-kids reveal">아이의 <strong>공부 습관·학습 방법</strong>이 궁금하다면 → <a href="https://5344-lang.github.io/kids/">똑심마인드 키즈</a></p>
+  </div>
+</section>
+
+<section class="home-pkgs" id="home-pkgs">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom:28px;">
+      <div class="pre-label">인기 패키지</div>
+      <h2>가장 많이 찾는 구성</h2>
+      <p>2개 이상 묶으면 개별로 사는 것보다 저렴해요.</p>
+    </div>
+    <div class="home-pkg-grid" id="homePkgGrid"></div>
+    <div style="text-align:center;margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="pages/packages.html" class="btn btn-outline">전체 패키지 보기</a>
+      <a href="pages/tests.html" class="btn btn-outline">검사 16종 모두 보기</a>
     </div>
   </div>
 </section>
@@ -130,33 +173,6 @@
     </div>
 
     <p class="flow-note">문항 응답은 약 20~40분 소요됩니다.<br>중간에 잠시 멈췄다 이어서 진행하셔도 괜찮아요.</p>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════
-     SHORTCUT CARDS
-══════════════════════════════════════ -->
-<section style="padding: 48px 0;">
-  <div class="container">
-    <div class="section-header reveal" style="margin-bottom: 32px;">
-      <div class="pre-label">검사 둘러보기</div>
-      <h2>무엇이 궁금하신가요?</h2>
-    </div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; max-width:760px; margin:0 auto;">
-
-      <a href="pages/tests.html" class="trust-card reveal" style="text-decoration:none; display:flex; flex-direction:column; align-items:flex-start; cursor:pointer;">
-        <h4 style="margin-bottom:8px;">전체 검사 보기</h4>
-        <p style="flex:1;">TCI, K-OCEAN, GOLDEN 등 학계 검증 16종 검사를 한눈에 확인하고 상세 정보를 살펴보세요.</p>
-        <span style="margin-top:16px; color:var(--brown); font-weight:700; font-size:.9rem;">전체 검사 바로가기 →</span>
-      </a>
-
-      <a href="pages/packages.html" class="trust-card reveal" style="text-decoration:none; display:flex; flex-direction:column; align-items:flex-start; cursor:pointer;">
-        <h4 style="margin-bottom:8px;">추천 패키지 보기</h4>
-        <p style="flex:1;">목적별로 엄선한 2~3종 조합 패키지로 더 입체적인 자기 이해를 경험해 보세요.</p>
-        <span style="margin-top:16px; color:var(--brown); font-weight:700; font-size:.9rem;">패키지 바로가기 →</span>
-      </a>
-
-    </div>
   </div>
 </section>
 
@@ -236,22 +252,7 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     QUIZ BANNER (하단)
-══════════════════════════════════════ -->
-<section style="padding: 48px 0 0;">
-  <div class="container">
-    <div class="quiz-banner reveal">
-      <div class="quiz-banner-text">
-        <h3>어떤 검사를 해야 할지 모르겠나요?</h3>
-        <p>2가지 질문으로 <strong>단일 검사 + 패키지</strong>를 함께 추천해 드립니다.</p>
-      </div>
-      <button class="btn btn-primary" style="background:#fff; color:var(--brown); white-space:nowrap;" data-quiz-open>
-        맞춤 검사 찾기 →
-      </button>
-    </div>
-  </div>
-</section>
+
 
 <!-- ══════════════════════════════════════
      FINAL CTA
@@ -261,7 +262,7 @@
     <h2>나를 아는 것은 나를 사랑하는 시작입니다</h2>
     <p>지금, 똑심마인드에서 당신만의 고유한 마음 지도를 확인해 보세요.</p>
     <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-      <a href="https://kmong.com/gig/766983" target="_blank" class="btn btn-green" style="font-size:1.1rem; padding:18px 44px;">문의하기
+      <a href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-green" style="font-size:1.1rem; padding:18px 44px;">문의하기
       </a>
       <button class="btn btn-outline" style="color:#fff; border-color:#fff;" data-quiz-open>맞춤 검사 찾기
       </button>
@@ -301,22 +302,23 @@
       </div>
       <div class="footer-links">
         <h4>바로가기</h4>
-        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">문의하기</a>
-        <a href="pages/packages.html">추천 패키지</a>
+        <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer">문의하기</a>
+        <a href="pages/packages.html">패키지</a>
         <a href="#benefits">왜 똑심인가요?</a>
       </div>
       <div class="footer-social">
         <h4>SNS 채널</h4>
-        <a href="https://www.instagram.com/talk_sim_mind/" rel="noopener" target="_blank">Instagram</a>
+        <a href="https://www.instagram.com/talk_sim_mind/" rel="noopener noreferrer" target="_blank">Instagram</a>
         <span style="color:rgba(255,255,255,.3);">·</span>
-        <a href="https://www.youtube.com/@talk_sim_mind" rel="noopener" target="_blank">YouTube</a>
+        <a href="https://www.youtube.com/@talk_sim_mind" rel="noopener noreferrer" target="_blank">YouTube</a>
         <span style="color:rgba(255,255,255,.3);">·</span>
-        <a href="https://blog.naver.com/talk_sim_mind" target="_blank">Blog</a>
+        <a href="https://blog.naver.com/talk_sim_mind" target="_blank" rel="noopener noreferrer">Blog</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 똑심마인드<a href="admin.html" style="color:rgba(255,255,255,.18);margin-left:4px;text-decoration:none;" title="">·</a>. All rights reserved. |
-        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">문의하기</a>
+      <p>© 2026 똑심마인드. All rights reserved. |
+        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.8);text-decoration:none;">문의하기</a>
       </p>
     </div>
   </div>
@@ -352,7 +354,7 @@
       </div>
       <div id="pkgMSteps"></div>
       <div id="pkgMPrice" style="display:none;flex-wrap:wrap;align-items:center;gap:10px;margin:20px 0 0;padding:16px;background:var(--beige);border-radius:12px;"></div>
-      <a href="#" id="pkgMCta" target="_blank" class="btn btn-green" style="width:100%;justify-content:center;margin-top:20px;">문의하기
+      <a href="#" id="pkgMCta" target="_blank" rel="noopener noreferrer" class="btn btn-green" style="width:100%;justify-content:center;margin-top:20px;">문의하기
       </a>
     </div>
   </div>

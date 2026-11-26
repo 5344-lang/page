@@ -2,7 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MLST-II 학습전략검사 — 똑심마인드</title>
   <meta name="description" content="초등·청소년·대학생의 학습 전략과 자기조절 능력을 과학적으로 진단. 성적 향상의 출발점.">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -15,20 +17,23 @@
     <a href="../index.html" class="gnb-logo"><img src="../assets/logo.png" alt="" class="bear-mini"> 똑심마인드</a>
     <div class="gnb-menu">
       <a href="../index.html">맞춤 검사 찾기</a>
-      <a href="packages.html">추천 패키지</a>
+      <a href="packages.html">패키지</a>
       <a href="tests.html">전체 검사</a>
-      <a href="cart.html">검사 담기</a>
-      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">문의하기</a>
+      <a href="cart.html">장바구니</a>
+      <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="gnb-store-btn">문의하기</a>
     </div>
+    <button type="button" class="gnb-mobile-cta" data-quiz-open>맞춤 추천</button>
     <button class="gnb-hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
   <a href="../index.html">맞춤 검사 찾기</a>
-  <a href="packages.html">추천 패키지</a>
+  <a href="packages.html">패키지</a>
   <a href="tests.html">전체 검사</a>
-  <a href="cart.html">검사 담기</a>
-  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">문의하기</a>
+  <a href="cart.html">장바구니</a>
+  <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer">문의하기</a>
 </div>
 
 <section class="test-hero">
@@ -44,7 +49,7 @@
 
         <h1 style="font-size:clamp(1.6rem,4vw,2.6rem); margin-bottom:14px;">
           MLST-II 학습전략검사<br>
-          <span style="font-size:.65em; color:var(--text-muted); font-weight:400;">Motivated Learning Strategies Test II</span>
+          <span style="font-size:.65em; color:var(--text-muted); font-weight:400;">Multi-Dimensional Learning Strategy Test 2nd Edition</span>
         </h1>
         <p style="color:var(--text-muted); max-width:480px; line-height:1.7; margin-bottom:20px;">
           왜 공부해도 성적이 안 오를까요? 열심히 하는데 집중이 안 된다면, 문제는 <strong>학습 전략</strong>에 있습니다. MLST-II는 성격·정서·동기·행동 전 영역을 입체적으로 진단해 학습자의 장단점과 맞춤 개입 전략을 제시합니다.
@@ -86,8 +91,8 @@
     </div>
     <p class="sample-sub">초등용·청소년용 MLST-II 샘플을 확인하세요.</p>
     <div class="sample-btns">
-      <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/MLST2_CO_SG_E.pdf" target="_blank" class="btn-sample">MLST-II 초등용 샘플</a>
-          <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/MLST2_CO_SG_A.pdf" target="_blank" class="btn-sample">MLST-II 청소년용 샘플</a>
+      <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/MLST2_CO_SG_E.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">MLST-II 초등용 샘플</a>
+          <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/MLST2_CO_SG_A.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">MLST-II 청소년용 샘플</a>
     </div>
   </div>
 </div>
@@ -227,7 +232,20 @@
   <div class="container">
     <h2>공부법을 바꾸면 성적이 달라집니다 📚</h2>
     <p>MLST-II 정밀 리포트 + AI 학습 처방 프롬프트 + 리뷰 약속 시 SCT 무료 증정</p>
-    <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="btn btn-store">문의하기</a>
+    <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-store">문의하기</a>
+  </div>
+</section>
+
+<!-- 키즈 안내 -->
+<section style="padding:32px 0 0;">
+  <div class="container">
+    <div class="quiz-banner reveal">
+      <div class="quiz-banner-text">
+        <h3>아이의 공부 습관·학습 방법이 궁금하다면</h3>
+        <p>초등 4학년~고등학생 학습전략검사를 학년별 패키지와 공부법 해석지로 받아 보세요.</p>
+      </div>
+      <a href="https://5344-lang.github.io/kids/" class="btn btn-primary" style="background:#fff; color:var(--brown); white-space:nowrap;">똑심마인드 키즈 보기 →</a>
+    </div>
   </div>
 </section>
 
@@ -238,10 +256,10 @@
       <div style="display:flex; gap:20px; flex-wrap:wrap;">
         <a href="../index.html" style="color:rgba(255,255,255,.7); font-size:.85rem;">홈으로</a>
         <a href="packages.html" style="color:rgba(255,255,255,.7); font-size:.85rem;">추천 패키지</a>
-        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" style="color:rgba(255,255,255,.7); font-size:.85rem;">문의하기</a>
+        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.7); font-size:.85rem;">문의하기</a>
       </div>
     </div>
-    <div class="footer-bottom"><p>© 2025 똑심마인드. All rights reserved.</p></div>
+    <div class="footer-bottom"><p>© 2026 똑심마인드. All rights reserved.</p></div>
   </div>
 </footer>
 <script src="../js/links.js"></script>

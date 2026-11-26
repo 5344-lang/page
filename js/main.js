@@ -85,12 +85,14 @@ const QUIZ = {
   ],
 
   init() {
+    document.querySelectorAll('[data-audience]').forEach(b => b.addEventListener('click', () => this.openWith(b.dataset.audience)));
     document.querySelectorAll('[data-quiz-open]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); this.open(); }));
     const ov = document.getElementById('quizOverlay');
     document.getElementById('quizClose')?.addEventListener('click', () => this.close());
     ov?.addEventListener('click', e => { if (e.target === ov) this.close(); });
   },
   open()  { this.q1 = this.q2 = null; this.level = 1; this.step1(); document.getElementById('quizOverlay').classList.add('open'); },
+  openWith(q1) { this.q1 = q1; this.q2 = null; this.level = 1; this.step2(); document.getElementById('quizOverlay').classList.add('open'); },
   close() { document.getElementById('quizOverlay').classList.remove('open'); },
 
   progress(n) { return `<div class="quiz-progress">${[0,1,2].map(i => `<span class="${i < n ? 'done' : ''}"></span>`).join('')}</div>`; },
@@ -159,6 +161,7 @@ const QUIZ = {
           ${r.why ? `<p class="qr-why">${r.why.length > 90 ? r.why.slice(0, 90) + '…' : r.why}</p>` : ''}
           <div class="qr-pricebox">${priceHtml}</div>
           <p class="qr-note">결과지 + 종합 해석 보고서 + AI 해석 프롬프트 포함</p>
+          ${(this.q1 === 'child' || `${this.q1}+${this.q2}` === 'student+study') ? '<p class="qr-note" style="margin-top:6px;">공부 습관·학습 방법이 궁금하다면 <a href="https://5344-lang.github.io/kids/" style="color:var(--brown);font-weight:700;">똑심마인드 키즈</a>에서 학년별 학습검사를 확인해 보세요.</p>' : ''}
         </div>
         <div class="qr-actions" style="${detail ? '' : 'grid-template-columns:1fr'}">
           <button type="button" class="btn btn-primary qr-btn" id="qrAdd">장바구니에 담기</button>
@@ -608,3 +611,28 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   });
 });
+
+
+/* ─── 홈: 인기 패키지 (가격은 PKG_INFO·links.js 값으로 계산) ─── */
+function renderHomePkgs() {
+  const grid = document.getElementById('homePkgGrid');
+  if (!grid || typeof PKG_INFO === 'undefined') return;
+  const KEYS = ['pkg_personality', 'pkg_mental', 'pkg_couple', 'pkg_parenting_elem'];
+  const won = n => '₩' + n.toLocaleString('ko-KR');
+  grid.innerHTML = KEYS.filter(k => PKG_INFO[k]).map(k => {
+    const p = PKG_INFO[k], { total, discounted, rate } = computePkgPrice(p.testKeys);
+    const title = p.title.replace(/^[^가-힣A-Za-z]+/, '');
+    const price = rate >= 0.05
+      ? `<span class="hp-old">${won(total)}</span><b class="hp-price">${won(discounted)}</b><span class="hp-badge">${Math.round(rate * 100)}% 할인</span>`
+      : `<b class="hp-price">${won(discounted)}</b>`;
+    const tags = (p.tags || []).map(t => `<span class="tag tag-brown">${t}</span>`).join('');
+    return `<button type="button" class="home-pkg reveal visible" data-pkg="${k}">
+      <span class="hp-ic">${p.icon || ''}</span><b class="hp-title">${title}</b>
+      <span class="hp-tags">${tags}</span>
+      <span class="hp-priceline">${price}</span>
+      <span class="hp-more">구성 보기 →</span></button>`;
+  }).join('');
+  grid.querySelectorAll('.home-pkg').forEach(b => b.addEventListener('click', () => openPkgModal(b.dataset.pkg)));
+}
+document.addEventListener('DOMContentLoaded', renderHomePkgs);
+if (document.readyState !== 'loading') renderHomePkgs();

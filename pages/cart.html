@@ -2,7 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>검사 담기 — 똑심마인드</title>
   <meta name="description" content="원하는 심리검사를 선택하고 할인 가격을 바로 확인하세요. 2개 2~5% · 3개 7~10% · 4개 이상 12~15% 할인 (TCI 포함 시 낮은 쪽).">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -339,20 +341,23 @@
     <a href="../index.html" class="gnb-logo"><img src="../assets/logo.png" alt="" class="bear-mini"> 똑심마인드</a>
     <div class="gnb-menu">
       <a href="../index.html">맞춤 검사 찾기</a>
-      <a href="packages.html">추천 패키지</a>
+      <a href="packages.html">패키지</a>
       <a href="tests.html">전체 검사</a>
-      <a href="cart.html">검사 담기</a>
-      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">문의하기</a>
+      <a href="cart.html">장바구니</a>
+      <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="gnb-store-btn">문의하기</a>
     </div>
+    <button type="button" class="gnb-mobile-cta" data-quiz-open>맞춤 추천</button>
     <button class="gnb-hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
   <a href="../index.html">맞춤 검사 찾기</a>
-  <a href="packages.html">추천 패키지</a>
+  <a href="packages.html">패키지</a>
   <a href="tests.html">전체 검사</a>
-  <a href="cart.html">검사 담기</a>
-  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">문의하기</a>
+  <a href="cart.html">장바구니</a>
+  <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer">문의하기</a>
 </div>
 
 <!-- HERO -->
@@ -470,7 +475,7 @@
         </div>
       </div>
 
-      <a href="https://kmong.com/gig/766983" target="_blank" id="btnInquiry"
+      <a href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" id="btnInquiry"
          class="btn-inquiry disabled">결제 문의하기 (크몽)
       </a>
       <p class="sct-note">결제는 크몽 페이지에서 진행합니다.</p>
@@ -496,10 +501,10 @@
       <div style="display:flex;gap:20px;flex-wrap:wrap;">
         <a href="../index.html" style="color:rgba(255,255,255,.7);font-size:.85rem;">홈으로</a>
         <a href="packages.html" style="color:rgba(255,255,255,.7);font-size:.85rem;">추천 패키지</a>
-        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" style="color:rgba(255,255,255,.7);font-size:.85rem;">문의하기</a>
+        <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.7);font-size:.85rem;">문의하기</a>
       </div>
     </div>
-    <div class="footer-bottom"><p>© 2025 똑심마인드. All rights reserved.</p></div>
+    <div class="footer-bottom"><p>© 2026 똑심마인드. All rights reserved.</p></div>
   </div>
 </footer>
 

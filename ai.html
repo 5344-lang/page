@@ -2,7 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI 해석 프롬프트 생성 — 똑심마인드</title>
   <meta name="description" content="검사 결과지 수치를 입력하면 ChatGPT · Claude · Gemini에 바로 사용할 수 있는 통합 심리분석 프롬프트를 자동 생성합니다.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -226,12 +228,14 @@
     <a href="index.html" class="gnb-logo"><img src="assets/logo.png" alt="" class="bear-mini"> 똑심마인드</a>
     <div class="gnb-menu">
       <a href="index.html">맞춤 검사 찾기</a>
-      <a href="pages/packages.html">추천 패키지</a>
+      <a href="pages/packages.html">패키지</a>
       <a href="pages/tests.html">전체 검사</a>
       <a href="ai.html" style="color:var(--brown);font-weight:700;">AI 분석</a>
-      <a href="pages/cart.html">검사 담기</a>
-      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">문의하기</a>
+      <a href="pages/cart.html">장바구니</a>
+      <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="gnb-store-btn">문의하기</a>
     </div>
+    <button type="button" class="gnb-mobile-cta" data-quiz-open>맞춤 추천</button>
     <button class="gnb-hamburger" id="hamburger" aria-label="메뉴 열기">
       <span></span><span></span><span></span>
     </button>
@@ -240,11 +244,12 @@
 
 <div class="mobile-menu" id="mobileMenu">
   <a href="index.html">맞춤 검사 찾기</a>
-  <a href="pages/packages.html">추천 패키지</a>
+  <a href="pages/packages.html">패키지</a>
   <a href="pages/tests.html">전체 검사</a>
   <a href="ai.html">AI 심리분석</a>
-  <a href="pages/cart.html">검사 담기</a>
-  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">문의하기</a>
+  <a href="pages/cart.html">장바구니</a>
+  <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer">문의하기</a>
 </div>
 
 <!-- ══ HERO ══ -->
@@ -610,9 +615,9 @@
             <strong>아래 AI 중 하나에 접속합니다</strong>
             <span class="sub">세 서비스 모두 무료 계정으로 PDF 업로드가 가능합니다.</span>
             <div class="ai-links" style="margin-top:6px;">
-              <a href="https://claude.ai" target="_blank" class="ai-link-btn">Claude 열기 →</a>
-              <a href="https://chat.openai.com" target="_blank" class="ai-link-btn">ChatGPT 열기 →</a>
-              <a href="https://gemini.google.com" target="_blank" class="ai-link-btn">Gemini 열기 →</a>
+              <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" class="ai-link-btn">Claude 열기 →</a>
+              <a href="https://chat.openai.com" target="_blank" rel="noopener noreferrer" class="ai-link-btn">ChatGPT 열기 →</a>
+              <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="ai-link-btn">Gemini 열기 →</a>
             </div>
           </div>
         </li>
@@ -696,26 +701,26 @@
       <div class="footer-links">
         <h4>바로가기</h4>
         <a href="ai.html">AI 해석 프롬프트</a>
-        <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank">카카오 문의하기</a>
-        <a href="pages/packages.html">추천 패키지</a>
+        <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank" rel="noopener noreferrer">카카오 문의하기</a>
+        <a href="pages/packages.html">패키지</a>
         <a href="index.html#benefits">왜 똑심인가요?</a>
       </div>
       <div class="footer-social">
         <h4>SNS 채널</h4>
-        <a href="https://www.instagram.com/talk_sim_mind/" rel="noopener" target="_blank">
+        <a href="https://www.instagram.com/talk_sim_mind/" rel="noopener noreferrer" target="_blank">
           <span class="sns-icon sns-insta">📸</span> 인스타그램
         </a>
-        <a href="https://www.youtube.com/@talk_sim_mind" rel="noopener" target="_blank">
+        <a href="https://www.youtube.com/@talk_sim_mind" rel="noopener noreferrer" target="_blank">
           <span class="sns-icon sns-youtube">▶</span> 유튜브
         </a>
-        <a href="https://blog.naver.com/talk_sim_mind" target="_blank">
+        <a href="https://blog.naver.com/talk_sim_mind" target="_blank" rel="noopener noreferrer">
           <span class="sns-icon sns-blog">N</span> 네이버 블로그
         </a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 똑심마인드. All rights reserved. |
-        <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">카카오 문의하기</a>
+      <p>© 2026 똑심마인드. All rights reserved. |
+        <a href="https://open.kakao.com/o/sPbZfmsi" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.8);text-decoration:none;">카카오 문의하기</a>
       </p>
     </div>
   </div>

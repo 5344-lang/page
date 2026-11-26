@@ -2,7 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STS 6요인 기질검사 — 똑심마인드</title>
   <meta name="description" content="영아부터 성인까지, 타고난 기질을 6가지 요인으로 정밀 분석. 동물 유형으로 쉽게 이해하는 기질검사. 소요 10~15분.">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -15,20 +17,23 @@
     <a href="../index.html" class="gnb-logo"><img src="../assets/logo.png" alt="" class="bear-mini"> 똑심마인드</a>
     <div class="gnb-menu">
       <a href="../index.html">맞춤 검사 찾기</a>
-      <a href="packages.html">추천 패키지</a>
+      <a href="packages.html">패키지</a>
       <a href="tests.html">전체 검사</a>
-      <a href="cart.html">검사 담기</a>
-      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="gnb-store-btn">문의하기</a>
+      <a href="cart.html">장바구니</a>
+      <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+      <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="gnb-store-btn">문의하기</a>
     </div>
+    <button type="button" class="gnb-mobile-cta" data-quiz-open>맞춤 추천</button>
     <button class="gnb-hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
   <a href="../index.html">맞춤 검사 찾기</a>
-  <a href="packages.html">추천 패키지</a>
+  <a href="packages.html">패키지</a>
   <a href="tests.html">전체 검사</a>
-  <a href="cart.html">검사 담기</a>
-  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank">문의하기</a>
+  <a href="cart.html">장바구니</a>
+  <a href="https://5344-lang.github.io/kids/" class="gnb-kids">키즈 ↗</a>
+  <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer">문의하기</a>
 </div>
 <section class="test-hero">
   <div class="container">
@@ -103,9 +108,9 @@
     </div>
     <p class="sample-sub">영아용·유아용·성인용 샘플을 직접 확인하세요.</p>
     <div class="sample-btns">
-      <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/STS_CO_PG_I_Sample.pdf" target="_blank" class="btn-sample">영아용 샘플</a>
-      <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/STS_CO_PG_T_Sample.pdf" target="_blank" class="btn-sample">유아용 샘플</a>
-      <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/STS_CO_SG_Adu_Sample.pdf" target="_blank" class="btn-sample">성인용 샘플</a>
+      <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/STS_CO_PG_I_Sample.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">영아용 샘플</a>
+      <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/STS_CO_PG_T_Sample.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">유아용 샘플</a>
+      <a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-ef2ae7ddfb1a/resultSample/STS_CO_SG_Adu_Sample.pdf" target="_blank" rel="noopener noreferrer" class="btn-sample">성인용 샘플</a>
     </div>
   </div>
 </div>
@@ -171,6 +176,19 @@
   </div>
 </section>
 
+<!-- 키즈 안내 -->
+<section style="padding:32px 0 0;">
+  <div class="container">
+    <div class="quiz-banner reveal">
+      <div class="quiz-banner-text">
+        <h3>아이의 공부 습관·학습 방법이 궁금하다면</h3>
+        <p>기질 이해는 여기서, 학년별 학습검사와 공부법 해석지는 똑심마인드 키즈에서 이어서 확인하세요.</p>
+      </div>
+      <a href="https://5344-lang.github.io/kids/" class="btn btn-primary" style="background:#fff; color:var(--brown); white-space:nowrap;">똑심마인드 키즈 보기 →</a>
+    </div>
+  </div>
+</section>
+
 <!-- 꿀조합 -->
 <section class="section-alt">
   <div class="container">
@@ -203,7 +221,7 @@
   <div class="container">
     <h2>내 아이의 타고난 기질, 지금 확인하세요 🦎</h2>
     <p>STS 리포트 + 동물 유형 해석 + 양육 코칭까지 한 번에</p>
-    <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" class="btn btn-store">문의하기</a>
+    <a data-store="store" href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" class="btn btn-store">문의하기</a>
   </div>
 </section>
 
@@ -214,10 +232,10 @@
       <div style="display:flex; gap:20px; flex-wrap:wrap;">
         <a href="../index.html" style="color:rgba(255,255,255,.7); font-size:.85rem;">홈으로</a>
         <a href="packages.html" style="color:rgba(255,255,255,.7); font-size:.85rem;">추천 패키지</a>
-        <a href="https://kmong.com/gig/766983" target="_blank" data-store="store" style="color:rgba(255,255,255,.7); font-size:.85rem;">네이버 스토어</a>
+        <a href="https://kmong.com/gig/766983" target="_blank" rel="noopener noreferrer" data-store="store" style="color:rgba(255,255,255,.7); font-size:.85rem;">네이버 스토어</a>
       </div>
     </div>
-    <div class="footer-bottom"><p>© 2025 똑심마인드. All rights reserved.</p></div>
+    <div class="footer-bottom"><p>© 2026 똑심마인드. All rights reserved.</p></div>
   </div>
 </footer>
 <script src="../js/links.js"></script>
